@@ -1,11 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.API {
+namespace Muna.API {
 
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,6 @@ namespace Function.API {
     using UnityEngine;
     using Newtonsoft.Json;
     using Services;
-    using Types;
 
     /// <summary>
     /// Function API client for Unity Engine.
@@ -31,7 +30,7 @@ namespace Function.API {
         /// <param name="url">Function API URL.</param>
         /// <param name="accessKey">Function access key.</param>
         /// <param name="cache">Prediction cache.</param>
-        public PredictionCacheClient (
+        public PredictionCacheClient(
             string url,
             string? accessKey,
             List<CachedPrediction>? cache = default
@@ -46,7 +45,7 @@ namespace Function.API {
         /// <param name="payload">Request body.</param>
         /// <param name="headers">Request body.</param>
         /// <returns>Deserialized response.</returns>
-        public override async Task<T?> Request<T> (
+        public override async Task<T?> Request<T>(
             string method,
             string path,
             Dictionary<string, object?>? payload = default,
@@ -112,7 +111,7 @@ namespace Function.API {
         private static string ResourceCachePath => Path.Combine(CacheRoot, @"cache");
         private static string PredictorCachePath => Path.Combine(CacheRoot, @"predictors");
 
-        private async Task<PredictionResource> GetCachedResource (PredictionResource resource) {
+        private async Task<PredictionResource> GetCachedResource(PredictionResource resource) {
             var path = PredictionService.GetResourcePath(resource, ResourceCachePath);
             if (!File.Exists(path)) {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -123,7 +122,7 @@ namespace Function.API {
             return new PredictionResource { type = resource.type, url = $"file://{path}" };
         }
 
-        private static Prediction? TryLoadCachedPrediction (string path) {
+        private static Prediction? TryLoadCachedPrediction(string path) {
             if (!File.Exists(path))
                 return null;
             var json = File.ReadAllText(path);

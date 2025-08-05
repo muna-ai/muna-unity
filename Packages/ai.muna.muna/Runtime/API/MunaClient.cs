@@ -1,25 +1,26 @@
 /*
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 #pragma warning disable 8618
 
-namespace Function.API {
+namespace Muna.API {
 
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Function API client.
+    /// Muna API client.
     /// </summary>
-    public abstract class FunctionClient {
+    public abstract class MunaClient {
 
         #region --Client API--
         /// <summary>
-        /// Function API URL.
+        /// Muna API URL.
         /// </summary>
         public readonly string url;
 
@@ -32,7 +33,7 @@ namespace Function.API {
         /// <param name="payload">Request body.</param>
         /// <param name="headers">Request headers.</param>
         /// <returns>Deserialized response.</returns>
-        public abstract Task<T?> Request<T> (
+        public abstract Task<T?> Request<T>(
             string method,
             string path,
             Dictionary<string, object?>? payload = default,
@@ -43,7 +44,7 @@ namespace Function.API {
         /// Download a file.
         /// </summary>
         /// <param name="url">URL</param>
-        public abstract Task<Stream> Download (string url);
+        public abstract Task<Stream> Download(string url);
 
         /// <summary>
         /// Upload a data stream.
@@ -51,17 +52,21 @@ namespace Function.API {
         /// <param name="stream">Data stream.</param>
         /// <param name="url">Upload URL.</param>
         /// <param name="mime">MIME type.</param>
-        public abstract Task Upload (Stream stream, string url, string? mime = null);
+        public abstract Task Upload(
+            Stream stream,
+            string url,
+            string? mime = null
+        );
         #endregion
 
 
         #region --Operations--
         /// <summary>
-        /// Function access key.
+        /// Muna access key.
         /// </summary>
         protected internal readonly string? accessKey;
-    
-        protected FunctionClient (string url, string? accessKey) {
+
+        protected MunaClient(string url, string? accessKey) {
             this.url = url;
             this.accessKey = accessKey;
         }
@@ -69,7 +74,7 @@ namespace Function.API {
     }
 
     /// <summary>
-    /// Function API error response.
+    /// Muna API error response.
     /// </summary>
     [Preserve]
     public sealed class ErrorResponse {
@@ -77,5 +82,15 @@ namespace Function.API {
         public sealed class Error {
             public string message;
         }
+    }
+    
+    /// <summary>
+    /// Muna API exception.
+    /// </summary>
+    public sealed class FunctionAPIException : Exception {
+
+        public readonly int status;
+
+        public FunctionAPIException (string message, int status)  : base(message) => this.status = status;
     }
 }

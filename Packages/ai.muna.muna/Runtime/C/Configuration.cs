@@ -1,18 +1,17 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.C {
+namespace Muna.C {
 
     using System;
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading.Tasks;
-    using static Function;
-    using Acceleration = Types.Acceleration;
+    using static Muna;
 
     public sealed class Configuration : IDisposable {
 
@@ -82,7 +81,7 @@ namespace Function.C {
             this.configuration = configuration;
         }
 
-        public Task AddResource (string type, string path) {
+        public Task AddResource(string type, string path) {
             #if UNITY_WEBGL && !UNITY_EDITOR
             var tcs = new TaskCompletionSource<bool>();
             var context = GCHandle.Alloc(tcs, GCHandleType.Normal);
@@ -113,10 +112,10 @@ namespace Function.C {
         #region --Operations--
         private readonly IntPtr configuration;
 
-        public static implicit operator IntPtr (Configuration configuration) => configuration.configuration;
+        public static implicit operator IntPtr(Configuration configuration) => configuration.configuration;
 
         [MonoPInvokeCallback(typeof(Action<IntPtr>))]
-        private static void OnFunctionInitialized (IntPtr context) {
+        private static void OnFunctionInitialized(IntPtr context) {
             var handle = (GCHandle)context;
             var tcs = handle.Target as TaskCompletionSource<bool>;
             handle.Free();
@@ -124,7 +123,7 @@ namespace Function.C {
         }
 
         [MonoPInvokeCallback(typeof(Action<IntPtr, Status>))]
-        private static void OnAddConfigurationResource (IntPtr context, Status status) {
+        private static void OnAddConfigurationResource(IntPtr context, Status status) {
             var handle = (GCHandle)context;
             var tcs = handle.Target as TaskCompletionSource<bool>;
             handle.Free();

@@ -1,11 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Services {
+namespace Muna.Services {
 
     using System;
     using System.Collections;
@@ -15,7 +15,6 @@ namespace Function.Services {
     using System.Runtime.Serialization;
     using System.Threading.Tasks;
     using API;
-    using Types;
     using Configuration = C.Configuration;
     using Value = C.Value;
     using ValueMap = C.ValueMap;
@@ -35,7 +34,7 @@ namespace Function.Services {
         /// <param name="device">Prediction device. Do not set this unless you know what you are doing.</param>
         /// <param name="clientId">Function client identifier. Specify this to override the current client identifier.</param>
         /// <param name="configurationId">Configuration identifier. Specify this to override the current client configuration token.</param>
-        public async Task<Prediction> Create (
+        public async Task<Prediction> Create(
             string tag,
             Dictionary<string, object?>? inputs = null,
             Acceleration acceleration = default,
@@ -59,7 +58,7 @@ namespace Function.Services {
         /// <param name="inputs">Input values.</param>
         /// <param name="acceleration">Prediction acceleration.</param>
         /// <param name="device">Prediction device. Do not set this unless you know what you are doing.</param>
-        public async IAsyncEnumerable<Prediction> Stream (
+        public async IAsyncEnumerable<Prediction> Stream(
             string tag,
             Dictionary<string, object?> inputs,
             Acceleration acceleration = default,
@@ -79,7 +78,7 @@ namespace Function.Services {
         /// </summary>
         /// <param name="tag">Predictor tag.</param>
         /// <returns>Whether the predictor was successfully deleted from memory.</returns>
-        public async Task<bool> Delete (string tag) {
+        public async Task<bool> Delete(string tag) {
             await Configuration.InitializationTask;
             if (!cache.TryGetValue(tag, out var predictor))
                 return false;
@@ -91,11 +90,11 @@ namespace Function.Services {
 
 
         #region --Operations--
-        private readonly FunctionClient client;
+        private readonly MunaClient client;
         private readonly string cachePath;
         private readonly Dictionary<string, C.Predictor> cache = new();
 
-        internal PredictionService (FunctionClient client) {
+        internal PredictionService(MunaClient client) {
             this.client = client;
             this.cachePath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
@@ -104,7 +103,7 @@ namespace Function.Services {
             );
         }
 
-        private Task<Prediction> CreateRawPrediction (
+        private Task<Prediction> CreateRawPrediction(
             string tag,
             string? clientId = default,
             string? configurationId = default
@@ -118,7 +117,7 @@ namespace Function.Services {
             }
         )!;
 
-        private async Task<C.Predictor> GetPredictor (
+        private async Task<C.Predictor> GetPredictor(
             string tag,
             Acceleration acceleration = default,
             IntPtr device = default,
@@ -144,7 +143,7 @@ namespace Function.Services {
             return predictor;
         }
 
-        private async Task<string> DownloadResource (PredictionResource resource) {
+        private async Task<string> DownloadResource(PredictionResource resource) {
             var uri = new Uri(resource.url);
             if (uri.IsFile)
                 return uri.LocalPath;
@@ -158,7 +157,7 @@ namespace Function.Services {
             return path;
         }
 
-        internal static string GetResourcePath (PredictionResource resource, string cacheDir) {
+        internal static string GetResourcePath(PredictionResource resource, string cacheDir) {
             var uri = new Uri(resource.url);
             var stem = Path.GetFileName(uri.AbsolutePath);
             var path = string.IsNullOrEmpty(resource.name) ?
@@ -167,7 +166,7 @@ namespace Function.Services {
             return path;
         }
 
-        internal static unsafe Value ToValue (object? value) => value switch {
+        internal static unsafe Value ToValue(object? value) => value switch {
             Value           x => x,
             IntPtr          x => new Value(x),
             float           x => Value.CreateArray(x),
@@ -213,14 +212,14 @@ namespace Function.Services {
             _                 => throw new InvalidOperationException($"Cannot create a Function value from value '{value}' of type {value.GetType()}"),
         };
 
-        private static ValueMap ToValueMap (Dictionary<string, object?> inputs) {
+        private static ValueMap ToValueMap(Dictionary<string, object?> inputs) {
             var map = new ValueMap();
             foreach (var pair in inputs)
                 map[pair.Key] = ToValue(pair.Value);
             return map;
         }
 
-        private static Prediction ToPrediction (string tag, C.Prediction prediction) {
+        private static Prediction ToPrediction(string tag, C.Prediction prediction) {
             var outputMap = prediction.results;
             return new Prediction {
                 id = prediction.id,
@@ -237,7 +236,7 @@ namespace Function.Services {
             };
         }
 
-        private static object SerializeEnum (Enum value) {
+        private static object SerializeEnum(Enum value) {
             var fieldInfo = value.GetType().GetField(value.ToString());
             var attribute = fieldInfo?.GetCustomAttributes(typeof(EnumMemberAttribute), false)?.FirstOrDefault() as EnumMemberAttribute;
             return (attribute?.IsValueSetExplicitly ?? false) ? attribute.Value : Convert.ToInt32(value);

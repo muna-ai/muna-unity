@@ -1,9 +1,9 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Editor.Build {
+namespace Muna.Editor.Build {
 
     using System;
     using System.Collections.Generic;
@@ -16,8 +16,7 @@ namespace Function.Editor.Build {
     using UnityEditor.Build.Reporting;
     using API;
     using Services;
-    using Types;
-    using FunctionSettings = Internal.FunctionSettings;
+    using MunaSettings = Internal.MunaSettings;
 
     internal sealed class AndroidBuildHandler : BuildHandler, IPostGenerateGradleAndroidProject {
 
@@ -28,11 +27,13 @@ namespace Function.Editor.Build {
             [AndroidArchitecture.X86_64]    = @"android-x86_64",
         };
 
-        protected override BuildTarget[] targets => new [] { BuildTarget.Android };
+        protected override BuildTarget[] targets => new[] {
+            BuildTarget.Android
+        };
 
-        protected override FunctionSettings CreateSettings (BuildReport report) {
-            var projectSettings = FunctionProjectSettings.instance;
-            var settings = FunctionSettings.Create(projectSettings.accessKey);
+        protected override MunaSettings CreateSettings (BuildReport report) {
+            var projectSettings = MunaProjectSettings.instance;
+            var settings = MunaSettings.Create(projectSettings.accessKey);
             var embeds = GetEmbeds();
             var clientIds = ArchToClientId
                 .Where(pair => PlayerSettings.Android.targetArchitectures.HasFlag(pair.Key))
@@ -41,7 +42,7 @@ namespace Function.Editor.Build {
             var cache = embeds
                 .SelectMany(embed => {
                     var client = new DotNetClient(embed.url, embed.accessKey);
-                    var fxn = new Function(client);
+                    var fxn = new Muna(client);
                     var predictions = clientIds.SelectMany(clientId => embed.tags.Select(tag => {
                         try {
                             var prediction = Task.Run(() => fxn.Predictions.Create(
@@ -51,7 +52,7 @@ namespace Function.Editor.Build {
                             )).Result;
                             return new CachedPrediction(prediction, clientId);
                         } catch (AggregateException ex) {
-                            Debug.LogWarning($"Function: Failed to embed {tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
+                            Debug.LogWarning($"Muna: Failed to embed {tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
                             return null;
                         }
                     }));
@@ -64,7 +65,7 @@ namespace Function.Editor.Build {
             return settings;
         }
 
-        void IPostGenerateGradleAndroidProject.OnPostGenerateGradleAndroidProject (string projectPath) {
+        void IPostGenerateGradleAndroidProject.OnPostGenerateGradleAndroidProject(string projectPath) {
             if (cache == null)
                 return;
             foreach (var prediction in cache) {
@@ -74,7 +75,7 @@ namespace Function.Editor.Build {
                 if (!Directory.Exists(libDir))
                     continue;
                 // Fetch resources
-                var client = new DotNetClient(Function.URL);
+                var client = new DotNetClient(Muna.URL);
                 foreach (var resource in prediction.resources) {
                     try {
                         if (resource.type != @"dso")
@@ -86,7 +87,7 @@ namespace Function.Editor.Build {
                         using var fileStream = File.Create(path);
                         dsoStream.CopyTo(fileStream);
                     } catch (AggregateException ex) {
-                        Debug.LogWarning($"Function: Failed to embed prediction resource for {prediction.tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
+                        Debug.LogWarning($"Muna: Failed to embed prediction resource for {prediction.tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
                     }
                 }
             }

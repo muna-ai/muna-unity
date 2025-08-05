@@ -73,10 +73,11 @@
     <Compile Include="Assets/Tests/Runtime/SystemInfoTest.cs" />
     <Compile Include="Assets/Tests/Runtime/AccessKeyTest.cs" />
     <Compile Include="Assets/Tests/Runtime/ImageTest.cs" />
+    <Compile Include="Assets/Tests/Runtime/TextGenerationTest.cs" />
     <Compile Include="Assets/Tests/Runtime/RemoteGreetingTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Tests/Runtime/Function.Tests.Runtime.asmdef" />
+    <None Include="Assets/Tests/Runtime/Muna.Tests.Runtime.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

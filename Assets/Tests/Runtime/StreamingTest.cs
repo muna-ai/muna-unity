@@ -1,9 +1,9 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
     using UnityEngine;
     using Newtonsoft.Json;
@@ -11,9 +11,9 @@ namespace Function.Tests {
 
     internal sealed class StreamingTest : MonoBehaviour {
 
-        private async void Start () {
-            var fxn = FunctionUnity.Create(
-                accessKey: FunctionSettings.Instance.accessKey,
+        private async void Start() {
+            var fxn = MunaUnity.Create(
+                accessKey: MunaSettings.Instance.accessKey,
                 url: @"https://api.fxn.dev"
             );
             var stream = fxn.Predictions.Stream(

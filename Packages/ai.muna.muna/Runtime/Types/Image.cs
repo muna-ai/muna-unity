@@ -1,11 +1,11 @@
 /*
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Types {
+namespace Muna {
 
     using Newtonsoft.Json;
 
@@ -45,7 +45,7 @@ namespace Function.Types {
         /// <param name="width">Image width.</param>
         /// <param name="height">Image height.</param>
         /// <param name="channels">Image channels.</param>
-        public Image (byte[] data, int width, int height, int channels) {
+        public Image(byte[] data, int width, int height, int channels) {
             this.data = data;
             this.nativeData = null;
             this.width = width;
@@ -61,7 +61,7 @@ namespace Function.Types {
         /// <param name="width">Image width.</param>
         /// <param name="height">Image height</param>
         /// <param name="channels">Image channels.</param>
-        public unsafe Image (byte* data, int width, int height, int channels) { // Enables zero copy into `FXNValue`
+        public unsafe Image(byte* data, int width, int height, int channels) { // Enables zero copy into `FXNValue`
             this.data = null!;
             this.nativeData = data;
             this.width = width;
@@ -87,7 +87,7 @@ namespace Function.Types {
             }
         }
         
-        public ref byte GetPinnableReference () => ref (nativeData == null ? ref data[0] : ref *nativeData);
+        public ref byte GetPinnableReference() => ref (nativeData == null ? ref data[0] : ref *nativeData);
         #endregion
     }
 }

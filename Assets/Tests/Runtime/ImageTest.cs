@@ -1,12 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
     using UnityEngine;
-    using Types;
 
     internal sealed class ImageTest : MonoBehaviour {
 
@@ -16,13 +15,13 @@ namespace Function.Tests {
         [Header(@"UI")]
         [SerializeField] private UnityEngine.UI.RawImage rawImage;
 
-        private async void Start () {
+        private async void Start() {
             // Predict
-            var fxn = FunctionUnity.Create(url: @"https://api.fxn.dev");
-            var prediction = await fxn.Predictions.Create(
-                "@yusuf/image-identity",
-                new () {
-                    ["image"] = image.ToImage(),
+            var muna = MunaUnity.Create(url: @"https://api.fxn.dev");
+            var prediction = await muna.Predictions.Create(
+                tag: "@yusuf/image-identity",
+                inputs: new() {
+                    ["image"] = image.ToImage()
                 }
             );
             // Display

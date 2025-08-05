@@ -1,9 +1,9 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
     using System.Threading.Tasks;
     using NUnit.Framework;
@@ -11,14 +11,14 @@ namespace Function.Tests {
 
     internal sealed class UserTest {
 
-        private Function fxn;
+        private Muna muna;
 
         [SetUp]
-        public void Before () => fxn = FunctionUnity.Create();
+        public void Before () => muna = MunaUnity.Create();
 
         [Test(Description = @"Should retrieve the current user")]
-        public async Task RetrieveUser () {
-            var user = await fxn.Users.Retrieve();
+        public async Task RetrieveUser() {
+            var user = await muna.Users.Retrieve();
             Assert.AreEqual(@"yusuf", user?.username);
         }
     }

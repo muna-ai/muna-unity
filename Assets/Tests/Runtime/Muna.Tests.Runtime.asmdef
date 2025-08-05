@@ -1,27 +1,24 @@
 {
-    "name": "Function.Runtime",
+    "name": "Muna.Tests.Runtime",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "Muna.Runtime",
+        "Muna.Unity"
+    ],
     "includePlatforms": [
         "Android",
         "Editor",
-        "EmbeddedLinux",
         "iOS",
-        "LinuxStandalone64",
-        "CloudRendering",
         "macOSStandalone",
-        "VisionOS",
         "WebGL",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
-    "overrideReferences": true,
-    "precompiledReferences": [
-        "Newtonsoft.Json.dll"
-    ],
+    "overrideReferences": false,
+    "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
-    "noEngineReferences": true
+    "noEngineReferences": false
 }

@@ -1,28 +1,30 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
     using UnityEngine;
     using Newtonsoft.Json;
 
-    [Function.Embed(Tag)]
+    [Muna.Embed(Tag)]
     internal sealed class GreetingTest : MonoBehaviour {
 
         private const string Tag = "@fxn/greeting";
 
-        private async void Start () {
+        private async void Start() {
             // Predict
-            var fxn = FunctionUnity.Create();
-            var prediction = await fxn.Predictions.Create(
+            var muna = MunaUnity.Create();
+            var prediction = await muna.Predictions.Create(
                 tag: Tag,
-                inputs: new () { [@"name"] = "Yusuf" }
+                inputs: new() {
+                    [@"name"] = "Yusuf"
+                }
             );
             Debug.Log(JsonConvert.SerializeObject(prediction, Formatting.Indented));
             // Unload from memory
-            var deleted = await fxn.Predictions.Delete(Tag);
+            var deleted = await muna.Predictions.Delete(Tag);
             Debug.Log($"Deleted predictor: {deleted}");
         }
     }

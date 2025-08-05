@@ -65,14 +65,14 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.45f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Packages/ai.fxn.fxn3d/Unity/FunctionUnity.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Unity/Types/CachedPrediction.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Unity/API/PredictionCacheClient.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Unity/Internal/FunctionSettings.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Unity/API/UnityClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/Types/CachedPrediction.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/Internal/FunctionSettings.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/API/UnityClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/API/PredictionCacheClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/FunctionUnity.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Packages/ai.fxn.fxn3d/Unity/Function.Unity.asmdef" />
+    <None Include="Packages/ai.muna.muna/Unity/Muna.Unity.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

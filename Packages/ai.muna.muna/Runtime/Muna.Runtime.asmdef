@@ -1,9 +1,7 @@
 {
-    "name": "Function.Unity",
+    "name": "Muna.Runtime",
     "rootNamespace": "",
-    "references": [
-        "Function.Runtime"
-    ],
+    "references": [],
     "includePlatforms": [
         "Android",
         "Editor",
@@ -25,5 +23,5 @@
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
-    "noEngineReferences": false
+    "noEngineReferences": true
 }

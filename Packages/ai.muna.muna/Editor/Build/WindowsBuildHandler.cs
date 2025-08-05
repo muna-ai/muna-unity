@@ -1,21 +1,23 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Editor.Build {
+namespace Muna.Editor.Build {
 
     using UnityEditor;
     using UnityEditor.Build.Reporting;
-    using FunctionSettings = Internal.FunctionSettings;
+    using MunaSettings = Internal.MunaSettings;
 
     internal sealed class WindowsBuildHandler : BuildHandler {
 
-        protected override BuildTarget[] targets => new [] { BuildTarget.StandaloneWindows64 };
+        protected override BuildTarget[] targets => new[] {
+            BuildTarget.StandaloneWindows64
+        };
 
-        protected override FunctionSettings CreateSettings (BuildReport report) {
-            var projectSettings = FunctionProjectSettings.instance;
-            var settings = FunctionSettings.Create(projectSettings.accessKey);
+        protected override MunaSettings CreateSettings(BuildReport report) {
+            var projectSettings = MunaProjectSettings.instance;
+            var settings = MunaSettings.Create(projectSettings.accessKey);
             return settings;
         }
     }

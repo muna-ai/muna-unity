@@ -1,5 +1,5 @@
 # 
-#   Function
+#   Muna
 #   Copyright © 2025 NatML Inc. All Rights Reserved.
 #
 
@@ -27,7 +27,7 @@ def _download_fxnc (url: str, path: Path):
 def main (): # CHECK # Linux # Android AAR
     args = parser.parse_args()
     version = args.version
-    LIB_PATH_BASE = Path("Packages") / "ai.fxn.fxn3d" / "Plugins"
+    LIB_PATH_BASE = Path("Packages") / "ai.muna.muna" / "Plugins"
     LIBS = [
         {
             "url": f"https://cdn.fxn.ai/fxnc/{version}/Function.xcframework.zip",

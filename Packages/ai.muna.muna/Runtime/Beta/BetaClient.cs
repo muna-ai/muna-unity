@@ -1,11 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Beta {
+namespace Muna.Beta {
 
     using API;
     using Services;
@@ -25,7 +25,7 @@ namespace Function.Beta {
 
         #region --Operations--
 
-        internal BetaClient (FunctionClient client) {
+        internal BetaClient(MunaClient client) {
             this.Predictions = new PredictionService(client);
         }
         #endregion

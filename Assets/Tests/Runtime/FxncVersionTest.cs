@@ -1,9 +1,9 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
     using System.Runtime.InteropServices;
     using UnityEngine;
@@ -11,12 +11,12 @@ namespace Function.Tests {
 
     internal sealed class FxncVersionTest : MonoBehaviour {
 
-        private async void Start () {
+        private async void Start() {
             await Configuration.InitializationTask;
-            Debug.Log("Initialized Function!");
+            Debug.Log("Initialized Muna!");
             // Version
-            var version = Marshal.PtrToStringAuto(Function.GetVersion());
-            Debug.Log($"Function {version}");
+            var version = Marshal.PtrToStringAuto(Muna.GetVersion());
+            Debug.Log($"Muna {version}");
             Debug.Log($"Client: {Configuration.ClientId}");
             Debug.Log($"Configuration: {Configuration.ConfigurationId}");
         }

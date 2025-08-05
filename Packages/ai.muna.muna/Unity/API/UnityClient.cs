@@ -1,11 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.API {
+namespace Muna.API {
 
     using System;
     using System.Collections.Generic;
@@ -16,10 +16,10 @@ namespace Function.API {
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Function API client for Unity Engine.
+    /// Muna API client for Unity Engine.
     /// This uses Unity APIs for performing web requests.
     /// </summary>
-    internal class UnityClient : FunctionClient {
+    internal class UnityClient : MunaClient {
 
         #region --Client API--
         /// <summary>
@@ -28,7 +28,7 @@ namespace Function.API {
         /// <param name="url">Function API URL.</param>
         /// <param name="accessKey">Function access key.</param>
         /// <param name="cache">Prediction cache.</param>
-        public UnityClient (
+        public UnityClient(
             string url,
             string? accessKey
         ) : base(url.TrimEnd('/'), accessKey) { }
@@ -42,7 +42,7 @@ namespace Function.API {
         /// <param name="payload">Request body.</param>
         /// <param name="headers">Request headers.</param>
         /// <returns>Deserialized response.</returns>
-        public override async Task<T?> Request<T> (
+        public override async Task<T?> Request<T>(
             string method,
             string path,
             Dictionary<string, object?>? payload = default,
@@ -92,7 +92,7 @@ namespace Function.API {
         /// Download a file.
         /// </summary>
         /// <param name="url">URL</param>
-        public override async Task<Stream> Download (string url) {
+        public override async Task<Stream> Download(string url) {
             using var request = UnityWebRequest.Get(url);
             request.timeout = 20;
             request.SendWebRequest();
@@ -111,7 +111,11 @@ namespace Function.API {
         /// <param name="stream">Data stream.</param>
         /// <param name="url">Upload URL.</param>
         /// <param name="mime">MIME type.</param>
-        public override async Task Upload (Stream stream, string url, string? mime = null) {
+        public override async Task Upload(
+            Stream stream,
+            string url,
+            string? mime = null
+        ) {
             using var client = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT) {
                 uploadHandler = new UploadHandlerRaw(ToArray(stream)),
                 downloadHandler = new DownloadHandlerBuffer(),
@@ -131,7 +135,7 @@ namespace Function.API {
 
         #region --Operations--
 
-        private static byte[] ToArray (Stream stream) {
+        private static byte[] ToArray(Stream stream) {
             if (stream is MemoryStream memoryStream)
                 return memoryStream.ToArray();
             using var dstStream = new MemoryStream();

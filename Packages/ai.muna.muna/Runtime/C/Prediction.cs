@@ -1,15 +1,15 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.C {
+namespace Muna.C {
 
     using System;
     using System.Text;
-    using static Function;
+    using static Muna;
 
     public sealed class Prediction : IDisposable {
 
@@ -55,16 +55,16 @@ namespace Function.C {
             }
         }
 
-        public void Dispose () => prediction.ReleasePrediction();
+        public void Dispose() => prediction.ReleasePrediction();
         #endregion
 
 
         #region --Operations--
         private readonly IntPtr prediction;
 
-        internal Prediction (IntPtr prediction) => this.prediction = prediction;
+        internal Prediction(IntPtr prediction) => this.prediction = prediction;
 
-        public static implicit operator IntPtr (Prediction prediction) => prediction.prediction;
+        public static implicit operator IntPtr(Prediction prediction) => prediction.prediction;
         #endregion
     }
 }

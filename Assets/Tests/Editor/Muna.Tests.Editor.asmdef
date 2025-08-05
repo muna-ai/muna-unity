@@ -1,10 +1,10 @@
 {
-    "name": "Function.Tests.Editor",
+    "name": "Muna.Tests.Editor",
     "rootNamespace": "",
     "references": [
-        "Function.Runtime",
-        "Function.Unity",
-        "Function.Editor",
+        "Muna.Runtime",
+        "Muna.Unity",
+        "Muna.Editor",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

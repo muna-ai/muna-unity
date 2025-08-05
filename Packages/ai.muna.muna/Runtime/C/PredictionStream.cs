@@ -1,31 +1,31 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.C {
+namespace Muna.C {
 
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using static Function;
+    using static Muna;
 
     public sealed class PredictionStream : IEnumerable<Prediction>, IDisposable {
 
         #region --Client API--
 
-        public void Dispose () => stream.ReleasePredictionStream();
+        public void Dispose() => stream.ReleasePredictionStream();
         #endregion
 
 
         #region --Operations--
         private readonly IntPtr stream;
 
-        internal PredictionStream (IntPtr stream) => this.stream = stream;
+        internal PredictionStream(IntPtr stream) => this.stream = stream;
 
-        IEnumerator<Prediction> IEnumerable<Prediction>.GetEnumerator () {
+        IEnumerator<Prediction> IEnumerable<Prediction>.GetEnumerator() {
             while (true) {
                 if (stream.ReadNextPrediction(out var prediction) == Status.Ok)
                     yield return new Prediction(prediction);
@@ -34,9 +34,9 @@ namespace Function.C {
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator () => (this as IEnumerable<Prediction>).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => (this as IEnumerable<Prediction>).GetEnumerator();
 
-        public static implicit operator IntPtr (PredictionStream stream) => stream.stream;
+        public static implicit operator IntPtr(PredictionStream stream) => stream.stream;
         #endregion
     }
 }

@@ -1,11 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Types {
+namespace Muna {
 
     using System;
 
@@ -18,9 +18,9 @@ namespace Function.Types {
         public string? clientId;
 
         [Preserve]
-        public CachedPrediction () { }
+        public CachedPrediction() { }
 
-        public CachedPrediction (Prediction prediction, string clientId) {
+        public CachedPrediction(Prediction prediction, string clientId) {
             this.id = prediction.id;
             this.tag = prediction.tag;
             this.created = prediction.created;

@@ -1,15 +1,14 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Services {
+namespace Muna.Services {
 
     using System.Threading.Tasks;
     using API;
-    using Types;
 
     /// <summary>
     /// Manage users.
@@ -20,7 +19,7 @@ namespace Function.Services {
         /// <summary>
         /// Retrieve the current user.
         /// </summary>
-        public async Task<User?> Retrieve () {
+        public async Task<User?> Retrieve() {
             try {
                 return await client.Request<User>(
                     method: @"GET",
@@ -36,9 +35,9 @@ namespace Function.Services {
 
 
         #region --Operations--
-        private readonly FunctionClient client;
+        private readonly MunaClient client;
 
-        internal UserService (FunctionClient client) => this.client = client;
+        internal UserService(MunaClient client) => this.client = client;
         #endregion
     }
 }

@@ -1,5 +1,5 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
@@ -9,15 +9,15 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: AssemblyCompany(@"NatML Inc.")]
-[assembly: AssemblyTitle(@"Function.Runtime")]
-[assembly: AssemblyVersion(Function.Function.Version)]
+[assembly: AssemblyTitle(@"Muna.Runtime")]
+[assembly: AssemblyVersion(Muna.Muna.Version)]
 [assembly: AssemblyCopyright(@"Copyright © 2025 NatML Inc. All Rights Reserved.")]
-[assembly: InternalsVisibleTo(@"Function.Unity")]
-[assembly: InternalsVisibleTo(@"Function.Editor")]
-[assembly: InternalsVisibleTo(@"Function.Tests.Editor")]
-[assembly: InternalsVisibleTo(@"Function.Tests.Runtime")]
+[assembly: InternalsVisibleTo(@"Muna.Unity")]
+[assembly: InternalsVisibleTo(@"Muna.Editor")]
+[assembly: InternalsVisibleTo(@"Muna.Tests.Editor")]
+[assembly: InternalsVisibleTo(@"Muna.Tests.Runtime")]
 
-namespace Function {
+namespace Muna {
 
     using System;
     using API;
@@ -27,7 +27,7 @@ namespace Function {
     /// <summary>
     /// Function client.
     /// </summary>
-    public sealed class Function {
+    public sealed class Muna {
 
         #region --Attributes--
         /// <summary>
@@ -42,7 +42,7 @@ namespace Function {
             /// <summary>
             /// Embed predictors at build time.
             /// </summary>
-            public EmbedAttribute (params string[] tags) => this.tags = tags;
+            public EmbedAttribute(params string[] tags) => this.tags = tags;
         }
         #endregion
 
@@ -69,22 +69,20 @@ namespace Function {
         public readonly BetaClient Beta;
 
         /// <summary>
-        /// Create a Function client.
+        /// Create a Muna client.
         /// </summary>
-        /// <param name="accessKey">Function access key.</param>
-        /// <param name="url">Function API URL.</param>
-        /// <param name="cachePath">Predictor cache path.</param>
-        public Function (
+        /// <param name="accessKey">Muna access key.</param>
+        /// <param name="url">Muna API URL.</param>
+        public Muna(
             string? accessKey = null,
             string? url = null
         ) : this(new DotNetClient(url ?? URL, accessKey: accessKey)) { }
 
         /// <summary>
-        /// Create a Function client.
+        /// Create a Muna client.
         /// </summary>
-        /// <param name="client">Function API client.</param>
-        /// <param name="cachePath">Predictor cache path.</param>
-        public Function (FunctionClient client) {
+        /// <param name="client">Muna API client.</param>
+        public Muna(MunaClient client) {
             this.client = client;
             this.Users = new UserService(client);
             this.Predictors = new PredictorService(client);
@@ -95,7 +93,7 @@ namespace Function {
 
 
         #region --Operations--
-        public readonly FunctionClient client;
+        public readonly MunaClient client;
         public const string Version = @"0.0.42";
         internal const string URL = @"https://api.muna.ai/v1";
         #endregion
@@ -106,6 +104,6 @@ namespace Function {
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     internal sealed class MonoPInvokeCallbackAttribute : Attribute {
-        public MonoPInvokeCallbackAttribute (Type type) {}
+        public MonoPInvokeCallbackAttribute(Type type) {}
     }
 }

@@ -1,9 +1,9 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Editor.Build {
+namespace Muna.Editor.Build {
 
     using System;
     using System.Collections.Generic;
@@ -16,8 +16,7 @@ namespace Function.Editor.Build {
     using UnityEditor.Build;
     using UnityEditor.Build.Reporting;
     using API;
-    using Types;
-    using FunctionSettings = Internal.FunctionSettings;
+    using MunaSettings = Internal.MunaSettings;
 
 #if UNITY_IOS || UNITY_VISIONOS
     using UnityEditor.iOS.Xcode;
@@ -34,15 +33,15 @@ namespace Function.Editor.Build {
 
         protected override BuildTarget[] targets => ClientIds.Keys.ToArray();
 
-        protected override FunctionSettings CreateSettings (BuildReport report) {
-            var projectSettings = FunctionProjectSettings.instance;
-            var settings = FunctionSettings.Create(projectSettings.accessKey);
+        protected override MunaSettings CreateSettings(BuildReport report) {
+            var projectSettings = MunaProjectSettings.instance;
+            var settings = MunaSettings.Create(projectSettings.accessKey);
             var embeds = GetEmbeds();
             var cache = new List<CachedPrediction>();
             var clientId = ClientIds[report.summary.platform];
             foreach (var embed in embeds) {
                 var client = new DotNetClient(embed.url, embed.accessKey);
-                var fxn = new Function(client);
+                var fxn = new Muna(client);
                 var predictions = embed.tags
                     .Select(tag => {
                         try {
@@ -53,7 +52,7 @@ namespace Function.Editor.Build {
                             )).Result;
                             return new CachedPrediction(prediction, clientId);
                         } catch (AggregateException ex) {
-                            Debug.LogWarning($"Function: Failed to embed {tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
+                            Debug.LogWarning($"Muna: Failed to embed {tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
                             return null;
                         }
                     })
@@ -66,14 +65,14 @@ namespace Function.Editor.Build {
             return settings;
         }
 
-        void IPostprocessBuildWithReport.OnPostprocessBuild (BuildReport report) {
+        void IPostprocessBuildWithReport.OnPostprocessBuild(BuildReport report) {
             if (!targets.Contains(report.summary.platform))
                 return;
             if (cache == null)
                 return;
-            var frameworkDir = Path.Combine(report.summary.outputPath, @"Frameworks", @"Function");
+            var frameworkDir = Path.Combine(report.summary.outputPath, @"Frameworks", @"Muna");
             Directory.CreateDirectory(frameworkDir);
-            var client = new DotNetClient(Function.URL);
+            var client = new DotNetClient(Muna.URL);
             var frameworks = new List<string>();
             foreach (var prediction in cache)
                 foreach (var resource in prediction.resources) {
@@ -89,7 +88,7 @@ namespace Function.Editor.Build {
                         ZipFile.ExtractToDirectory(dsoPath, frameworkDir, true);
                         frameworks.Add(resource.name);
                     } catch (AggregateException ex) {
-                        Debug.LogWarning($"Function: Failed to embed prediction resource for {prediction.tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
+                        Debug.LogWarning($"Muna: Failed to embed prediction resource for {prediction.tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
                     }
                 }
         #if UNITY_IOS || UNITY_VISIONOS
@@ -106,7 +105,7 @@ namespace Function.Editor.Build {
             var targetGuid = project.GetUnityMainTargetGuid();
             foreach (var framework in frameworks) {
                 var frameworkGuid = project.AddFile(
-                    @"Frameworks/Function/" + framework,
+                    @"Frameworks/Muna/" + framework,
                     @"Frameworks/" + framework,
                     PBXSourceTree.Source
                 );

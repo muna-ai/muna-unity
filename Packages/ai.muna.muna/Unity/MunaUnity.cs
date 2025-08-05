@@ -1,5 +1,5 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
@@ -9,14 +9,14 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: AssemblyCompany(@"NatML Inc")]
-[assembly: AssemblyTitle(@"Function.Unity")]
-[assembly: AssemblyVersion(Function.Function.Version)]
+[assembly: AssemblyTitle(@"Muna.Unity")]
+[assembly: AssemblyVersion(Muna.Muna.Version)]
 [assembly: AssemblyCopyright(@"Copyright © 2025 NatML Inc. All Rights Reserved.")]
-[assembly: InternalsVisibleTo(@"Function.Editor")]
-[assembly: InternalsVisibleTo(@"Function.Tests.Editor")]
-[assembly: InternalsVisibleTo(@"Function.Tests.Runtime")]
+[assembly: InternalsVisibleTo(@"Muna.Editor")]
+[assembly: InternalsVisibleTo(@"Muna.Tests.Editor")]
+[assembly: InternalsVisibleTo(@"Muna.Tests.Runtime")]
 
-namespace Function {
+namespace Muna {
 
     using System;
     using System.Collections.Generic;
@@ -24,12 +24,11 @@ namespace Function {
     using Unity.Collections.LowLevel.Unsafe;
     using API;
     using Internal;
-    using Types;
 
     /// <summary>
     /// Utilities for working with Unity.
     /// </summary>
-    public static class FunctionUnity {
+    public static class MunaUnity {
 
         #region --Client API--
         /// <summary>
@@ -39,17 +38,17 @@ namespace Function {
         /// <param name="url">Function API URL.</param>
         /// <param name="cachePath">Predictor cache path.</param>
         /// <returns>Function client.</returns>
-        public static Function Create (
+        public static Muna Create(
             string? accessKey = null,
             string? url = null
         ) {
-            var settings = FunctionSettings.Instance!;
+            var settings = MunaSettings.Instance!;
             var client = new PredictionCacheClient(
-                url ?? Function.URL,
+                url ?? Muna.URL,
                 accessKey: accessKey ?? settings?.accessKey,
                 cache: settings?.cache
             );
-            var fxn = new Function(client);
+            var fxn = new Muna(client);
             return fxn;
         }
 
@@ -60,7 +59,7 @@ namespace Function {
         /// <param name="texture">Input texture.</param>
         /// <param name="pixelBuffer">Pixel buffer to store image data. Use this to prevent allocations.</param>
         /// <returns>Image.</returns>
-        public static unsafe Image ToImage (
+        public static unsafe Image ToImage(
             this Texture2D texture,
             byte[]? pixelBuffer = null
         ) {
@@ -100,7 +99,7 @@ namespace Function {
         /// <param name="value">Image.</param>
         /// <param name="texture">Optional destination texture.</param>
         /// <returns>Texture.</returns>
-        public static unsafe Texture2D ToTexture (
+        public static unsafe Texture2D ToTexture(
             this Image image,
             Texture2D? texture = null
         ) {

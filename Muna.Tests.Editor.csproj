@@ -19,7 +19,7 @@
     <RootNamespace></RootNamespace>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Function.Tests.Editor</AssemblyName>
+    <AssemblyName>Muna.Tests.Editor</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>
     <BaseDirectory>.</BaseDirectory>
   </PropertyGroup>
@@ -995,7 +995,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Function.Runtime.csproj" />
+    <ProjectReference Include="Muna.Runtime.csproj" />
+    <ProjectReference Include="Muna.Unity.csproj" />
+    <ProjectReference Include="Muna.Editor.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

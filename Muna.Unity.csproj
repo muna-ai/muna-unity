@@ -19,7 +19,7 @@
     <RootNamespace></RootNamespace>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Function.Tests.Editor</AssemblyName>
+    <AssemblyName>Muna.Unity</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>
     <BaseDirectory>.</BaseDirectory>
   </PropertyGroup>
@@ -54,7 +54,7 @@
     <UnityProjectGenerator>Package</UnityProjectGenerator>
     <UnityProjectGeneratorVersion>2.0.22</UnityProjectGeneratorVersion>
     <UnityProjectGeneratorStyle>SDK</UnityProjectGeneratorStyle>
-    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>WebGL:20</UnityBuildTarget>
     <UnityVersion>6000.0.45f1</UnityVersion>
   </PropertyGroup>
@@ -65,12 +65,14 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.45f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Tests/Editor/UserTest.cs" />
-    <Compile Include="Assets/Tests/Editor/PredictionTest.cs" />
-    <Compile Include="Assets/Tests/Editor/PredictorTest.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/Internal/MunaSettings.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/Types/CachedPrediction.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/MunaUnity.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/API/UnityClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/API/PredictionCacheClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Tests/Editor/Muna.Tests.Editor.asmdef" />
+    <None Include="Packages/ai.muna.muna/Unity/Muna.Unity.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -457,8 +459,28 @@
       <HintPath>/Applications/Unity/Hub/Editor/6000.0.45f1/Unity.app/Contents/Managed/UnityEngine/UnityEditor.XRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>Library/PackageCache/com.unity.ext.nunit@031a54704bff/net40/unity-custom/nunit.framework.dll</HintPath>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>/Applications/Unity/Hub/Editor/6000.0.45f1/Unity.app/Contents/Managed/UnityEditor.Graphs.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.WebGL.Extensions">
+      <HintPath>/Applications/Unity/Hub/Editor/6000.0.45f1/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.OSXStandalone.Extensions">
+      <HintPath>/Applications/Unity/Hub/Editor/6000.0.45f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.Android.Extensions">
+      <HintPath>/Applications/Unity/Hub/Editor/6000.0.45f1/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions">
+      <HintPath>/Applications/Unity/Hub/Editor/6000.0.45f1/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.LinuxStandalone.Extensions">
+      <HintPath>/Applications/Unity/Hub/Editor/6000.0.45f1/PlaybackEngines/LinuxStandaloneSupport/UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -977,14 +999,6 @@
       <HintPath>/Applications/Unity/Hub/Editor/6000.0.45f1/Unity.app/Contents/NetStandard/compat/2.1.0/shims/netfx/mscorlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.TestRunner">
-      <HintPath>Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEditor.TestRunner">
-      <HintPath>Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
       <Private>False</Private>
@@ -995,7 +1009,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Function.Runtime.csproj" />
+    <ProjectReference Include="Muna.Runtime.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

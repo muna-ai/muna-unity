@@ -65,34 +65,34 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.45f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Function.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/API/DotNetClient.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Types/Tensor.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Beta/PredictionService.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Types/Image.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/C/Predictor.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Beta/RemotePredictionService.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Types/Dtype.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Beta/BetaClient.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Types/User.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/C/Configuration.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/C/PredictionStream.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/C/ValueMap.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/API/FunctionAPIException.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/C/Prediction.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/C/Value.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Types/Predictor.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Beta/Value.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/API/FunctionClient.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Services/User.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Services/Prediction.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Services/Predictor.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Beta/RemoteAcceleration.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/C/Function.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Runtime/Types/Prediction.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/C/Prediction.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/API/FunctionAPIException.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/BetaClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/API/FunctionClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/C/PredictionStream.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Types/Prediction.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Types/Image.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/PredictionService.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/RemoteAcceleration.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/RemotePredictionService.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Value.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Services/Predictor.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/C/Configuration.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/API/DotNetClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/C/Function.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Services/Prediction.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Services/User.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Types/Tensor.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Types/Predictor.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/C/ValueMap.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Types/User.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Types/Dtype.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Function.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/C/Value.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/C/Predictor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Packages/ai.fxn.fxn3d/Runtime/Function.Runtime.asmdef" />
+    <None Include="Packages/ai.muna.muna/Runtime/Muna.Runtime.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">

@@ -1,8 +1,8 @@
 {
-    "name": "Function.Editor",
+    "name": "Muna.Editor",
     "references": [
-        "Function.Runtime",
-        "Function.Unity"
+        "Muna.Runtime",
+        "Muna.Unity"
     ],
     "includePlatforms": [
         "Editor"

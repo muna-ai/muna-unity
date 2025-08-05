@@ -65,19 +65,19 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.45f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/Build/BuildHandler.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/Build/macOSBuildHandler.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/Build/AndroidBuildHandler.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/Build/WindowsBuildHandler.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/FunctionSettingsProvider.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/Build/LinuxBuildHandler.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/FunctionProjectSettings.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/FunctionMenu.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/Build/WebGLBuildHandler.cs" />
-    <Compile Include="Packages/ai.fxn.fxn3d/Editor/Build/iOSBuildHandler.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/FunctionMenu.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/Build/AndroidBuildHandler.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/Build/iOSBuildHandler.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/Build/WebGLBuildHandler.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/FunctionSettingsProvider.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/FunctionProjectSettings.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/Build/BuildHandler.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/Build/WindowsBuildHandler.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/Build/macOSBuildHandler.cs" />
+    <Compile Include="Packages/ai.muna.muna/Editor/Build/LinuxBuildHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Packages/ai.fxn.fxn3d/Editor/Function.Editor.asmdef" />
+    <None Include="Packages/ai.muna.muna/Editor/Muna.Editor.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1124,12 +1124,12 @@
       <HintPath>Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEditor.TestRunner">
-      <HintPath>Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEngine.TestRunner">
       <HintPath>Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.TestRunner">
+      <HintPath>Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

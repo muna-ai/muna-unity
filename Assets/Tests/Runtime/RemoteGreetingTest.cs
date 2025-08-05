@@ -1,9 +1,9 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
     using UnityEngine;
     using Newtonsoft.Json;
@@ -14,11 +14,13 @@ namespace Function.Tests {
         public RemoteAcceleration acceleration;
         private const string Tag = "@fxn/greeting";
 
-        private async void Start () {
-            var fxn = FunctionUnity.Create();
+        private async void Start() {
+            var fxn = MunaUnity.Create();
             var prediction = await fxn.Beta.Predictions.Remote.Create(
                 tag: Tag,
-                inputs: new () { [@"name"] = "Yusuf" },
+                inputs: new() {
+                    [@"name"] = "Yusuf"
+                },
                 acceleration: acceleration
             );
             Debug.Log(JsonConvert.SerializeObject(prediction, Formatting.Indented));

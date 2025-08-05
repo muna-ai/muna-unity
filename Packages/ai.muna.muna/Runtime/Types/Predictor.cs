@@ -6,7 +6,7 @@
 #nullable enable
 #pragma warning disable 8618
 
-namespace Function.Types {
+namespace Muna {
 
     using System;
     using System.Runtime.Serialization;

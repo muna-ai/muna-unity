@@ -1,11 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Beta.Services {
+namespace Muna.Beta.Services {
 
     using System;
     using System.Collections;
@@ -16,7 +16,6 @@ namespace Function.Beta.Services {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using API;
-    using Types;
     using Configuration = C.Configuration;
 
     /// <summary>
@@ -32,7 +31,7 @@ namespace Function.Beta.Services {
         /// <param name="inputs">Input values.</param>
         /// <param name="acceleration">Prediction acceleration.</param>
         /// <returns></returns>
-        public async Task<Prediction> Create (
+        public async Task<Prediction> Create(
             string tag,
             Dictionary<string, object?> inputs,
             RemoteAcceleration acceleration = default
@@ -66,11 +65,11 @@ namespace Function.Beta.Services {
 
 
         #region --Operations--
-        private readonly FunctionClient client;
+        private readonly MunaClient client;
 
-        internal RemotePredictionService (FunctionClient client) => this.client = client;
+        internal RemotePredictionService(MunaClient client) => this.client = client;
 
-        private async Task<Value> ToValue ( // INCOMPLETE // Image
+        private async Task<Value> ToValue( // INCOMPLETE // Image
             object? value,
             string name,
             int maxDataUrlSize = 4 * 1024 * 1024
@@ -118,7 +117,7 @@ namespace Function.Beta.Services {
             _                 => throw new InvalidOperationException($"Failed to serialize value '{value}' of type `{value.GetType()}` because it is not supported"),
         };
 
-        private async Task<object?> ToObject (Value value) { // INCOMPLETE // Image
+        private async Task<object?> ToObject(Value value) { // INCOMPLETE // Image
             if (value.type == Dtype.Null)
                 return null;
             using var stream = await Download(value.data!);
@@ -143,7 +142,7 @@ namespace Function.Beta.Services {
             };
         }
 
-        private async Task<string> Upload (
+        private async Task<string> Upload(
             Stream stream,
             string name,
             string? mime = @"application/octet-stream",
@@ -163,7 +162,7 @@ namespace Function.Beta.Services {
             return value.downloadUrl!;
         }
 
-        private async Task<Stream> Download (string url) {
+        private async Task<Stream> Download(string url) {
             if (url.StartsWith(@"data:")) {
                 var dataIdx = url.LastIndexOf(",") + 1;
                 var b64Data = url.Substring(dataIdx);

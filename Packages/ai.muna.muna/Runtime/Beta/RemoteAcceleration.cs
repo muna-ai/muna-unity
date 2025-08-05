@@ -1,9 +1,9 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Beta {
+namespace Muna.Beta {
 
     using System.Runtime.Serialization;
     using Newtonsoft.Json;
@@ -17,22 +17,22 @@ namespace Function.Beta {
         /// <summary>
         /// Automatically choose the best acceleration.
         /// </summary>
-        [EnumMember(Value = @"auto")]
+        [EnumMember(Value = @"remote_auto")]
         Auto = 0,
         /// <summary>
         /// Predictions run on a CPU.
         /// </summary>
-        [EnumMember(Value = @"cpu")]
+        [EnumMember(Value = @"remote_cpu")]
         CPU = 1,
         /// <summary>
         /// Predictions run on an Nvidia A40 GPU.
         /// </summary>
-        [EnumMember(Value = @"a40")]
+        [EnumMember(Value = @"remote_a40")]
         A40 = 2,
         /// <summary>
         /// Predictions run on an Nvidia A100 GPU.
         /// </summary>
-        [EnumMember(Value = @"a100")]
+        [EnumMember(Value = @"remote_a100")]
         A100 = 3,
     }
 }

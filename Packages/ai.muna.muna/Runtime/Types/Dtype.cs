@@ -1,9 +1,9 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Types {
+namespace Muna {
 
     using System.Runtime.Serialization;
     using Newtonsoft.Json;

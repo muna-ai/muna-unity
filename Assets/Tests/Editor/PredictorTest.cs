@@ -1,26 +1,25 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
     using System.Threading.Tasks;
     using NUnit.Framework;
     using UnityEngine.TestTools;
-    using Types;
 
     internal sealed class PredictorTest {
 
-        private Function fxn;
+        private Muna muna;
 
         [SetUp]
-        public void Before () => fxn = FunctionUnity.Create();
+        public void Before () => muna = MunaUnity.Create();
 
         [Test(Description = @"Should retrieve a valid predictor")]
-        public async Task RetrievePredictor () {
+        public async Task RetrievePredictor() {
             var tag = "@fxn/greeting";
-            var predictor = await fxn.Predictors.Retrieve(tag);
+            var predictor = await muna.Predictors.Retrieve(tag);
             Assert.AreEqual(tag, predictor?.tag);
             Assert.AreEqual(PredictorStatus.Active, predictor?.status);
         }

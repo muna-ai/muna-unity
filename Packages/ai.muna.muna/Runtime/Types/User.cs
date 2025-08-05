@@ -1,17 +1,17 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 #pragma warning disable 8618
 
-namespace Function.Types {
+namespace Muna {
 
     using System;
 
     /// <summary>
-    /// Function user.
+    /// Muna user.
     /// </summary>
     [Preserve, Serializable]
     public class User {

@@ -1,11 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.API {
+namespace Muna.API {
 
     using System.Collections.Generic;
     using System.IO;
@@ -18,7 +18,7 @@ namespace Function.API {
     /// <summary>
     /// Function API client for .NET.
     /// </summary>
-    public sealed class DotNetClient : FunctionClient {
+    public sealed class DotNetClient : MunaClient {
 
         #region --Client API--
         /// <summary>
@@ -29,12 +29,12 @@ namespace Function.API {
         /// <param name="clientId">Client identifier.</param>
         /// <param name="deviceId">Device model identifier.</param>
         /// <param name="cachePath">Prediction resource cache path.</param>
-        public DotNetClient (
+        public DotNetClient(
             string url,
             string? accessKey = default
         ) : base(url.TrimEnd('/'), accessKey) {
             client = new();
-            var ua = new ProductInfoHeaderValue(@"FunctionDotNet", Function.Version);
+            var ua = new ProductInfoHeaderValue(@"FunctionDotNet", Muna.Version);
             client.DefaultRequestHeaders.UserAgent.Add(ua);
         }
 
@@ -47,7 +47,7 @@ namespace Function.API {
         /// <param name="payload">Request body.</param>
         /// <param name="headers">Request headers.</param>
         /// <returns>Deserialized response.</returns>
-        public override async Task<T?> Request<T> (
+        public override async Task<T?> Request<T>(
             string method,
             string path,
             Dictionary<string, object?>? payload = default,
@@ -78,7 +78,7 @@ namespace Function.API {
         /// Download a file.
         /// </summary>
         /// <param name="url">Data URL.</param>
-        public override Task<Stream> Download (string url) => client.GetStreamAsync(url);
+        public override Task<Stream> Download(string url) => client.GetStreamAsync(url);
 
         /// <summary>
         /// Upload a data stream.
@@ -86,7 +86,11 @@ namespace Function.API {
         /// <param name="stream">Data stream.</param>
         /// <param name="url">Upload URL.</param>
         /// <param name="mime">MIME type.</param>
-        public override async Task Upload (Stream stream, string url, string? mime = null) {
+        public override async Task Upload(
+            Stream stream,
+            string url,
+            string? mime = null
+        ) {
             using var content = new StreamContent(stream);
             content.Headers.ContentType = new MediaTypeHeaderValue(mime ?? @"application/octet-stream");
             using var response = await client.PutAsync(url, content);

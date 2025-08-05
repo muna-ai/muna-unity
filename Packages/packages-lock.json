@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "ai.fxn.fxn3d": {
-      "version": "file:ai.fxn.fxn3d",
+    "ai.muna.muna": {
+      "version": "file:ai.muna.muna",
       "depth": 0,
       "source": "embedded",
       "dependencies": {

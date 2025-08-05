@@ -1,21 +1,20 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Internal {
+namespace Muna.Internal {
 
     using System.Collections.Generic;
     using UnityEngine;
-    using Types;
 
     /// <summary>
-    /// Function settings for the current Unity project.
+    /// Muna settings for the current Unity project.
     /// </summary>
     [DefaultExecutionOrder(int.MinValue)]
-    internal sealed class FunctionSettings : ScriptableObject {
+    internal sealed class MunaSettings : ScriptableObject {
 
         #region --Client API--
         /// <summary>
@@ -34,15 +33,15 @@ namespace Function.Internal {
         /// Settings instance for this project.
         /// </summary>
         #pragma warning disable 8618
-        public static FunctionSettings Instance;
+        public static MunaSettings Instance;
         #pragma warning restore 8618
 
         /// <summary>
         /// Create Function settings.
         /// </summary>
         /// <param name="accessKey">Function access key.</param>
-        public static FunctionSettings Create (string accessKey) {
-            var settings = CreateInstance<FunctionSettings>();
+        public static MunaSettings Create(string accessKey) {
+            var settings = CreateInstance<MunaSettings>();
             settings.accessKey = accessKey;
             return settings;
         }
@@ -51,8 +50,7 @@ namespace Function.Internal {
 
         #region --Operations--
 
-        private void Awake () {
-            // Set singleton in player
+        private void Awake() {
             if (!Application.isEditor)
                 Instance = this;
         }

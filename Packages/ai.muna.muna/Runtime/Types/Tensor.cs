@@ -1,11 +1,11 @@
 /*
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Types {
+namespace Muna {
 
     /// <summary>
     /// Tensor.
@@ -29,7 +29,7 @@ namespace Function.Types {
         /// </summary>
         /// <param name="data">Tensor data.</param>
         /// <param name="shape">Tensor shape.</param>
-        public Tensor (T[] data, int[] shape) {
+        public Tensor(T[] data, int[] shape) {
             this.data = data;
             this.nativeData = null;
             this.shape = shape;
@@ -41,7 +41,7 @@ namespace Function.Types {
         /// </summary>
         /// <param name="data">Tensor data.</param>
         /// <param name="shape">Tensor shape.</param>
-        public Tensor (T* data, int[] shape) { // Enables zero copy into `FXNValue`
+        public Tensor(T* data, int[] shape) { // Enables zero copy into `FXNValue`
             this.data = null!;
             this.nativeData = data;
             this.shape = shape;
@@ -52,7 +52,7 @@ namespace Function.Types {
         #region --Operations--
         private readonly T* nativeData;
 
-        public ref T GetPinnableReference () => ref (nativeData == null ? ref data[0] : ref *nativeData);
+        public ref T GetPinnableReference() => ref (nativeData == null ? ref data[0] : ref *nativeData);
         #endregion
     }
 }

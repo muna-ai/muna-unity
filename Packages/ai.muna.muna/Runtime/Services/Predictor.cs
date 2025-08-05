@@ -1,15 +1,14 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Services {
+namespace Muna.Services {
 
     using System.Threading.Tasks;
     using API;
-    using Types;
 
     /// <summary>
     /// Manage predictors.
@@ -21,7 +20,7 @@ namespace Function.Services {
         /// Retrieve a predictor.
         /// </summary>
         /// <param name="tag">Predictor tag.</param>
-        public async Task<Predictor?> Retrieve (string tag) {
+        public async Task<Predictor?> Retrieve(string tag) {
             try {
                 return await client.Request<Predictor>(
                     method: @"GET",
@@ -37,9 +36,9 @@ namespace Function.Services {
 
 
         #region --Operations--
-        private readonly FunctionClient client;
+        private readonly MunaClient client;
 
-        internal PredictorService (FunctionClient client) => this.client = client;
+        internal PredictorService(MunaClient client) => this.client = client;
         #endregion
     }
 }

@@ -1,11 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.C {
+namespace Muna.C {
 
     using System;
     using System.Collections;
@@ -14,8 +14,7 @@ namespace Function.C {
     using System.Runtime.InteropServices;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using Types;
-    using static Function;
+    using static Muna;
 
     public unsafe sealed class Value : IDisposable {
 
@@ -53,7 +52,7 @@ namespace Function.C {
             }
         }
 
-        public object? ToObject () => type switch {
+        public object? ToObject() => type switch {
             Dtype.Null      => null,
             Dtype.Float32   => ToObject((float*)data, shape),
             Dtype.Float64   => ToObject((double*)data, shape),
@@ -74,19 +73,19 @@ namespace Function.C {
             _               => throw new InvalidOperationException($"Cannot convert Function value to object because value type is unsupported: {type}"),
         };
 
-        public void Dispose () => value.ReleaseValue();
+        public void Dispose() => value.ReleaseValue();
 
-        public static Value CreateArray<T> (T scalar) where T : unmanaged => CreateArray(
+        public static Value CreateArray<T>(T scalar) where T : unmanaged => CreateArray(
             new Tensor<T>(new [] { scalar }, new int[0]),
             Flags.CopyData
         );
 
-        public static Value CreateArray<T> (T[] vector) where T : unmanaged => CreateArray(
+        public static Value CreateArray<T>(T[] vector) where T : unmanaged => CreateArray(
             new Tensor<T>(vector, new [] { vector.Length }),
             Flags.CopyData
         );
 
-        public static Value CreateArray<T> (
+        public static Value CreateArray<T>(
             in Tensor<T> tensor,
             Flags flags = Flags.None
         ) where T : unmanaged {
@@ -103,24 +102,24 @@ namespace Function.C {
             return new Value(value);
         }
 
-        public static Value CreateString (string input) {
+        public static Value CreateString(string input) {
             CreateStringValue(input, out var value).Throw();
             return new Value(value);
         }
 
-        public static Value CreateList (IList list) {
+        public static Value CreateList(IList list) {
             var json = JsonConvert.SerializeObject(list);
             CreateListValue(json, out var value).Throw();
             return new Value(value);
         }
 
-        public static Value CreateDict (IDictionary dict) {
+        public static Value CreateDict(IDictionary dict) {
             var json = JsonConvert.SerializeObject(dict);
             CreateDictValue(json, out var value).Throw();
             return new Value(value);
         }
 
-        public static Value CreateImage (in Image image) {
+        public static Value CreateImage(in Image image) {
             IntPtr value = default;
             fixed (byte* data = image)
                 CreateImageValue(
@@ -134,7 +133,7 @@ namespace Function.C {
             return new Value(value);
         }
 
-        public static Value CreateBinary (Stream stream) {
+        public static Value CreateBinary(Stream stream) {
             byte[] data;
             if (stream is MemoryStream memoryStream)
                 data = memoryStream.ToArray();
@@ -147,7 +146,7 @@ namespace Function.C {
             return new Value(value);
         }
 
-        public static Value CreateNull () {
+        public static Value CreateNull() {
             CreateNullValue(out var value).Throw();
             return new Value(value);
         }
@@ -157,18 +156,18 @@ namespace Function.C {
         #region --Operations--
         private readonly IntPtr value;
 
-        internal Value (IntPtr value) => this.value = value;
+        internal Value(IntPtr value) => this.value = value;
 
-        public static implicit operator IntPtr (Value value) => value.value;
+        public static implicit operator IntPtr(Value value) => value.value;
 
-        private static unsafe object ToObject<T> (T* data, int[] shape) where T : unmanaged {
+        private static unsafe object ToObject<T>(T* data, int[] shape) where T : unmanaged {
             if (shape.Length == 0)
                 return *(T*)data;
             var array = ToArray(data, shape);
             return new Tensor<T>(array, shape);
         }
 
-        private static unsafe T[] ToArray<T> (T* data, int[] shape) where T : unmanaged {
+        private static unsafe T[] ToArray<T>(T* data, int[] shape) where T : unmanaged {
             var count = shape.Aggregate(1, (a, b) => a * b);
             var result = new T[count];
             fixed (void* dst = result)
@@ -176,7 +175,7 @@ namespace Function.C {
             return result;
         }
 
-        private static Dtype ToDtype<T> () where T : unmanaged => default(T) switch { // don't use this for reference types
+        private static Dtype ToDtype<T>() where T : unmanaged => default(T) switch { // don't use this for reference types
             float   _ => Dtype.Float32,
             double  _ => Dtype.Float64,
             sbyte   _ => Dtype.Int8,

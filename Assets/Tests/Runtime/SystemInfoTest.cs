@@ -1,17 +1,16 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
-    using System.Collections.Generic;
     using System.Runtime.InteropServices;
     using UnityEngine;
 
     internal sealed class SystemInfoTest : MonoBehaviour {
 
-        private void Start () {
+        private void Start() {
             Debug.Log("Process arch: " + RuntimeInformation.ProcessArchitecture);
             Debug.Log("OS arch: " + RuntimeInformation.OSArchitecture);
             Debug.Log("macOS: " + RuntimeInformation.IsOSPlatform(OSPlatform.OSX));

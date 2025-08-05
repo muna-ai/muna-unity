@@ -3,21 +3,21 @@
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
     using System.Threading.Tasks;
     using NUnit.Framework;
 
     internal sealed class PredictionTest {
 
-        private Function fxn;
+        private Muna muna;
 
         [SetUp]
-        public void Before () => fxn = FunctionUnity.Create();
+        public void Before () => muna = MunaUnity.Create();
 
         [Test(Description = @"Should create a prediction")]
-        public async Task CreatePrediction () {
-            var prediction = await fxn.Predictions.Create(
+        public async Task CreatePrediction() {
+            var prediction = await muna.Predictions.Create(
                 tag: "@yusuf/area",
                 inputs: new () {
                     ["radius"] = 3f,

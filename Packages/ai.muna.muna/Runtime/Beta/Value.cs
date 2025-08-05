@@ -1,11 +1,11 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Function.Beta {
+namespace Muna.Beta {
 
     using System;
     using System.IO;
@@ -13,7 +13,6 @@ namespace Function.Beta {
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
     using System.Text;
-    using Types;
 
     /// <summary>
     /// Remote prediction value.
@@ -41,13 +40,13 @@ namespace Function.Beta {
     internal static class ValueUtils {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static object ToObject<T> (this Stream stream, int[] shape) where T : unmanaged {
+        public static object ToObject<T>(this Stream stream, int[] shape) where T : unmanaged {
             var data = stream.ToArray<T>();
             return shape.Length > 0 ? new Tensor<T>(data, shape) : data[0];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static object ToObject (this Enum value) {
+        public static object ToObject(this Enum value) {
             var fieldInfo = value.GetType().GetField(value.ToString());
             var attribute = fieldInfo?
                 .GetCustomAttributes(typeof(EnumMemberAttribute), false)?
@@ -56,7 +55,7 @@ namespace Function.Beta {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe Stream ToStream<T> (this T[] data) where T : unmanaged {
+        public static unsafe Stream ToStream<T>(this T[] data) where T : unmanaged {
             if (data is byte[] raw)
                 return new MemoryStream(raw);
             var size = data.Length * sizeof(T);
@@ -67,10 +66,10 @@ namespace Function.Beta {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Stream ToStream (this string data) => new MemoryStream(Encoding.UTF8.GetBytes(data));
+        public static Stream ToStream(this string data) => new MemoryStream(Encoding.UTF8.GetBytes(data));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe T[] ToArray<T> (this Stream stream) where T : unmanaged {
+        public static unsafe T[] ToArray<T>(this Stream stream) where T : unmanaged {
             var result = new T[stream.Length / sizeof(T)];
             fixed (T* dst = result) 
                 using (var dstStream = new UnmanagedMemoryStream(
@@ -84,7 +83,7 @@ namespace Function.Beta {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Stream Clone (this Stream stream) {
+        public static Stream Clone(this Stream stream) {
             var result = new MemoryStream();
             stream.CopyTo(result);
             return result;

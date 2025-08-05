@@ -1,14 +1,14 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
-namespace Function.Tests {
+namespace Muna.Tests {
 
     using UnityEngine;
     using Newtonsoft.Json;
 
-    [Function.Embed(Tag)]
+    [Muna.Embed(Tag)]
     internal sealed class ImageClassifierTest : MonoBehaviour {
 
         [Header(@"Image")]
@@ -16,11 +16,13 @@ namespace Function.Tests {
 
         private const string Tag = "@yusuf/mobilenet-v2";
 
-        private async void Start () {
-            var fxn = FunctionUnity.Create();
-            var prediction = await fxn.Predictions.Create(
+        private async void Start() {
+            var muna = MunaUnity.Create();
+            var prediction = await muna.Predictions.Create(
                 tag: Tag,
-                inputs: new() { ["image"] = image.ToImage() }
+                inputs: new() {
+                    ["image"] = image.ToImage()
+                }
             );
             Debug.Log(JsonConvert.SerializeObject(prediction, formatting: Formatting.Indented));
         }
