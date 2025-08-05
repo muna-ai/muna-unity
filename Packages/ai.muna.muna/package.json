@@ -1,8 +1,8 @@
 {
-    "name": "ai.fxn.fxn3d",
+    "name": "ai.muna.muna",
     "version": "0.0.42",
-    "displayName": "Function",
-    "description": "Run AI prediction functions in Unity Engine.",
+    "displayName": "Muna",
+    "description": "Run AI inference in Unity Engine.",
     "unity": "2022.3",
     "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.2.1"
@@ -30,9 +30,9 @@
     ],
     "author": {
         "name": "NatML Inc",
-        "email": "hi@fxn.ai",
-        "url": "https://github.com/fxnai"
+        "email": "hi@muna.ai",
+        "url": "https://github.com/muna-ai"
     },
     "license": "Apache-2.0",
-    "repository": "github:fxnai/fxn3d"
+    "repository": "github:muna-ai/muna-unity"
 }

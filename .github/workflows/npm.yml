@@ -17,8 +17,8 @@ jobs:
       with:
         registry-url: "https://registry.npmjs.org"
 
-    - name: Pull Function C
-      run: python3 fxnc.py --version 0.0.35
+    - name: Pull Muna C
+      run: python3 munac.py --version 0.0.35
 
     - run: npm publish --access public
-      working-directory: Packages/ai.fxn.fxn3d
+      working-directory: Packages/ai.muna.muna

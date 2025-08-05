@@ -97,7 +97,7 @@ namespace Function {
         #region --Operations--
         public readonly FunctionClient client;
         public const string Version = @"0.0.42";
-        internal const string URL = @"https://api.fxn.ai/v1";
+        internal const string URL = @"https://api.muna.ai/v1";
         #endregion
     }
 

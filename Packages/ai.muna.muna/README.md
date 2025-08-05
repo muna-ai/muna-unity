@@ -1,10 +1,10 @@
-# Function for Unity Engine
+# Muna for Unity Engine
 
-![function logo](https://raw.githubusercontent.com/fxnai/.github/main/logo_wide.png)
+![function logo](https://raw.githubusercontent.com/muna-ai/.github/main/logo_wide.png)
 
-Run Python functions (a.k.a "predictors") locally in your Unity apps and games, with full GPU acceleration and zero dependencies. In a few steps:
+Run AI inference in your Unity applications. In a few steps:
 
-## Installing Function
+## Installing Muna
 Add the following items to your Unity project's `Packages/manifest.json`:
 ```json
 {
@@ -12,41 +12,45 @@ Add the following items to your Unity project's `Packages/manifest.json`:
     {
       "name": "Function",
       "url": "https://registry.npmjs.com",
-      "scopes": ["ai.fxn"]
+      "scopes": ["ai.muna"]
     }
   ],
   "dependencies": {
-    "ai.fxn.fxn3d": "0.0.42"
+    "ai.muna.muna": "0.0.43"
   }
 }
 ```
 
 ## Retrieving your Access Key
-Head over to [fxn.ai](https://fxn.ai) to create an account by logging in. Once you do, generate an access key:
+Head over to [muna.ai](https://muna.ai) to create an account by logging in. Once you do, generate an access key:
 
-![generate access key](https://raw.githubusercontent.com/fxnai/.github/main/access_key.gif)
+![generate access key](https://raw.githubusercontent.com/muna-ai/.github/main/access_key.gif)
 
 Then add it to your Unity project in `Project Settings > Function`:
 
-![add access key to Unity](https://raw.githubusercontent.com/fxnai/fxn3d/main/settings.gif)
+![add access key to Unity](https://raw.githubusercontent.com/muna-ai/muna-unity/main/settings.gif)
 
 ## Making a Prediction
-First, create a Function client:
+First, create a Muna client:
 ```csharp
-using Function;
+using Muna;
 
-// Create a Function client
-var fxn = FunctionUnity.Create();
+// 💥 Create a Muna client
+var muna = FunctionUnity.Create();
 ```
 
 Then make a prediction:
 ```csharp
-// Make a prediction
-var prediction = await fxn.Predictions.Create(
+// 🔥 Make a prediction
+var prediction = await muna.Predictions.Create(
     tag: "@fxn/greeting",
     inputs: new () { ["name"] = "Roberta" }
 );
-// Log the result
+```
+
+Then use the results:
+```csharp
+// 🚀 Use the results
 Debug.Log(prediction.results[0]);
 ```
 
@@ -66,10 +70,10 @@ ___
   - Safari 16.4+
 
 ## Useful Links
-- [Discover predictors to use in your apps](https://fxn.ai/explore).
-- [Join our Discord community](https://fxn.ai/community).
-- [Check out our docs](https://docs.fxn.ai).
-- Learn more about us [on our blog](https://blog.fxn.ai).
-- Reach out to us at [hi@fxn.ai](mailto:hi@fxn.ai).
+- [Discover predictors to use in your apps](https://muna.ai/explore).
+- [Join our Discord community](https://muna.ai/community).
+- [Check out our docs](https://docs.muna.ai).
+- Learn more about us [on our blog](https://blog.muna.ai).
+- Reach out to us at [hi@muna.ai](mailto:hi@muna.ai).
 
 Thank you very much!

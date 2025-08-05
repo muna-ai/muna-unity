@@ -1,15 +1,12 @@
-# Function for Unity Engine
+# Muna for Unity Engine
 
-![function logo](https://raw.githubusercontent.com/fxnai/.github/main/logo_wide.png)
+![Muna logo](https://raw.githubusercontent.com/muna-ai/.github/main/logo_wide.png)
 
-[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2Fy5vwgXkz2f%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Function%20community)](https://discord.gg/fxn)
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2Fy5vwgXkz2f%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Function%20community)](https://discord.gg/muna)
 
-Run Python functions (a.k.a "predictors") locally in your Unity apps and games, with full GPU acceleration and zero dependencies.
+Run AI inference in your Unity applications.
 
-> [!TIP]
-> [Join our waitlist](https://fxn.ai/waitlist) to bring your custom Python functions and run them on-device across Android, iOS, macOS, Linux, web, and Windows.
-
-## Installing Function
+## Installing Muna
 Add the following items to your Unity project's `Packages/manifest.json`:
 ```json
 {
@@ -17,19 +14,19 @@ Add the following items to your Unity project's `Packages/manifest.json`:
     {
       "name": "Function",
       "url": "https://registry.npmjs.com",
-      "scopes": ["ai.fxn"]
+      "scopes": ["ai.muna"]
     }
   ],
   "dependencies": {
-    "ai.fxn.fxn3d": "0.0.41"
+    "ai.muna.muna": "0.0.41"
   }
 }
 ```
 
 ## Retrieving your Access Key
-Head over to [fxn.ai](https://fxn.ai) to create an account by logging in. Once you do, generate an access key:
+Head over to [muna.ai](https://muna.ai) to create an account by logging in. Once you do, generate an access key:
 
-![generate access key](https://raw.githubusercontent.com/fxnai/.github/main/access_key.gif)
+![generate access key](https://raw.githubusercontent.com/muna-ai/.github/main/access_key.gif)
 
 Then add it to your Unity project in `Project Settings > Function`:
 
@@ -43,18 +40,22 @@ First, create a Function client:
 ```csharp
 using Function;
 
-// Create a Function client
-var fxn = FunctionUnity.Create();
+// 💥 Create a Function client
+var muna = FunctionUnity.Create();
 ```
 
 Then make a prediction:
 ```csharp
-// Make a prediction
-var prediction = await fxn.Predictions.Create(
+// 🔥 Make a prediction
+var prediction = await muna.Predictions.Create(
     tag: "@fxn/greeting",
     inputs: new () { ["name"] = "Roberta" }
 );
-// Log the result
+```
+
+Finally, use the results
+```csharp
+// 🚀 Use the results
 Debug.Log(prediction.results[0]);
 ```
 
@@ -72,10 +73,10 @@ Debug.Log(prediction.results[0]);
   - Safari 16.4+
 
 ## Useful Links
-- [Discover predictors to use in your apps](https://fxn.ai/explore).
-- [Join our Discord community](https://discord.gg/fxn).
-- [Check out our docs](https://docs.fxn.ai).
-- Learn more about us [on our blog](https://blog.fxn.ai).
-- Reach out to us at [hi@fxn.ai](mailto:hi@fxn.ai).
+- [Discover predictors to use in your apps](https://muna.ai/explore).
+- [Join our Discord community](https://discord.gg/muna).
+- [Check out our docs](https://docs.muna.ai).
+- Learn more about us [on our blog](https://blog.muna.ai).
+- Reach out to us at [hi@muna.ai](mailto:hi@muna.ai).
 
 Thank you very much!
