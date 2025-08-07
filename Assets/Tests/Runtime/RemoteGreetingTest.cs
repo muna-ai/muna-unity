@@ -15,8 +15,8 @@ namespace Muna.Tests {
         private const string Tag = "@fxn/greeting";
 
         private async void Start() {
-            var fxn = MunaUnity.Create();
-            var prediction = await fxn.Beta.Predictions.Remote.Create(
+            var muna = MunaUnity.Create();
+            var prediction = await muna.Beta.Predictions.Remote.Create(
                 tag: Tag,
                 inputs: new() {
                     [@"name"] = "Yusuf"

@@ -25,7 +25,7 @@ namespace Muna.Services {
                     method: @"GET",
                     path: @"/users"
                 );
-            } catch (FunctionAPIException ex) {
+            } catch (MunaAPIException ex) {
                 if (ex.status == 401)
                     return null;
                 throw;

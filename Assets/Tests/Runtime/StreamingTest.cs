@@ -12,11 +12,11 @@ namespace Muna.Tests {
     internal sealed class StreamingTest : MonoBehaviour {
 
         private async void Start() {
-            var fxn = MunaUnity.Create(
+            var muna = MunaUnity.Create(
                 accessKey: MunaSettings.Instance.accessKey,
                 url: @"https://api.fxn.dev"
             );
-            var stream = fxn.Predictions.Stream(
+            var stream = muna.Predictions.Stream(
                 tag: "@yusuf-delete/streaming",
                 inputs: new () {
                     ["sentence"] = @"Hello world"

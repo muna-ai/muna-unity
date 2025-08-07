@@ -1,5 +1,5 @@
 /* 
-*   Function
+*   Muna
 *   Copyright © 2025 NatML Inc. All rights reserved.
 */
 
@@ -13,7 +13,7 @@ namespace Muna.Tests {
         private Muna muna;
 
         [SetUp]
-        public void Before () => muna = MunaUnity.Create();
+        public void Before() => muna = MunaUnity.Create();
 
         [Test(Description = @"Should create a prediction")]
         public async Task CreatePrediction() {

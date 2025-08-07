@@ -32,12 +32,12 @@ namespace Muna {
 
         #region --Client API--
         /// <summary>
-        /// Create a Function client for Unity.
+        /// Create a Muna client for Unity.
         /// </summary>
-        /// <param name="accessKey">Function access key. This defaults to your access key in Project Settings.</param>
-        /// <param name="url">Function API URL.</param>
+        /// <param name="accessKey">Muna access key. This defaults to your access key in Project Settings.</param>
+        /// <param name="url">Muna API URL.</param>
         /// <param name="cachePath">Predictor cache path.</param>
-        /// <returns>Function client.</returns>
+        /// <returns>Muna client.</returns>
         public static Muna Create(
             string? accessKey = null,
             string? url = null
@@ -48,8 +48,7 @@ namespace Muna {
                 accessKey: accessKey ?? settings?.accessKey,
                 cache: settings?.cache
             );
-            var fxn = new Muna(client);
-            return fxn;
+            return new Muna(client);
         }
 
         /// <summary>
@@ -66,7 +65,7 @@ namespace Muna {
             if (texture == null)
                 throw new ArgumentNullException(nameof(texture));
             if (!texture.isReadable)
-                throw new InvalidOperationException(@"Texture cannot be converted to a Function image because it is not readable");
+                throw new InvalidOperationException(@"Texture cannot be converted to a Muna image because it is not readable");
             var FormatChannelMap = new Dictionary<TextureFormat, int> {
                 [TextureFormat.R8] = 1,
                 [TextureFormat.Alpha8] = 1,
@@ -74,12 +73,12 @@ namespace Muna {
                 [TextureFormat.RGBA32] = 4,
             };
             if (!FormatChannelMap.TryGetValue(texture.format, out var channels))
-                throw new InvalidOperationException($"Texture cannot be converted to a Function image because it has unsupported format: {texture.format}");
+                throw new InvalidOperationException($"Texture cannot be converted to a Muna image because it has unsupported format: {texture.format}");
             var rowStride = texture.width * channels;
             var bufferSize = rowStride * texture.height;
             pixelBuffer ??= new byte[bufferSize];
             if (pixelBuffer.Length < bufferSize)
-                throw new InvalidOperationException($"Texture cannot be converted to a Function image because pixel buffer length was expected to be greater than or equal to {bufferSize} but got {pixelBuffer.Length}");
+                throw new InvalidOperationException($"Texture cannot be converted to a Muna image because pixel buffer length was expected to be greater than or equal to {bufferSize} but got {pixelBuffer.Length}");
             fixed (void* dst = pixelBuffer)
                 UnsafeUtility.MemCpyStride(
                     dst,

@@ -25,7 +25,7 @@ namespace Muna {
     using Services;
 
     /// <summary>
-    /// Function client.
+    /// Muna client.
     /// </summary>
     public sealed class Muna {
 

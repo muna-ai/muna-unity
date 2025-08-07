@@ -32,7 +32,7 @@ namespace Muna.Services {
         /// <param name="inputs">Input values.</param>
         /// <param name="acceleration">Prediction acceleration.</param>
         /// <param name="device">Prediction device. Do not set this unless you know what you are doing.</param>
-        /// <param name="clientId">Function client identifier. Specify this to override the current client identifier.</param>
+        /// <param name="clientId">Muna client identifier. Specify this to override the current client identifier.</param>
         /// <param name="configurationId">Configuration identifier. Specify this to override the current client configuration token.</param>
         public async Task<Prediction> Create(
             string tag,
@@ -68,9 +68,10 @@ namespace Muna.Services {
             var predictor = await GetPredictor(tag, acceleration, device);
             using var inputMap = ToValueMap(inputs);
             using var stream = predictor.StreamPrediction(inputMap);
-            foreach (var prediction in stream)
+            C.Prediction? prediction = null;
+            while ((prediction = stream.ReadNext()) != null)
                 using (prediction)
-                    yield return ToPrediction(tag, prediction);
+                    yield return ToPrediction(tag, prediction);   
         }
 
         /// <summary>
@@ -209,7 +210,7 @@ namespace Muna.Services {
             Image           x => Value.CreateImage(x),
             Stream          x => Value.CreateBinary(x),          
             null              => Value.CreateNull(),
-            _                 => throw new InvalidOperationException($"Cannot create a Function value from value '{value}' of type {value.GetType()}"),
+            _                 => throw new InvalidOperationException($"Cannot create a Muna value from value '{value}' of type {value.GetType()}"),
         };
 
         private static ValueMap ToValueMap(Dictionary<string, object?> inputs) {

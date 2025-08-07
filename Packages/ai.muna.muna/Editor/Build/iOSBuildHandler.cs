@@ -41,11 +41,11 @@ namespace Muna.Editor.Build {
             var clientId = ClientIds[report.summary.platform];
             foreach (var embed in embeds) {
                 var client = new DotNetClient(embed.url, embed.accessKey);
-                var fxn = new Muna(client);
+                var muna = new Muna(client);
                 var predictions = embed.tags
                     .Select(tag => {
                         try {
-                            var prediction = Task.Run(() => fxn.Predictions.Create(
+                            var prediction = Task.Run(() => muna.Predictions.Create(
                                 tag,
                                 clientId: clientId,
                                 configurationId: @""

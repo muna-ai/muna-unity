@@ -14,7 +14,7 @@ namespace Muna.Tests {
         private Muna muna;
 
         [SetUp]
-        public void Before () => muna = MunaUnity.Create();
+        public void Before() => muna = MunaUnity.Create();
 
         [Test(Description = @"Should retrieve a valid predictor")]
         public async Task RetrievePredictor() {

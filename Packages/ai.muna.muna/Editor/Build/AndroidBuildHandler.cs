@@ -21,36 +21,35 @@ namespace Muna.Editor.Build {
     internal sealed class AndroidBuildHandler : BuildHandler, IPostGenerateGradleAndroidProject {
 
         private static List<CachedPrediction> cache;
-        private static Dictionary<AndroidArchitecture, string> ArchToClientId = new () {
+        private static Dictionary<AndroidArchitecture, string> ArchToClientId = new() {
             [AndroidArchitecture.ARMv7]     = @"android-armeabi-v7a",
             [AndroidArchitecture.ARM64]     = @"android-arm64-v8a",
-            [AndroidArchitecture.X86_64]    = @"android-x86_64",
         };
 
         protected override BuildTarget[] targets => new[] {
             BuildTarget.Android
         };
 
-        protected override MunaSettings CreateSettings (BuildReport report) {
+        protected override MunaSettings CreateSettings(BuildReport report) {
             var projectSettings = MunaProjectSettings.instance;
             var settings = MunaSettings.Create(projectSettings.accessKey);
             var embeds = GetEmbeds();
-            var clientIds = ArchToClientId
+            var targets = ArchToClientId
                 .Where(pair => PlayerSettings.Android.targetArchitectures.HasFlag(pair.Key))
                 .Select(pair => pair.Value)
                 .ToArray();
             var cache = embeds
                 .SelectMany(embed => {
                     var client = new DotNetClient(embed.url, embed.accessKey);
-                    var fxn = new Muna(client);
-                    var predictions = clientIds.SelectMany(clientId => embed.tags.Select(tag => {
+                    var muna = new Muna(client);
+                    var predictions = targets.SelectMany(target => embed.tags.Select(tag => {
                         try {
-                            var prediction = Task.Run(() => fxn.Predictions.Create(
+                            var prediction = Task.Run(() => muna.Predictions.Create(
                                 tag,
-                                clientId: clientId,
+                                clientId: target,
                                 configurationId: @""
                             )).Result;
-                            return new CachedPrediction(prediction, clientId);
+                            return new CachedPrediction(prediction, target);
                         } catch (AggregateException ex) {
                             Debug.LogWarning($"Muna: Failed to embed {tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
                             return null;

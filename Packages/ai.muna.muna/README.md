@@ -10,7 +10,7 @@ Add the following items to your Unity project's `Packages/manifest.json`:
 {
   "scopedRegistries": [
     {
-      "name": "Function",
+      "name": "Muna",
       "url": "https://registry.npmjs.com",
       "scopes": ["ai.muna"]
     }
@@ -26,7 +26,7 @@ Head over to [muna.ai](https://muna.ai) to create an account by logging in. Once
 
 ![generate access key](https://raw.githubusercontent.com/muna-ai/.github/main/access_key.gif)
 
-Then add it to your Unity project in `Project Settings > Function`:
+Then add it to your Unity project in `Project Settings > Muna`:
 
 ![add access key to Unity](https://raw.githubusercontent.com/muna-ai/muna-unity/main/settings.gif)
 
@@ -36,7 +36,7 @@ First, create a Muna client:
 using Muna;
 
 // 💥 Create a Muna client
-var muna = FunctionUnity.Create();
+var muna = MunaUnity.Create();
 ```
 
 Then make a prediction:

@@ -26,7 +26,7 @@ namespace Muna.Services {
                     method: @"GET",
                     path: $"/predictors/{tag}"
                 );
-            } catch (FunctionAPIException ex) {
+            } catch (MunaAPIException ex) {
                 if (ex.status == 404)
                     return null;
                 throw;

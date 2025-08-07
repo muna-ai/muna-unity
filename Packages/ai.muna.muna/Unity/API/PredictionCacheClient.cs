@@ -17,7 +17,7 @@ namespace Muna.API {
     using Services;
 
     /// <summary>
-    /// Function API client for Unity Engine.
+    /// Muna API client for Unity Engine.
     /// This uses Unity APIs for performing web requests.
     /// Furthermore, this handles partial prediction caching for edge predictors.
     /// </summary>
@@ -27,8 +27,8 @@ namespace Muna.API {
         /// <summary>
         /// Create the client.
         /// </summary>
-        /// <param name="url">Function API URL.</param>
-        /// <param name="accessKey">Function access key.</param>
+        /// <param name="url">Muna API URL.</param>
+        /// <param name="accessKey">Muna access key.</param>
         /// <param name="cache">Prediction cache.</param>
         public PredictionCacheClient(
             string url,
@@ -37,7 +37,7 @@ namespace Muna.API {
         ) : base(url, accessKey) => this.cache = cache ?? new();
 
         /// <summary>
-        /// Perform a request to a Function REST endpoint.
+        /// Perform a request to a Muna REST endpoint.
         /// </summary>
         /// <typeparam name="T">Deserialized response type.</typeparam>
         /// <param name="method">HTTP request method.</param>

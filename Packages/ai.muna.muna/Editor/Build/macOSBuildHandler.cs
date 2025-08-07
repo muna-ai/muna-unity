@@ -26,7 +26,7 @@ namespace Muna.Editor.Build {
     internal sealed class macOSBuildHandler : BuildHandler, IPostprocessBuildWithReport {
 
         private List<CachedPrediction> cache;
-        private static readonly string[] ClientIds = new [] {
+        private static readonly string[] ClientIds = new[] {
             "macos-arm64",
             "macos-x86_64"
         };
@@ -44,12 +44,12 @@ namespace Muna.Editor.Build {
             var cache = new List<CachedPrediction>();
             foreach (var embed in embeds) {
                 var client = new DotNetClient(embed.url, embed.accessKey);
-                var fxn = new Muna(client);
+                var muna = new Muna(client);
                 var predictions = (from tag in embed.tags from clientId in ClientIds select (clientId, tag))
                     .Select((pair) => {
                         var (clientId, tag) = pair;
                         try {
-                            var prediction = Task.Run(() => fxn.Predictions.Create(
+                            var prediction = Task.Run(() => muna.Predictions.Create(
                                 tag,
                                 clientId: clientId,
                                 configurationId: @""

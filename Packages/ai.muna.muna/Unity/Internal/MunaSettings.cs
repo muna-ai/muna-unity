@@ -37,9 +37,9 @@ namespace Muna.Internal {
         #pragma warning restore 8618
 
         /// <summary>
-        /// Create Function settings.
+        /// Create Muna settings.
         /// </summary>
-        /// <param name="accessKey">Function access key.</param>
+        /// <param name="accessKey">Muna access key.</param>
         public static MunaSettings Create(string accessKey) {
             var settings = CreateInstance<MunaSettings>();
             settings.accessKey = accessKey;

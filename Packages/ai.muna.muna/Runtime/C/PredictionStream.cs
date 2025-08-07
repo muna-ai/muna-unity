@@ -8,13 +8,18 @@
 namespace Muna.C {
 
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using static Muna;
 
-    public sealed class PredictionStream : IEnumerable<Prediction>, IDisposable {
+    public sealed class PredictionStream : IDisposable {
 
         #region --Client API--
+
+        public Prediction? ReadNext() {
+            if (stream.ReadNextPrediction(out var prediction) == Status.Ok)
+                return new Prediction(prediction);
+            else
+                return null;
+        }
 
         public void Dispose() => stream.ReleasePredictionStream();
         #endregion
@@ -24,17 +29,6 @@ namespace Muna.C {
         private readonly IntPtr stream;
 
         internal PredictionStream(IntPtr stream) => this.stream = stream;
-
-        IEnumerator<Prediction> IEnumerable<Prediction>.GetEnumerator() {
-            while (true) {
-                if (stream.ReadNextPrediction(out var prediction) == Status.Ok)
-                    yield return new Prediction(prediction);
-                else
-                    yield break;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => (this as IEnumerable<Prediction>).GetEnumerator();
 
         public static implicit operator IntPtr(PredictionStream stream) => stream.stream;
         #endregion

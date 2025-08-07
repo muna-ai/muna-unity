@@ -25,8 +25,8 @@ namespace Muna.API {
         /// <summary>
         /// Create the client.
         /// </summary>
-        /// <param name="url">Function API URL.</param>
-        /// <param name="accessKey">Function access key.</param>
+        /// <param name="url">Muna API URL.</param>
+        /// <param name="accessKey">Muna access key.</param>
         /// <param name="cache">Prediction cache.</param>
         public UnityClient(
             string url,
@@ -75,14 +75,14 @@ namespace Muna.API {
             // Check error
             var responseStr = client.downloadHandler.text;
             if (client.responseCode == 0)
-                throw new FunctionAPIException(
+                throw new MunaAPIException(
                     @"Failed to get response from server. Check that you have an internet connection.",
                     (int)client.responseCode
                 );
             if (client.responseCode >= 400) {
                 var errorPayload = JsonConvert.DeserializeObject<ErrorResponse>(responseStr);
                 var error = errorPayload?.errors?[0]?.message ?? @"An unknown error occurred";
-                throw new FunctionAPIException(error, (int)client.responseCode);
+                throw new MunaAPIException(error, (int)client.responseCode);
             }
             // Return
             return JsonConvert.DeserializeObject<T>(responseStr)!;

@@ -70,7 +70,7 @@ namespace Muna.C {
             Dtype.Dict      => JsonConvert.DeserializeObject<JObject>(Marshal.PtrToStringUTF8((IntPtr)data)),
             Dtype.Image     => new Image(ToArray((byte*)data, shape), shape[1], shape[0], shape[2]),
             Dtype.Binary    => new MemoryStream(ToArray((byte*)data, shape)),
-            _               => throw new InvalidOperationException($"Cannot convert Function value to object because value type is unsupported: {type}"),
+            _               => throw new InvalidOperationException($"Cannot convert Muna value to object because value type is unsupported: {type}"),
         };
 
         public void Dispose() => value.ReleaseValue();

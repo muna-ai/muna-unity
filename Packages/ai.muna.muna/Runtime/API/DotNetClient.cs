@@ -16,16 +16,16 @@ namespace Muna.API {
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Function API client for .NET.
+    /// Muna API client for .NET.
     /// </summary>
     public sealed class DotNetClient : MunaClient {
 
         #region --Client API--
         /// <summary>
-        /// Create the .NET Function API client.
+        /// Create the .NET Muna API client.
         /// </summary>
-        /// <param name="url">Function API URL.</param>
-        /// <param name="accessKey">Function access key.</param>
+        /// <param name="url">Muna API URL.</param>
+        /// <param name="accessKey">Muna access key.</param>
         /// <param name="clientId">Client identifier.</param>
         /// <param name="deviceId">Device model identifier.</param>
         /// <param name="cachePath">Prediction resource cache path.</param>
@@ -34,7 +34,7 @@ namespace Muna.API {
             string? accessKey = default
         ) : base(url.TrimEnd('/'), accessKey) {
             client = new();
-            var ua = new ProductInfoHeaderValue(@"FunctionDotNet", Muna.Version);
+            var ua = new ProductInfoHeaderValue(@"MunaDotNet", Muna.Version);
             client.DefaultRequestHeaders.UserAgent.Add(ua);
         }
 
@@ -69,7 +69,7 @@ namespace Muna.API {
             if ((int)response.StatusCode >= 400) {
                 var errorPayload = JsonConvert.DeserializeObject<ErrorResponse>(responseStr);
                 var error = errorPayload?.errors?[0]?.message ?? @"An unknown error occurred";
-                throw new FunctionAPIException(error, (int)response.StatusCode);
+                throw new MunaAPIException(error, (int)response.StatusCode);
             }
             return JsonConvert.DeserializeObject<T>(responseStr)!;
         }

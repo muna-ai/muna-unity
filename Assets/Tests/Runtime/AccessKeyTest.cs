@@ -10,6 +10,6 @@ namespace Muna.Tests {
 
     internal sealed class AccessKeyTest : MonoBehaviour {
 
-        private void Start () => Debug.Log($"Access key: {MunaSettings.Instance.accessKey}");
+        private void Start() => Debug.Log($"Access key: {MunaSettings.Instance.accessKey}");
     }
 }

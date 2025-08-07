@@ -87,10 +87,10 @@ namespace Muna.API {
     /// <summary>
     /// Muna API exception.
     /// </summary>
-    public sealed class FunctionAPIException : Exception {
+    public sealed class MunaAPIException : Exception {
 
         public readonly int status;
 
-        public FunctionAPIException (string message, int status)  : base(message) => this.status = status;
+        public MunaAPIException(string message, int status)  : base(message) => this.status = status;
     }
 }

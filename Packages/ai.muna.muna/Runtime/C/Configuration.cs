@@ -63,49 +63,49 @@ namespace Muna.C {
 
         public static Task InitializationTask {
             get {
-                #if UNITY_WEBGL && !UNITY_EDITOR
+            #if UNITY_WEBGL && !UNITY_EDITOR
                 var tcs = new TaskCompletionSource<bool>();
                 var context = GCHandle.Alloc(tcs, GCHandleType.Normal);
                 SetInitializationHandler(OnFunctionInitialized, (IntPtr)context);
                 return tcs.Task;
-                [DllImport(Function.Assembly, EntryPoint = @"FXNSetInitializationHandler")]
+                [DllImport(Muna.Assembly, EntryPoint = @"FXNSetInitializationHandler")]
                 static extern Status SetInitializationHandler (Action<IntPtr> handler, IntPtr context);
-                #else
+            #else
                 return Task.CompletedTask;
-                #endif
+            #endif
             }
         }
 
-        public Configuration () {
+        public Configuration() {
             CreateConfiguration(out var configuration).Throw();
             this.configuration = configuration;
         }
 
         public Task AddResource(string type, string path) {
-            #if UNITY_WEBGL && !UNITY_EDITOR
+        #if UNITY_WEBGL && !UNITY_EDITOR
             var tcs = new TaskCompletionSource<bool>();
             var context = GCHandle.Alloc(tcs, GCHandleType.Normal);
             AddConfigurationResource(configuration, type, path, OnAddConfigurationResource, (IntPtr)context);
             return tcs.Task;
-            [DllImport(Function.Assembly, EntryPoint = @"FXNConfigurationAddResourceAsync")]
-            static extern Status AddConfigurationResource (
+            [DllImport(Muna.Assembly, EntryPoint = @"FXNConfigurationAddResourceAsync")]
+            static extern Status AddConfigurationResource(
                 IntPtr configuration,
                 [MarshalAs(UnmanagedType.LPUTF8Str)] string type,
                 [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
                 Action<IntPtr, Status> handler,
                 IntPtr context
             );
-            #else
+        #else
             try {
                 configuration.AddConfigurationResource(type, path).Throw();
                 return Task.CompletedTask;
             } catch (Exception ex) {
                 return Task.FromException(ex);
             }
-            #endif
+        #endif
         }
 
-        public void Dispose () => configuration.ReleaseConfiguration();
+        public void Dispose() => configuration.ReleaseConfiguration();
         #endregion
 
 

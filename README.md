@@ -2,7 +2,7 @@
 
 ![Muna logo](https://raw.githubusercontent.com/muna-ai/.github/main/logo_wide.png)
 
-[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2Fy5vwgXkz2f%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Function%20community)](https://discord.gg/muna)
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2Fy5vwgXkz2f%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Muna%20community)](https://discord.gg/muna)
 
 Run AI inference in your Unity applications.
 
@@ -12,13 +12,13 @@ Add the following items to your Unity project's `Packages/manifest.json`:
 {
   "scopedRegistries": [
     {
-      "name": "Function",
+      "name": "Muna",
       "url": "https://registry.npmjs.com",
       "scopes": ["ai.muna"]
     }
   ],
   "dependencies": {
-    "ai.muna.muna": "0.0.41"
+    "ai.muna.muna": "0.0.42"
   }
 }
 ```
@@ -28,20 +28,20 @@ Head over to [muna.ai](https://muna.ai) to create an account by logging in. Once
 
 ![generate access key](https://raw.githubusercontent.com/muna-ai/.github/main/access_key.gif)
 
-Then add it to your Unity project in `Project Settings > Function`:
+Then add it to your Unity project in `Project Settings > Muna`:
 
 ![add access key to Unity](settings.gif)
 
 > [!CAUTION]
-> If your Unity project is open-source, make sure to add `UserSettings/` to your `.gitignore` file to keep your Function access key private.
+> If your Unity project is open-source, make sure to add `UserSettings/` to your `.gitignore` file to keep your Muna access key private.
 
 ## Making a Prediction
-First, create a Function client:
+First, create a Muna client:
 ```csharp
-using Function;
+using Muna;
 
-// 💥 Create a Function client
-var muna = FunctionUnity.Create();
+// 💥 Create a Muna client
+var muna = MunaUnity.Create();
 ```
 
 Then make a prediction:

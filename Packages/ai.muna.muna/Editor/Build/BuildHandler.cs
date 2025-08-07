@@ -33,9 +33,9 @@ namespace Muna.Editor.Build {
         protected abstract BuildTarget[] targets { get; }
         public virtual int callbackOrder => -1_000_000; // run very early, but not too early ;)
 
-        protected abstract MunaSettings CreateSettings (BuildReport report);
+        protected abstract MunaSettings CreateSettings(BuildReport report);
 
-        internal static Embed[] GetEmbeds () {
+        internal static Embed[] GetEmbeds() {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var types = assemblies.SelectMany(assembly => assembly.GetTypes()).ToArray();
             var defaultEmbeds = types
@@ -64,10 +64,10 @@ namespace Muna.Editor.Build {
                 .Select(property  => {
                     var attribute = property.GetCustomAttribute<EmbedAttribute>();
                     var getter = CreateDelegateForProperty<MunaClient>(property);
-                    var fxn = getter!();
+                    var muna = getter!();
                     return new Embed {
-                        url = fxn.client.url,
-                        accessKey = fxn.client.accessKey,
+                        url = muna.client.url,
+                        accessKey = muna.client.accessKey,
                         tags = attribute.tags
                     };
                 })
