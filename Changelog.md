@@ -1,3 +1,6 @@
+## 0.0.43
++ Upgraded to Function C 0.0.37.
+
 ## 0.0.42
 + Function is now Muna!
 + Added `PredictorAccess.Unlisted` enumeration member for public predictors excluded from discovery.

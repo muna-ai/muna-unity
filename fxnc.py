@@ -34,7 +34,7 @@ def main (): # CHECK # Linux # Android AAR
             "path": LIB_PATH_BASE / "iOS" / "Function.xcframework.zip"
         },
         {
-            "url": f"https://cdn.fxn.ai/fxnc/{version}/Function-macos.dylib",
+            "url": f"https://cdn.fxn.ai/fxnc/{version}/Function-macos-arm64.dylib",
             "path": LIB_PATH_BASE / "macOS" / "Function.dylib"
         },
         {
