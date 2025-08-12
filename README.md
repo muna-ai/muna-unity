@@ -65,8 +65,8 @@ Debug.Log(prediction.results[0]);
 ## Supported Platforms
 - Android API Level 24+
 - iOS 14+
-- macOS 12+ (Apple Silicon and Intel)
-- Windows 10+ (64-bit only)
+- macOS 13+ (Apple Silicon only)
+- Windows 10+ (ARM64 and x64)
 - WebGL:
   - Chrome 91+
   - Firefox 90+

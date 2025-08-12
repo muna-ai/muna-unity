@@ -1,4 +1,6 @@
 ## 0.0.43
++ Muna now requires Apple Silicon on macOS.
++ Muna now requires macOS 13+.
 + Upgraded to Function C 0.0.37.
 
 ## 0.0.42
