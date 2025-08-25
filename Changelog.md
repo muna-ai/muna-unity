@@ -1,3 +1,6 @@
+## 0.0.44
++ Minor updates.
+
 ## 0.0.43
 + Added support for 16KB page sizes on Android.
 + Muna now requires Apple Silicon on macOS.

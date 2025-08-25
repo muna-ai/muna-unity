@@ -16,7 +16,7 @@ Add the following items to your Unity project's `Packages/manifest.json`:
     }
   ],
   "dependencies": {
-    "ai.muna.muna": "0.0.43"
+    "ai.muna.muna": "0.0.44"
   }
 }
 ```
