@@ -1,7 +1,8 @@
 ## 0.0.43
++ Added support for 16KB page sizes on Android.
 + Muna now requires Apple Silicon on macOS.
 + Muna now requires macOS 13+.
-+ Upgraded to Function C 0.0.37.
++ Upgraded to Function C 0.0.38.
 
 ## 0.0.42
 + Function is now Muna!
