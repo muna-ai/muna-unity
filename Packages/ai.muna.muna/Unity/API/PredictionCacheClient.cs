@@ -109,7 +109,7 @@ namespace Muna.API {
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @".fxn") :
             Path.Combine(Application.persistentDataPath, @"fxn");
         private static string ResourceCachePath => Path.Combine(CacheRoot, @"cache");
-        private static string PredictorCachePath => Path.Combine(CacheRoot, @"predictors");
+        internal static string PredictorCachePath => Path.Combine(CacheRoot, @"predictors");
 
         private async Task<PredictionResource> GetCachedResource(PredictionResource resource) {
             var path = PredictionService.GetResourcePath(resource, ResourceCachePath);

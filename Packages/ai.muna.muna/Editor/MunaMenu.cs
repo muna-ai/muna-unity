@@ -5,12 +5,13 @@
 
 namespace Muna.Editor {
 
+    using System.IO;
     using UnityEditor;
 
     internal static class MunaMenu {
 
         private const int BasePriority = -50;
-        
+
         [MenuItem(@"Muna/Muna " + Muna.Version, false, BasePriority)]
         private static void Version() { }
 
@@ -28,5 +29,14 @@ namespace Muna.Editor {
 
         [MenuItem(@"Muna/Report an Issue", false, BasePriority + 4)]
         private static void ReportIssue() => Help.BrowseURL(@"https://github.com/muna-ai/muna-unity");
+
+        [MenuItem(@"Muna/Clear Predictor Cache", false, BasePriority + 5)]
+        private static void ClearPredictorCache() {
+            Directory.Delete(
+                global::Muna.API.PredictionCacheClient.PredictorCachePath,
+                true
+            );
+            UnityEngine.Debug.Log("Muna: Cleared predictor cache.");
+        }
     }
 }

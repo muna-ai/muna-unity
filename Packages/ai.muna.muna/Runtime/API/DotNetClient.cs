@@ -26,9 +26,6 @@ namespace Muna.API {
         /// </summary>
         /// <param name="url">Muna API URL.</param>
         /// <param name="accessKey">Muna access key.</param>
-        /// <param name="clientId">Client identifier.</param>
-        /// <param name="deviceId">Device model identifier.</param>
-        /// <param name="cachePath">Prediction resource cache path.</param>
         public DotNetClient(
             string url,
             string? accessKey = default

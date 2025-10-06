@@ -36,7 +36,6 @@ namespace Muna {
         /// </summary>
         /// <param name="accessKey">Muna access key. This defaults to your access key in Project Settings.</param>
         /// <param name="url">Muna API URL.</param>
-        /// <param name="cachePath">Predictor cache path.</param>
         /// <returns>Muna client.</returns>
         public static Muna Create(
             string? accessKey = null,
