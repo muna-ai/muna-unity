@@ -1,5 +1,5 @@
 ## 0.0.45
-*INCOMPLETE*
++ Fixed Gradle errors when building for Android in Unity 2022.
 
 ## 0.0.44
 + Minor updates.
