@@ -1,4 +1,5 @@
 ## 0.0.45
++ Added `muna.Beta.OpenAI` property for using predictors with our mock OpenAI client.
 + Fixed Gradle errors when building for Android in Unity 2022.
 
 ## 0.0.44

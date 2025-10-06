@@ -8,6 +8,7 @@
 namespace Muna.Beta {
 
     using API;
+    using OpenAI;
     using Services;
     using PredictorService = global::Muna.Services.PredictorService;
     using EdgePredictionService = global::Muna.Services.PredictionService;
@@ -22,6 +23,11 @@ namespace Muna.Beta {
         /// Make predictions.
         /// </summary>
         public readonly PredictionService Predictions;
+
+        /// <summary>
+        /// OpenAI client.
+        /// </summary>
+        public readonly OpenAIClient OpenAI;
         #endregion
 
 
@@ -33,6 +39,7 @@ namespace Muna.Beta {
             EdgePredictionService predictions
         ) {
             this.Predictions = new PredictionService(client);
+            this.OpenAI = new OpenAIClient(predictors, predictions, Predictions.Remote);
         }
         #endregion
     }

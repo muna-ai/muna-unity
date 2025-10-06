@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Prediction.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/EmbeddingService.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/ChatService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/BetaClient.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Remote/RemoteAcceleration.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/PredictionStream.cs" />
@@ -57,10 +59,14 @@
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Image.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Remote/PredictionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Parameter.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Value.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/Types.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/OpenAIClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Remote/Value.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Services/Predictor.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Configuration.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/AudioService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Remote/RemotePredictionService.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/SpeechService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/API/DotNetClient.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Function.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Services/Prediction.cs" />
@@ -72,6 +78,7 @@
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Dtype.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Muna.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Value.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/CompletionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Predictor.cs" />
   </ItemGroup>
   <ItemGroup>
