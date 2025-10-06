@@ -11,7 +11,7 @@ namespace Muna.C {
     using System.Runtime.InteropServices;
     using System.Text;
 
-    internal static unsafe class Muna {
+    internal static unsafe class Function {
 
         public const string Assembly =
         #if (UNITY_IOS || UNITY_VISIONOS || UNITY_WEBGL) && !UNITY_EDITOR

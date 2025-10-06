@@ -14,7 +14,7 @@ namespace Muna.C {
     using System.Runtime.InteropServices;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using static Muna;
+    using static Function;
 
     public unsafe sealed class Value : IDisposable {
 

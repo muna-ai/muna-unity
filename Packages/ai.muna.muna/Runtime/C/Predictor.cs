@@ -8,7 +8,7 @@
 namespace Muna.C {
 
     using System;
-    using static Muna;
+    using static Function;
 
     public sealed class Predictor : IDisposable {
 

@@ -9,6 +9,8 @@ namespace Muna.Beta {
 
     using API;
     using Services;
+    using PredictorService = global::Muna.Services.PredictorService;
+    using EdgePredictionService = global::Muna.Services.PredictionService;
 
     /// <summary>
     /// Client for incubating features.
@@ -25,7 +27,11 @@ namespace Muna.Beta {
 
         #region --Operations--
 
-        internal BetaClient(MunaClient client) {
+        internal BetaClient(
+            MunaClient client,
+            PredictorService predictors,
+            EdgePredictionService predictions
+        ) {
             this.Predictions = new PredictionService(client);
         }
         #endregion

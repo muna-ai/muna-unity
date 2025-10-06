@@ -9,7 +9,7 @@ namespace Muna.C {
 
     using System;
     using System.Text;
-    using static Muna;
+    using static Function;
 
     public sealed class ValueMap : IDisposable {
 

@@ -11,7 +11,7 @@ namespace Muna.C {
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading.Tasks;
-    using static Muna;
+    using static Function;
 
     public sealed class Configuration : IDisposable {
 

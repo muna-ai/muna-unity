@@ -87,7 +87,7 @@ namespace Muna {
             this.Users = new UserService(client);
             this.Predictors = new PredictorService(client);
             this.Predictions = new PredictionService(client);
-            this.Beta = new BetaClient(client);
+            this.Beta = new BetaClient(client, this.Predictors, this.Predictions);
         }
         #endregion
 

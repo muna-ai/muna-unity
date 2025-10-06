@@ -15,7 +15,7 @@ namespace Muna.Tests {
             await Configuration.InitializationTask;
             Debug.Log("Initialized Muna!");
             // Version
-            var version = Marshal.PtrToStringAuto(Muna.GetVersion());
+            var version = Marshal.PtrToStringAuto(Function.GetVersion());
             Debug.Log($"Muna {version}");
             Debug.Log($"Client: {Configuration.ClientId}");
             Debug.Log($"Configuration: {Configuration.ConfigurationId}");
