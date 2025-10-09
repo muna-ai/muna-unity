@@ -58,10 +58,9 @@ namespace Muna.Beta.Services {
         public static unsafe Stream ToStream<T>(this T[] data) where T : unmanaged {
             if (data is byte[] raw)
                 return new MemoryStream(raw);
-            var size = data.Length * sizeof(T);
-            var array = new byte[size];
+            var array = new byte[data.Length * sizeof(T)];
             fixed (void* src = data, dst = array)
-                Buffer.MemoryCopy(src, dst, size, size);
+                Buffer.MemoryCopy(src, dst, array.Length, array.Length);
             return new MemoryStream(array);
         }
 

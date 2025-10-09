@@ -170,8 +170,9 @@ namespace Muna.C {
         private static unsafe T[] ToArray<T>(T* data, int[] shape) where T : unmanaged {
             var count = shape.Aggregate(1, (a, b) => a * b);
             var result = new T[count];
+            var size = count * sizeof(T);
             fixed (void* dst = result)
-                Buffer.MemoryCopy(data, dst, count * sizeof(T), count * sizeof(T));
+                Buffer.MemoryCopy(data, dst, size, size);
             return result;
         }
 

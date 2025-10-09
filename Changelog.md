@@ -1,5 +1,6 @@
 ## 0.0.45
 + Added `muna.Beta.OpenAI` property for using predictors with our mock OpenAI client.
++ Added `muna.Beta.OpenAI.Audio.Speech.Create` method for using text-to-speech predictors via the OpenAI client.
 + Added `Parameter.sampleRate` property for inspecting the sample rate of audio parameters.
 + Fixed Gradle errors when building for Android in Unity 2022.
 

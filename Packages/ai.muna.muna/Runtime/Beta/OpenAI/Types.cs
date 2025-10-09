@@ -17,7 +17,7 @@ namespace Muna.Beta.OpenAI {
         public string? MediaType { get; private set; }
         private readonly byte[] data;
 
-        public BinaryData(byte[] data, string mediaType) {
+        public BinaryData(byte[] data, string? mediaType = null) {
             this.data = data;
             this.MediaType = mediaType;
         }

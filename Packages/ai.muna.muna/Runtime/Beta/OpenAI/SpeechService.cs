@@ -79,42 +79,42 @@ namespace Muna.Beta.OpenAI {
         /// <summary>
         /// Generate audio from the input text.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="input"></param>
-        /// <param name="voice"></param>
-        /// <param name="speed"></param>
-        /// <param name="responseFormat"></param>
-        /// <param name="streamFormat"></param>
-        /// <returns></returns>
-        public Task<BinaryData> Create(
+        /// <param name="model">Speech generation predictor tag.</param>
+        /// <param name="input">The text to generate audio for.</param>
+        /// <param name="voice">The voice to use when generating the audio.</param>
+        /// <param name="speed">The speed of the generated audio. Defaults to 1.0.</param>
+        /// <param name="responseFormat">The format to return audio in. Currently only `ResponseFormat.PCM` is supported.</param>
+        /// <param name="streamFormat">The format to stream the audio in. Currently only `StreamFormat.Audio` is supported.</param>
+        /// <param name="acceleration">Prediction acceleration. Must be `Acceleration` or `RemoteAcceleration` instance.</param>
+        /// <returns>Generated audio.</returns>
+        public async Task<BinaryData> Create(
             string model,
             string input,
             string voice,
             float speed = 1f,
             ResponseFormat responseFormat = ResponseFormat.MP3,
             StreamFormat streamFormat = StreamFormat.Audio,
-            Acceleration acceleration = Acceleration.Auto
-        ) => Create(model, input, voice, (object)acceleration, speed, responseFormat, streamFormat);
-
-        /// <summary>
-        /// Generate audio from the input text.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="input"></param>
-        /// <param name="voice"></param>
-        /// <param name="speed"></param>
-        /// <param name="responseFormat"></param>
-        /// <param name="streamFormat"></param>
-        /// <returns></returns>
-        public Task<BinaryData> Create(
-            string model,
-            string input,
-            string voice,
-            RemoteAcceleration acceleration,
-            float speed = 1f,
-            ResponseFormat responseFormat = ResponseFormat.MP3,
-            StreamFormat streamFormat = StreamFormat.Audio
-        ) => Create(model, input, voice, (object)acceleration, speed, responseFormat, streamFormat);
+            object? acceleration = null
+        ) {
+            // Ensure we have a delegate
+            if (!cache.ContainsKey(model)) {
+                var @delegate = await CreateSpeechDelegate(model);
+                cache.Add(model, @delegate);
+            }
+            // Make prediction
+            var handler = cache[model];
+            var result = await handler(
+                model,
+                input,
+                voice,
+                speed,
+                responseFormat,
+                streamFormat,
+                acceleration: acceleration ?? Acceleration.Auto
+            );
+            // Return
+            return result;
+        }
         #endregion
 
 
@@ -144,35 +144,6 @@ namespace Muna.Beta.OpenAI {
             this.cache = new();
         }
 
-        private async Task<BinaryData> Create(
-            string model,
-            string input,
-            string voice,
-            object acceleration,
-            float speed = 1f,
-            ResponseFormat responseFormat = ResponseFormat.MP3,
-            StreamFormat streamFormat = StreamFormat.Audio
-        ) {
-            // Ensure we have a delegate
-            if (!cache.ContainsKey(model)) {
-                var @delegate = await CreateSpeechDelegate(model);
-                cache.Add(model, @delegate);
-            }
-            // Make prediction
-            var handler = cache[model];
-            var result = await handler(
-                model,
-                input,
-                voice,
-                speed,
-                responseFormat,
-                streamFormat,
-                acceleration
-            );
-            // Return
-            return result;
-        }
-
         private async Task<SpeechDelegate> CreateSpeechDelegate(string tag) {
             // Retrieve predictor
             var predictor = await predictors.Retrieve(tag);
@@ -180,7 +151,7 @@ namespace Muna.Beta.OpenAI {
                 throw new ArgumentException($"{tag} cannot be used for OpenAI speech API because the predictor could not be found.");
             // Get required inputs
             var signature = predictor.signature!;
-            var requiredInputParams = signature.inputs.Where(parameter => parameter.optional == true).ToArray();
+            var requiredInputParams = signature.inputs.Where(parameter => parameter.optional == false).ToArray();
             if (requiredInputParams.Length != 2)
                 throw new InvalidOperationException($"${tag} cannot be used with OpenAI speech API because it does not have exactly two required input parameters.");
             // Get the text input parameter
@@ -245,10 +216,8 @@ namespace Muna.Beta.OpenAI {
                 }
                 // Create response
                 var channels = tensor.shape.Length == 2 ? tensor.shape[0] : 1; // Assume planar
-                var response = new BinaryData( // INCOMPLETE
-                    null,
-                    mediaType: $"audio/pcm;rate={audioParam.sampleRate};channels=${channels}"
-                );
+                var mediaType = $"audio/pcm;rate={audioParam.sampleRate};channels={channels}";
+                var response = ToBinaryData(tensor, mediaType);
                 // Return
                 return response;
             };
@@ -261,10 +230,21 @@ namespace Muna.Beta.OpenAI {
             Dictionary<string, object?> inputs,
             object acceleration
         ) => acceleration switch {
-            Acceleration acc        => predictions.Create(tag, inputs, acc),
-            RemoteAcceleration acc  => remotePredictions.Create(tag, inputs, acc),
-            _                       => throw new InvalidOperationException($"Cannot create {tag} prediction because acceleration is invalid: {acceleration}")
+            Acceleration acc => predictions.Create(tag, inputs, acc),
+            RemoteAcceleration acc => remotePredictions.Create(tag, inputs, acc),
+            _ => throw new InvalidOperationException($"Cannot create {tag} prediction because acceleration is invalid: {acceleration}")
         };
+        
+        private static unsafe BinaryData ToBinaryData<T>(
+            Tensor<T> tensor,
+            string? mediaType = null
+        ) where T : unmanaged {
+            var elementCount = tensor.shape.Aggregate(1, (a, b) => a * b);
+            var data = new byte[elementCount * sizeof(T)];
+            fixed (void* src = tensor, dst = data)
+                Buffer.MemoryCopy(src, dst, data.Length, data.Length);
+            return new BinaryData(data, mediaType);
+        }
         #endregion
     }
 }
