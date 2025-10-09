@@ -20,17 +20,17 @@ namespace Muna.Beta.OpenAI {
         /// <summary>
         /// Create chat conversations.
         /// </summary>
-        public readonly ChatService chat;
+        public readonly ChatService Chat;
 
         /// <summary>
         /// Create embedding vectors.
         /// </summary>
-        public readonly EmbeddingService embeddings;
+        public readonly EmbeddingService Embeddings;
 
         /// <summary>
         /// Create speech and transcriptions.
         /// </summary>
-        public readonly AudioService audio;
+        public readonly AudioService Audio;
         #endregion
 
 
@@ -41,9 +41,9 @@ namespace Muna.Beta.OpenAI {
             EdgePredictionService predictions,
             RemotePredictionService remotePredictions
         ) {
-            this.chat = new ChatService(predictors, predictions, remotePredictions);
-            this.embeddings = new EmbeddingService(predictors, predictions, remotePredictions);
-            this.audio = new AudioService(predictors, predictions, remotePredictions);
+            Chat = new ChatService(predictors, predictions, remotePredictions);
+            Embeddings = new EmbeddingService(predictors, predictions, remotePredictions);
+            Audio = new AudioService(predictors, predictions, remotePredictions);
         }
         #endregion
     }

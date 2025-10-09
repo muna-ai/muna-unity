@@ -19,12 +19,12 @@ namespace Muna {
         /// <summary>
         /// Parameter name.
         /// </summary>
-        public string? name;
+        public string name;
 
         /// <summary>
         /// Parameter type.
         /// </summary>
-        public Dtype? type;
+        public Dtype type;
 
         /// <summary>
         /// Parameter description.
@@ -50,6 +50,11 @@ namespace Muna {
         /// Parameter value choices for enumeration parameters.
         /// </summary>
         public EnumerationMember[]? enumeration;
+
+        /// <summary>
+        /// Parameter audio sample rate.
+        /// </summary>
+        public int? sampleRate;
     }
 
     /// <summary>
