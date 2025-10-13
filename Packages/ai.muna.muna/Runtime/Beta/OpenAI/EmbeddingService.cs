@@ -7,6 +7,14 @@
 
 namespace Muna.Beta.OpenAI {
 
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
+    using System.Threading.Tasks;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Linq;
     using Services;
     using PredictorService = global::Muna.Services.PredictorService;
     using EdgePredictionService = global::Muna.Services.PredictionService;
@@ -17,7 +25,79 @@ namespace Muna.Beta.OpenAI {
     public sealed class EmbeddingService {
 
         #region --Client API--
+        /// <summary>
+        /// Embedding encoding format.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum EncodingFormat {
+            /// <summary>
+            /// Float array.
+            /// </summary>
+            [EnumMember(Value = @"float")]
+            Float = 1,
+            /// <summary>
+            /// Base64 string.
+            /// </summary>
+            [EnumMember(Value = @"base64")]
+            Base64 = 2
+        }
 
+        /// <summary>
+        /// Create an embedding vector representing the input text.
+        /// </summary>
+        /// <param name="input">Input text to embed. The input must not exceed the max input tokens for the model.</param>
+        /// <param name="model">Embedding model predictor tag.</param>
+        /// <param name="dimensions">The number of dimensions the resulting output embeddings should have. Only supported by Matryoshka embedding models.</param>
+        /// <param name="encodingFormat">The format to return the embeddings in.</param>
+        /// <param name="acceleration">Prediction acceleration.</param>
+        /// <returns>Embeddings.</returns>
+        public Task<CreateEmbeddingResponse> Create(
+            string model,
+            string input,
+            int? dimensions = null,
+            EncodingFormat encodingFormat = EncodingFormat.Float,
+            object? acceleration = null
+        ) => Create(
+            model,
+            new[] { input },
+            dimensions: dimensions,
+            encodingFormat: encodingFormat,
+            acceleration: acceleration
+        );
+
+        /// <summary>
+        /// Create an embedding vector representing the input text.
+        /// </summary>
+        /// <param name="input">Input text to embed. The input must not exceed the max input tokens for the model.</param>
+        /// <param name="model">Embedding model predictor tag.</param>
+        /// <param name="dimensions">The number of dimensions the resulting output embeddings should have. Only supported by Matryoshka embedding models.</param>
+        /// <param name="encodingFormat">The format to return the embeddings in.</param>
+        /// <param name="acceleration">Prediction acceleration.</param>
+        /// <returns>Embeddings.</returns>
+        public async Task<CreateEmbeddingResponse> Create(
+            string model,
+            string[] input,
+            int? dimensions = null,
+            EncodingFormat encodingFormat = EncodingFormat.Float,
+            object? acceleration = null
+        ) {
+            // Ensure we have a delegate
+            if (!cache.ContainsKey(model)) {
+                var @delegate = await CreateEmbeddingDelegate(model);
+                cache.Add(model, @delegate);
+            }
+            // Make prediction
+            var handler = cache[model];
+            var result = await handler(
+                model,
+                input,
+                dimensions,
+                encodingFormat,
+                acceleration: acceleration ?? Acceleration.Auto
+            );
+            // Return
+            return result;
+        }
         #endregion
 
 
@@ -25,6 +105,14 @@ namespace Muna.Beta.OpenAI {
         private readonly PredictorService predictors;
         private readonly EdgePredictionService predictions;
         private readonly RemotePredictionService remotePredictions;
+        private readonly Dictionary<string, EmbeddingDelegate> cache;
+        private delegate Task<CreateEmbeddingResponse> EmbeddingDelegate(
+            string model,
+            string[] input,
+            int? dimensions,
+            EncodingFormat encodingFormat,
+            object acceleration
+        );
 
         internal EmbeddingService(
             PredictorService predictors,
@@ -34,6 +122,130 @@ namespace Muna.Beta.OpenAI {
             this.predictors = predictors;
             this.predictions = predictions;
             this.remotePredictions = remotePredictions;
+            this.cache = new();
+        }
+
+        private async Task<EmbeddingDelegate> CreateEmbeddingDelegate(string tag) {
+            // Retrieve predictor
+            var predictor = await predictors.Retrieve(tag);
+            if (predictor == null)
+                throw new ArgumentException($"{tag} cannot be used for OpenAI embedding API because the predictor could not be found.");
+            // Get required inputs
+            var signature = predictor.signature!;
+            var requiredInputParams = signature.inputs.Where(parameter => parameter.optional == false).ToArray();
+            if (requiredInputParams.Length != 1)
+                throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it does not have exactly one required input parameter.");
+            // Check the text input parameter
+            var inputParam = requiredInputParams[0];
+            if (inputParam.type != Dtype.List)
+                throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it does not have the required text embedding input parameter.");
+            // Get the Matryoshka dim parameter (optional)
+            var matryoshkaParam = signature.inputs.FirstOrDefault(parameter =>
+                new[] {
+                    Dtype.Int8, Dtype.Int16, Dtype.Int32, Dtype.Int64,
+                    Dtype.Uint8, Dtype.Uint16, Dtype.Uint32, Dtype.Uint64
+                }.Contains(parameter.type) &&
+                parameter.denotation == "embedding.dims"
+            );
+            // Get the embedding output parameter
+            var (embeddingParamIdx, embeddingParam) = signature.outputs
+                .Select((parameter, idx) => (idx, parameter))
+                .Where(pair =>
+                    pair.parameter.type == Dtype.Float32 &&
+                    pair.parameter.denotation == "embedding"
+                )
+                .FirstOrDefault();
+            if (embeddingParam == null)
+                throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it has no outputs with an `embedding` denotation.");
+            // Get the index of the usage output (optional)
+            var (usageParamIdx, usageParam) = signature.outputs
+                .Select((parameter, idx) => (idx, parameter))
+                .Where(pair =>
+                    pair.parameter.type == Dtype.Dict &&
+                    pair.parameter.denotation == "openai.embedding.usage"
+                )
+                .FirstOrDefault();
+            // Create delegate
+            EmbeddingDelegate result = async (
+                string model,
+                string[] input,
+                int? dimensions,
+                EncodingFormat encodingFormat,
+                object acceleration
+            ) => {
+                // Build prediction input map
+                var inputMap = new Dictionary<string, object?> {
+                    [inputParam.name] = input
+                };
+                if (dimensions != null && matryoshkaParam != null)
+                    inputMap[matryoshkaParam.name] = dimensions.Value;
+                // Create prediction
+                var prediction = await CreatePrediction(
+                    model,
+                    inputs: inputMap,
+                    acceleration: acceleration
+                );
+                // Check for error
+                if (prediction.error != null)
+                    throw new InvalidOperationException(prediction.error);
+                // Check returned embedding
+                var rawEmbeddingMatrix = prediction.results![embeddingParamIdx]!;
+                if (!(rawEmbeddingMatrix is Tensor<float> embeddingMatrix))
+                    throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it returned an object of type {rawEmbeddingMatrix.GetType()} instead of an embedding matrix.");
+                if (embeddingMatrix.shape.Length != 2) {
+                    var shapeStr = "(" + string.Join(",", embeddingMatrix.shape) + ")";
+                    throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it returned an embedding matrix with invalid shape: {shapeStr}");
+                }
+                // Create embedding response
+                var embeddings = Enumerable
+                    .Range(0, embeddingMatrix.shape[0])
+                    .Select(idx => ParseEmbedding(embeddingMatrix, idx, encodingFormat))
+                    .ToArray();
+                var usage = usageParam != null ?
+                    (prediction.results![usageParamIdx]! as JObject)!.ToObject<CreateEmbeddingResponse.Usage>() :
+                    default;
+                var response = new CreateEmbeddingResponse {
+                    @object = "list",
+                    model = model,
+                    data = embeddings,
+                    usage = usage
+                };
+                // Return
+                return response;
+            };
+            // Return
+            return result;
+        }
+
+        private Task<Prediction> CreatePrediction(
+            string tag,
+            Dictionary<string, object?> inputs,
+            object acceleration
+        ) => acceleration switch {
+            Acceleration acc => predictions.Create(tag, inputs, acc),
+            RemoteAcceleration acc => remotePredictions.Create(tag, inputs, acc),
+            _ => throw new InvalidOperationException($"Cannot create {tag} prediction because acceleration is invalid: {acceleration}")
+        };
+
+        private unsafe Embedding ParseEmbedding(
+            Tensor<float> matrix,
+            int index,
+            EncodingFormat format
+        ) {
+            fixed (float* data = matrix) {
+                var baseAddress = data + index * matrix.shape[1];
+                var floatSpan = new ReadOnlySpan<float>(baseAddress, matrix.shape[1]);
+                var byteSpan = new ReadOnlySpan<byte>(baseAddress, matrix.shape[1] * sizeof(float));
+                var embeddingVector = format == EncodingFormat.Float ? floatSpan.ToArray() : null;
+                var base64Rep = format == EncodingFormat.Base64 ? Convert.ToBase64String(byteSpan) : null;
+                var embedding = new Embedding {
+                    @object = @"embedding",
+                    embedding = embeddingVector,
+                    index = index,
+                    base64Representation = base64Rep
+                };
+                return embedding;
+            }
         }
         #endregion
     }

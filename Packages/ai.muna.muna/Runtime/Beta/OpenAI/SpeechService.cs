@@ -170,7 +170,7 @@ namespace Muna.Beta.OpenAI {
                 new[] { Dtype.Float32, Dtype.Float64 }.Contains((Dtype)parameter.type!) &&
                 parameter.denotation == "audio.speed"
             );
-            // Get the index of the audio output parameter
+            // Get the audio output parameter
             var (audioParamIdx, audioParam) = signature.outputs
                 .Select((parameter, idx) => (idx, parameter))
                 .Where(pair =>
@@ -181,7 +181,7 @@ namespace Muna.Beta.OpenAI {
             if (audioParam == null)
                 throw new InvalidOperationException($"{tag} cannot be used with OpenAI speech API because it has no outputs with an `audio` denotation.");
             // Create delegate
-            SpeechDelegate result = async (
+            SpeechDelegate result = async(
                 string model,
                 string input,
                 string voice,
@@ -211,8 +211,8 @@ namespace Muna.Beta.OpenAI {
                 if (!(result is Tensor<float> tensor))
                     throw new InvalidOperationException($"{tag} cannot be used with OpenAI speech API because it returned an object of type {result.GetType()} instead of an audio tensor.");
                 if (tensor.shape.Length != 1 && tensor.shape.Length != 2) {
-                    var shapeStr = "[" + string.Join(", ", tensor.shape) + "]";
-                    throw new InvalidOperationException($"{tag} cannot be used with OpenAI speech API because it returned a tensor with an invalid shape: {shapeStr}");
+                    var shapeStr = "(" + string.Join(",", tensor.shape) + ")";
+                    throw new InvalidOperationException($"{tag} cannot be used with OpenAI speech API because it returned an audio tensor with an invalid shape: {shapeStr}");
                 }
                 // Create response
                 var channels = tensor.shape.Length == 2 ? tensor.shape[0] : 1; // Assume planar

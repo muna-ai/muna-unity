@@ -20,7 +20,7 @@ namespace Muna.Beta.OpenAI {
         /// <summary>
         /// Create completions.
         /// </summary>
-        public readonly ChatCompletionService completions;
+        public readonly ChatCompletionService Completions;
         #endregion
 
 
@@ -31,7 +31,7 @@ namespace Muna.Beta.OpenAI {
             EdgePredictionService predictions,
             RemotePredictionService remotePredictions
         ) {
-            this.completions = new ChatCompletionService(predictors, predictions, remotePredictions);
+            Completions = new ChatCompletionService(predictors, predictions, remotePredictions);
         }
         #endregion
     }

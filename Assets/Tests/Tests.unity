@@ -429,6 +429,8 @@ GameObject:
   - component: {fileID: 1167683562}
   - component: {fileID: 1167683563}
   - component: {fileID: 1167683564}
+  - component: {fileID: 1167683567}
+  - component: {fileID: 1167683566}
   - component: {fileID: 1167683565}
   m_Layer: 0
   m_Name: Tests
@@ -588,6 +590,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9bba5d4e21e5485e9d6e902b15de3e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1167683566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167683551}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f107e67a909994b90bbae7ac46725c9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1167683567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167683551}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e61550312f87e4412a86d68114ca01f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prompt: Write me a poem about the joys of life. Make it at least 100 words.
 --- !u!1 &1413509856
 GameObject:
   m_ObjectHideFlags: 0

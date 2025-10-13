@@ -1,5 +1,7 @@
 ## 0.0.45
 + Added `muna.Beta.OpenAI` property for using predictors with our mock OpenAI client.
++ Added `muna.Beta.OpenAI.Chat.Completions.Create` method for using text generation predictors via the OpenAI client.
++ Added `muna.Beta.OpenAI.Embeddings.Create` method for using text embedding predictors via the OpenAI client.
 + Added `muna.Beta.OpenAI.Audio.Speech.Create` method for using text-to-speech predictors via the OpenAI client.
 + Added `Parameter.denotation` for inspecting the denotation of predictor parameters (e.g. audio, embeddings).
 + Added `Parameter.sampleRate` property for inspecting the sample rate of audio parameters.
