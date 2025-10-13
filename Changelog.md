@@ -1,3 +1,6 @@
+## 0.0.46
+*INCOMPLETE*
+
 ## 0.0.45
 + Added `muna.Beta.OpenAI` property for using predictors with our mock OpenAI client.
 + Added `muna.Beta.OpenAI.Chat.Completions.Create` method for using text generation predictors via the OpenAI client.
