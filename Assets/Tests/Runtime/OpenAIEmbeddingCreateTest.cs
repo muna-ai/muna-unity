@@ -16,10 +16,9 @@ namespace Muna.Tests {
             var openai = MunaUnity.Create().Beta.OpenAI;
             var response = await openai.Embeddings.Create(
                 model: PredictorTag,
-                input: "What is the capital of France?",
-                encodingFormat: Beta.OpenAI.EmbeddingService.EncodingFormat.Base64
+                input: "What is the capital of France?"
             );
-            Debug.Log(string.Join(",", response.data[0].embedding));
+            Debug.Log(string.Join(",", response.Data[0].Floats));
         }
     }
 }

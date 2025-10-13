@@ -202,13 +202,13 @@ namespace Muna.Beta.OpenAI {
                     .Select(idx => ParseEmbedding(embeddingMatrix, idx, encodingFormat))
                     .ToArray();
                 var usage = usageParam != null ?
-                    (prediction.results![usageParamIdx]! as JObject)!.ToObject<CreateEmbeddingResponse.Usage>() :
+                    (prediction.results![usageParamIdx]! as JObject)!.ToObject<CreateEmbeddingResponse.UsageInfo>() :
                     default;
                 var response = new CreateEmbeddingResponse {
-                    @object = "list",
-                    model = model,
-                    data = embeddings,
-                    usage = usage
+                    Object = "list",
+                    Model = model,
+                    Data = embeddings,
+                    Usage = usage
                 };
                 // Return
                 return response;
@@ -239,10 +239,10 @@ namespace Muna.Beta.OpenAI {
                 var embeddingVector = format == EncodingFormat.Float ? floatSpan.ToArray() : null;
                 var base64Rep = format == EncodingFormat.Base64 ? Convert.ToBase64String(byteSpan) : null;
                 var embedding = new Embedding {
-                    @object = @"embedding",
-                    embedding = embeddingVector,
-                    index = index,
-                    base64Representation = base64Rep
+                    Object = @"embedding",
+                    Floats = embeddingVector,
+                    Index = index,
+                    Base64 = base64Rep
                 };
                 return embedding;
             }

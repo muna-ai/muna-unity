@@ -22,13 +22,13 @@ namespace Muna.Tests {
                 model: PredictorTag,
                 messages: new[] {
                     new ChatMessage {
-                        role = ChatMessage.Role.User,
-                        content = prompt
+                        Role = ChatMessage.ChatRole.User,
+                        Content = prompt
                     }
                 }
             );
             await foreach (var chunk in stream) {
-                Debug.Log(chunk.choices?[0]?.delta?.content);
+                Debug.Log(chunk.Choices?[0]?.Delta?.Content);
                 await Task.Yield();
             }
         }
