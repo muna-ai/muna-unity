@@ -110,6 +110,7 @@ namespace Muna.Beta.Services {
             Image           x => new Value { data = "", type = Dtype.Image },
             Stream          x => new Value { data = await Upload(x), type = Dtype.Binary },
             Enum            x => await ToValue(x.ToObject()),
+            Value           x => x,
             _                 => throw new InvalidOperationException($"Failed to serialize value '{value}' of type `{value.GetType()}` because it is not supported"),
         };
 

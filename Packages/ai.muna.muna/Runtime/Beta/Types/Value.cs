@@ -5,7 +5,7 @@
 
 #nullable enable
 
-namespace Muna.Beta.Services {
+namespace Muna.Beta {
 
     using System;
     using System.IO;
@@ -18,7 +18,7 @@ namespace Muna.Beta.Services {
     /// Remote prediction value.
     /// </summary>
     [Preserve, Serializable]
-    internal class Value {
+    public sealed class Value {
 
         /// <summary>
         /// Value URL.
