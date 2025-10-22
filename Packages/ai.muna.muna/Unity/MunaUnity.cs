@@ -61,34 +61,34 @@ namespace Muna {
             this Texture2D texture,
             byte[]? pixelBuffer = null
         ) {
+            // Check texture
             if (texture == null)
                 throw new ArgumentNullException(nameof(texture));
+            // Check that texture is readable
             if (!texture.isReadable)
                 throw new InvalidOperationException(@"Texture cannot be converted to a Muna image because it is not readable");
-            var FormatChannelMap = new Dictionary<TextureFormat, int> {
-                [TextureFormat.R8] = 1,
-                [TextureFormat.Alpha8] = 1,
-                [TextureFormat.RGB24] = 3,
-                [TextureFormat.RGBA32] = 4,
-            };
-            if (!FormatChannelMap.TryGetValue(texture.format, out var channels))
-                throw new InvalidOperationException($"Texture cannot be converted to a Muna image because it has unsupported format: {texture.format}");
+            // Allocate buffer
+            var channels = TextureFormatToImageChannels.GetValueOrDefault(texture.format, 4);
             var rowStride = texture.width * channels;
             var bufferSize = rowStride * texture.height;
             pixelBuffer ??= new byte[bufferSize];
             if (pixelBuffer.Length < bufferSize)
                 throw new InvalidOperationException($"Texture cannot be converted to a Muna image because pixel buffer length was expected to be greater than or equal to {bufferSize} but got {pixelBuffer.Length}");
-            fixed (void* dst = pixelBuffer)
+            // Copy
+            var colorData = !TextureFormatToImageChannels.ContainsKey(texture.format) ? texture.GetPixels32() : null;
+            fixed (void* dst = pixelBuffer, colors = colorData) {
+                var src = colors == null ? texture.GetRawTextureData<byte>().GetUnsafePtr() : colors;
                 UnsafeUtility.MemCpyStride(
                     dst,
                     rowStride,
-                    (byte*)texture.GetRawTextureData<byte>().GetUnsafePtr() + (rowStride * (texture.height - 1)),
+                    (byte*)src + (rowStride * (texture.height - 1)),
                     -rowStride,
                     rowStride,
                     texture.height
                 );
-            var image = new Image(pixelBuffer, texture.width, texture.height, channels);
-            return image;
+            }
+            // Return
+            return new Image(pixelBuffer, texture.width, texture.height, channels);
         }
 
         /// <summary>
@@ -101,12 +101,7 @@ namespace Muna {
             this Image image,
             Texture2D? texture = null
         ) {
-            var ChannelFormatMap = new Dictionary<int, TextureFormat> {
-                [1] = TextureFormat.Alpha8,
-                [3] = TextureFormat.RGB24,
-                [4] = TextureFormat.RGBA32
-            };
-            if (!ChannelFormatMap.TryGetValue(image.channels, out var format))
+            if (!ImageChannelsToTextureFormat.TryGetValue(image.channels, out var format))
                 throw new InvalidOperationException($"Image cannot be converted to a Texture2D because it has unsupported channel count: {image.channels}");
             texture = texture != null ? texture : new Texture2D(image.width, image.height, format, false);
             if (texture.width != image.width || texture.height != image.height || texture.format != format)
@@ -124,6 +119,21 @@ namespace Muna {
             texture.Apply();
             return texture;
         }
+        #endregion
+
+
+        #region --Operations--
+        private static readonly Dictionary<TextureFormat, int> TextureFormatToImageChannels = new() {
+            [TextureFormat.R8] = 1,
+            [TextureFormat.Alpha8] = 1,
+            [TextureFormat.RGB24] = 3,
+            [TextureFormat.RGBA32] = 4,
+        };
+        private static readonly Dictionary<int, TextureFormat> ImageChannelsToTextureFormat = new() {
+            [1] = TextureFormat.Alpha8,
+            [3] = TextureFormat.RGB24,
+            [4] = TextureFormat.RGBA32,
+        };
         #endregion
     }
 }

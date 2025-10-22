@@ -1,5 +1,5 @@
 ## 0.0.46
-*INCOMPLETE*
++ Added support for converting compressed textures to images with the `MunaUnity.ToImage` extension method.
 
 ## 0.0.45
 + Added `muna.Beta.OpenAI` property for using predictors with our mock OpenAI client.
