@@ -18,7 +18,7 @@ namespace Muna.Beta {
     /// Remote prediction value.
     /// </summary>
     [Preserve, Serializable]
-    public sealed class Value {
+    public sealed class RemoteValue {
 
         /// <summary>
         /// Value URL.

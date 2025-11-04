@@ -59,9 +59,9 @@
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Image.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Remote/PredictionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Parameter.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Types/Value.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/Types.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/OpenAIClient.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Remote/Value.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Services/Predictor.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Configuration.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/AudioService.cs" />

@@ -190,6 +190,12 @@ namespace Muna.Beta.OpenAI {
                 StreamFormat streamFormat,
                 object acceleration
             ) => {
+                // Check response format
+                if (responseFormat != ResponseFormat.PCM)
+                    throw new ArgumentException($"Cannot create speech with response format  {responseFormat} because only `ResponseFormat.PCM` is supported.");
+                // Check stream format
+                if (streamFormat != StreamFormat.Audio)
+                    throw new ArgumentException($"Cannot create speech with stream format  {streamFormat} because only `StreamFormat.Audio` is supported.");
                 // Build prediction input map
                 var inputMap = new Dictionary<string, object?> {
                     [inputParam.name] = input,

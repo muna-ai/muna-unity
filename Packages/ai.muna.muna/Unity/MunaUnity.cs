@@ -20,9 +20,11 @@ namespace Muna {
 
     using System;
     using System.Collections.Generic;
+    using System.Text.RegularExpressions;
     using UnityEngine;
     using Unity.Collections.LowLevel.Unsafe;
     using API;
+    using Beta.OpenAI;
     using Internal;
 
     /// <summary>
@@ -118,6 +120,43 @@ namespace Muna {
                 );
             texture.Apply();
             return texture;
+        }
+
+        /// <summary>
+        /// Convert a `BinaryData` containing linear PCM audio into an audio clip.
+        /// </summary>
+        /// <param name="data">Binary data containing linear PCM audio.</param>
+        /// <returns>Audio clip.</returns>
+        public static unsafe AudioClip ToAudioClip(this BinaryData data) {
+            // Check that this contains LPCM data
+            if (string.IsNullOrEmpty(data.MediaType) || !data.MediaType.StartsWith(@"audio/pcm"))
+                throw new ArgumentException($"Failed to create audio clip from binary data because media type was expected to be 'audio/pcm' but got: '{data.MediaType}'");
+            // Match sample rate and channel count
+            var rateMatch = Regex.Match(data.MediaType, @"rate=(\d+)");
+            var channelsMatch = Regex.Match(data.MediaType, @"channels=(\d+)");
+            if (!rateMatch.Success || !channelsMatch.Success)
+                throw new ArgumentException($"Failed to create audio clip from binary data because media type is invalid: '{data.MediaType}'");
+            // Parse
+            if (!int.TryParse(rateMatch.Groups[1].Value, out var sampleRate))
+                throw new ArgumentException($"Failed to create audio clip from binary data because sample rate is invalid: '{rateMatch.Value}'");
+            if (!int.TryParse(channelsMatch.Groups[1].Value, out var channelCount))
+                throw new ArgumentException($"Failed to create audio clip from binary data because channel count is invalid: '{channelsMatch.Value}'");
+            // Create clip
+            var sampleCount = data.Length / sizeof(float);
+            var frameCount = sampleCount / channelCount;
+            var clip = AudioClip.Create(
+                "audio",
+                lengthSamples: frameCount,
+                channels: channelCount,
+                frequency: sampleRate,
+                stream: false
+            );
+            // Copy data
+            var samples = new float[sampleCount];
+            Buffer.BlockCopy(data.ToArray(), 0, samples, 0, data.Length);
+            clip.SetData(samples, 0);
+            // Return
+            return clip;
         }
         #endregion
 

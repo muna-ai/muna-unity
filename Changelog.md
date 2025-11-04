@@ -1,5 +1,6 @@
 ## 0.0.46
 + Added support for converting compressed textures to images with the `MunaUnity.ToImage` extension method.
++ Added `MunaUnity.ToAudioClip` extension method to create an `AudioClip` from an OpenAI speech `BinaryData`.
 
 ## 0.0.45
 + Added `muna.Beta.OpenAI` property for using predictors with our mock OpenAI client.

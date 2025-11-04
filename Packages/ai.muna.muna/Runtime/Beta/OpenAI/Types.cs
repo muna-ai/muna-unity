@@ -35,7 +35,6 @@ namespace Muna.Beta.OpenAI {
         /// <summary>
         /// Convert the `BinaryData` to a byte array.
         /// </summary>
-        /// <returns></returns>
         public byte[] ToArray() => data;
 
         /// <summary>
