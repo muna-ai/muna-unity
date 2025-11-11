@@ -12,25 +12,25 @@ namespace Muna.Editor {
 
         private const int BasePriority = -50;
 
-        [MenuItem(@"Muna/Muna " + Muna.Version, false, BasePriority)]
+        [MenuItem(@"Tools/Muna/Muna " + Muna.Version, false, BasePriority)]
         private static void Version() { }
 
-        [MenuItem(@"Muna/Muna " + Muna.Version, true, BasePriority)]
+        [MenuItem(@"Tools/Muna/Muna " + Muna.Version, true, BasePriority)]
         private static bool EnableVersion() => false;
 
-        [MenuItem(@"Muna/Get Access Key", false, BasePriority + 1)]
+        [MenuItem(@"Tools/Muna/Get Access Key", false, BasePriority + 1)]
         private static void GetAccessKey() => Help.BrowseURL(@"https://muna.ai/settings/developer");
 
-        [MenuItem(@"Muna/Explore Predictors", false, BasePriority + 2)]
+        [MenuItem(@"Tools/Muna/Explore Predictors", false, BasePriority + 2)]
         private static void OpenExplore() => Help.BrowseURL(@"https://muna.ai/explore");
 
-        [MenuItem(@"Muna/View the Docs", false, BasePriority + 3)]
+        [MenuItem(@"Tools/Muna/View the Docs", false, BasePriority + 3)]
         private static void OpenDocs() => Help.BrowseURL(@"https://docs.muna.ai");
 
-        [MenuItem(@"Muna/Report an Issue", false, BasePriority + 4)]
+        [MenuItem(@"Tools/Muna/Report an Issue", false, BasePriority + 4)]
         private static void ReportIssue() => Help.BrowseURL(@"https://github.com/muna-ai/muna-unity");
 
-        [MenuItem(@"Muna/Clear Predictor Cache", false, BasePriority + 5)]
+        [MenuItem(@"Tools/Muna/Clear Predictor Cache", false, BasePriority + 5)]
         private static void ClearPredictorCache() {
             Directory.Delete(
                 global::Muna.API.PredictionCacheClient.PredictorCachePath,
