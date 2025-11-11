@@ -2,6 +2,7 @@
 + Added support for converting compressed textures to images with the `MunaUnity.ToImage` extension method.
 + Added `MunaUnity.ToAudioClip` extension method to create an `AudioClip` from an OpenAI speech `BinaryData`.
 + Fixed `DllNotFoundException` when making predictions on macOS in Unity 2022.3 LTS (#14).
++ Moved `Muna` menu items under the `Tools` menu in the Unity Editor (#13).
 
 ## 0.0.45
 + Added `muna.Beta.OpenAI` property for using predictors with our mock OpenAI client.
