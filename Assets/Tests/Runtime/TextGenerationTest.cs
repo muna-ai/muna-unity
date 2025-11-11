@@ -29,7 +29,9 @@ namespace Muna.Tests {
             )) {
                 var chunk = prediction.results[0] as JObject;
                 Debug.Log($"{JsonConvert.SerializeObject(chunk, Formatting.Indented)}");
+                #if UNITY_6000_0_OR_NEWER
                 await Awaitable.WaitForSecondsAsync(0.01f);
+                #endif
             }
         }
     }
