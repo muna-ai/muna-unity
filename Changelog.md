@@ -1,3 +1,6 @@
+## 0.0.47
+*INCOMPLETE*
+
 ## 0.0.46
 + Added `Muna.Converters` namespace with JSON converters to common Unity types like `Vector3` and `Rect`.
 + Added support for converting compressed textures to images with the `MunaUnity.ToImage` extension method.
