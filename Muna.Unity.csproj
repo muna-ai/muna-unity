@@ -42,17 +42,22 @@
     <UnityVersion>6000.0.58f2</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="/Users/yusuf/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.1.3/Analyzers/Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="/Users/yusuf/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.0/Analyzers/Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.58f2/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.58f2/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.58f2/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packages/ai.muna.muna/Unity/Internal/MunaSettings.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/Converters/Rect.cs" />
     <Compile Include="Packages/ai.muna.muna/Unity/Types/CachedPrediction.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/Converters/Color.cs" />
     <Compile Include="Packages/ai.muna.muna/Unity/MunaUnity.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/Converters/Vector4.cs" />
     <Compile Include="Packages/ai.muna.muna/Unity/API/UnityClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/Converters/Vector3.cs" />
     <Compile Include="Packages/ai.muna.muna/Unity/API/PredictionCacheClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Unity/Converters/Vector2.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Packages/ai.muna.muna/Unity/Muna.Unity.asmdef" />

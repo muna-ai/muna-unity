@@ -1,4 +1,5 @@
 ## 0.0.46
++ Added `Muna.Converters` namespace with JSON converters to common Unity types like `Vector3` and `Rect`.
 + Added support for converting compressed textures to images with the `MunaUnity.ToImage` extension method.
 + Added `MunaUnity.ToAudioClip` extension method to create an `AudioClip` from an OpenAI speech `BinaryData`.
 + Fixed `DllNotFoundException` when making predictions on macOS in Unity 2022.3 LTS (#14).
