@@ -1,3 +1,6 @@
+## 0.0.48
+*INCOMPLETE*
+
 ## 0.0.47
 + Fixed certain predictions failing on Android due to caching errors.
 
