@@ -1,3 +1,6 @@
+## 0.0.49
+*INCOMPLETE*
+
 ## 0.0.48
 + Fixed some internal logs being displayed.
 
