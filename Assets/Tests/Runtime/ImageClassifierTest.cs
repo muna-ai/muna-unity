@@ -14,7 +14,7 @@ namespace Muna.Tests {
         [Header(@"Image")]
         [SerializeField] private Texture2D image;
 
-        private const string Tag = "@yusuf/mobilenet-v2";
+        private const string Tag = "@pytorch/mobilenet-v2";
 
         private async void Start() {
             var muna = MunaUnity.Create();

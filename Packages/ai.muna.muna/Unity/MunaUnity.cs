@@ -46,8 +46,7 @@ namespace Muna {
             var settings = MunaSettings.Instance!;
             var client = new PredictionCacheClient(
                 url ?? Muna.URL,
-                accessKey: accessKey ?? settings?.accessKey,
-                cache: settings?.cache
+                accessKey: accessKey ?? settings?.accessKey
             );
             return new Muna(client);
         }

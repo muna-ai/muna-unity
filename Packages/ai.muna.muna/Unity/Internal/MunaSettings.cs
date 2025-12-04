@@ -27,7 +27,7 @@ namespace Muna.Internal {
         /// Predictor cache.
         /// </summary>
         [field: SerializeField, HideInInspector]
-        public List<CachedPrediction> cache { get; internal set; } = new();
+        public List<PredictionCache.CachedPrediction> cache { get; internal set; } = new();
 
         /// <summary>
         /// Settings instance for this project.

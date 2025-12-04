@@ -7,6 +7,7 @@ namespace Muna.Editor {
 
     using System.IO;
     using UnityEditor;
+    using Internal;
 
     internal static class MunaMenu {
 
@@ -32,10 +33,7 @@ namespace Muna.Editor {
 
         [MenuItem(@"Tools/Muna/Clear Predictor Cache", false, BasePriority + 5)]
         private static void ClearPredictorCache() {
-            Directory.Delete(
-                global::Muna.API.PredictionCacheClient.PredictorCachePath,
-                true
-            );
+            Directory.Delete(PredictionCache.PredictorCachePath, true);
             UnityEngine.Debug.Log("Muna: Cleared predictor cache.");
         }
     }

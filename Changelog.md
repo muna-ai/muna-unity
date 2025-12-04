@@ -1,5 +1,5 @@
 ## 0.0.47
-*INCOMPLETE*
++ Fixed certain predictions failing on Android due to caching errors.
 
 ## 0.0.46
 + Added `Muna.Converters` namespace with JSON converters to common Unity types like `Vector3` and `Rect`.

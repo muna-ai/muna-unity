@@ -7,13 +7,12 @@
 
 namespace Muna.API {
 
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using UnityEngine;
-    using Newtonsoft.Json;
+    using Internal;
     using Services;
 
     /// <summary>
@@ -32,9 +31,8 @@ namespace Muna.API {
         /// <param name="cache">Prediction cache.</param>
         public PredictionCacheClient(
             string url,
-            string? accessKey,
-            List<CachedPrediction>? cache = default
-        ) : base(url, accessKey) => this.cache = cache ?? new();
+            string? accessKey
+        ) : base(url, accessKey) { }
 
         /// <summary>
         /// Perform a request to a Muna REST endpoint.
@@ -52,11 +50,9 @@ namespace Muna.API {
             Dictionary<string, string>? headers = default
         ) where T : class {
             // Check payload
-            var tag = payload?.TryGetValue(@"tag", out var t) ?? false ? t as string : null;
-            var clientId = payload?.TryGetValue(@"clientId", out var id) ?? false ? id as string : null;
-            var configurationId = payload?.TryGetValue(@"configurationId", out var configuration) ?? false ?
-                configuration as string :
-                null;
+            var tag = GetValue<string>(payload, @"tag");
+            var clientId = GetValue<string>(payload, @"clientId");
+            var configurationId = GetValue<string>(payload, @"configurationId");
             if (
                 method != @"POST"                       ||
                 path != @"/predictions"                 ||
@@ -65,38 +61,35 @@ namespace Muna.API {
                 string.IsNullOrEmpty(configurationId)
             )
                 return await base.Request<T>(method, path, payload, headers);
-            // Get cached prediction
-            var sanitizedTag = tag.Substring(1).Replace("/", "_");
-            var cachePath = Path.Combine(
-                PredictorCachePath,
+            // Get embedded prediction if available
+            var cache = MunaSettings.Instance!.cache;
+            var embeddedPrediction = cache.FirstOrDefault(p => 
+                p.tag == tag &&
+                MatchClientIds(p.clientId!, clientId)
+            );
+            // Load from prediction cache
+            if (PredictionCache.Get(
+                tag,
                 clientId,
                 configurationId,
-                $"{sanitizedTag}.json"
-            );
-            var cachedPrediction = TryLoadCachedPrediction(cachePath);
-            if (cachedPrediction != null)
+                embeddedPrediction?.resources,
+                out var cachedPrediction
+            ))
                 return cachedPrediction as T;
-            // Create prediction
-            var predictionId = cache.FirstOrDefault(p => p.tag == tag && p.clientId == clientId)?.id;
+            // Create prediction and cache
             var prediction = await base.Request<Prediction>(
                 method: @"POST",
                 path: @"/predictions",
-                payload: new () {
+                payload: new() {
                     [@"tag"] = tag,
                     [@"clientId"] = clientId,
                     [@"configurationId"] = configurationId,
-                    [@"predictionId"] = predictionId,
+                    [@"predictionId"] = embeddedPrediction?.id,
                 },
                 headers
             );
             prediction!.resources = await Task.WhenAll(prediction.resources.Select(GetCachedResource));
-            // Write
-            var predictionJson = JsonConvert.SerializeObject(
-                new CachedPrediction(prediction, clientId),
-                Formatting.Indented
-            );
-            Directory.CreateDirectory(Path.GetDirectoryName(cachePath));
-            File.WriteAllText(cachePath, predictionJson);
+            PredictionCache.Add(prediction.AsCached(clientId, configurationId));
             // Return
             return prediction as T;
         }
@@ -104,15 +97,9 @@ namespace Muna.API {
 
 
         #region --Operations--
-        private readonly List<CachedPrediction> cache;
-        private static string CacheRoot => Application.isEditor ?
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @".fxn") :
-            Path.Combine(Application.persistentDataPath, @"fxn");
-        private static string ResourceCachePath => Path.Combine(CacheRoot, @"cache");
-        internal static string PredictorCachePath => Path.Combine(CacheRoot, @"predictors");
 
         private async Task<PredictionResource> GetCachedResource(PredictionResource resource) {
-            var path = PredictionService.GetResourcePath(resource, ResourceCachePath);
+            var path = PredictionService.GetResourcePath(resource, PredictionCache.ResourceCachePath);
             if (!File.Exists(path)) {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 using var dataStream = await Download(resource.url);
@@ -122,22 +109,28 @@ namespace Muna.API {
             return new PredictionResource { type = resource.type, url = $"file://{path}" };
         }
 
-        private static Prediction? TryLoadCachedPrediction(string path) {
-            if (!File.Exists(path))
-                return null;
-            var json = File.ReadAllText(path);
-            var prediction = JsonConvert.DeserializeObject<Prediction>(json)!;
-            var resources = prediction.resources.Select(res => new PredictionResource {
-                type = res.type,
-                url = $"file://{PredictionService.GetResourcePath(res, ResourceCachePath)}",
-                name = res.name
-            }).ToArray();
-            if (!resources.All(res => File.Exists(new Uri(res.url).LocalPath))) {
-                File.Delete(path);
-                return null;
+        private static T? GetValue<T>(
+            Dictionary<string, object?>? payload,
+            string key
+        ) {
+            if (payload?.TryGetValue(key, out var value) ?? false)
+                return (T?)value;
+            else
+                return default;
+        }
+
+        private static bool MatchClientIds(string a, string b) {
+            if (a == b)
+                return true;
+            if (a.Contains("android") && b.Contains("android")) {
+                var ARM32 = new[] { "armeabi-v7a", "armv7l", "armv8l" };
+                var ARM64 = new[] { "arm64", "aarch64", "armv8" };
+                if (ARM32.Any(s => a.Contains(s)) && ARM32.Any(s => b.Contains(s)))
+                    return true;
+                if (ARM64.Any(s => a.Contains(s)) && ARM64.Any(s => b.Contains(s)))
+                    return true;
             }
-            prediction.resources = resources;
-            return prediction;
+            return false;
         }
         #endregion
     }

@@ -15,12 +15,12 @@ namespace Muna.Editor.Build {
     using UnityEditor.Android;
     using UnityEditor.Build.Reporting;
     using API;
+    using Internal;
     using Services;
-    using MunaSettings = Internal.MunaSettings;
 
     internal sealed class AndroidBuildHandler : BuildHandler, IPostGenerateGradleAndroidProject {
 
-        private static List<CachedPrediction> cache;
+        private static List<PredictionCache.CachedPrediction> cache;
         private static Dictionary<AndroidArchitecture, string> ArchToClientId = new() {
             [AndroidArchitecture.ARMv7]     = @"android-armeabi-v7a",
             [AndroidArchitecture.ARM64]     = @"android-arm64-v8a",
@@ -49,7 +49,7 @@ namespace Muna.Editor.Build {
                                 clientId: target,
                                 configurationId: @""
                             )).Result;
-                            return new CachedPrediction(prediction, target);
+                            return prediction.AsCached(target);
                         } catch (AggregateException ex) {
                             Debug.LogWarning($"Muna: Failed to embed {tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
                             return null;

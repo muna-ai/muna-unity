@@ -15,17 +15,17 @@ namespace Muna.Editor.Build {
     using UnityEditor.Build;
     using UnityEditor.Build.Reporting;
     using API;
+    using Internal;
     using Services;
-    using MunaSettings = Internal.MunaSettings;
 
-    #if UNITY_STANDALONE_OSX
+#if UNITY_STANDALONE_OSX
     using UnityEditor.iOS.Xcode;
     using UnityEditor.iOS.Xcode.Extensions;
-    #endif
+#endif
 
     internal sealed class macOSBuildHandler : BuildHandler, IPostprocessBuildWithReport {
 
-        private List<CachedPrediction> cache;
+        private List<PredictionCache.CachedPrediction> cache;
         private static readonly string[] ClientIds = new[] {
             "macos-arm64",
             "macos-x86_64"
@@ -41,7 +41,7 @@ namespace Muna.Editor.Build {
             var settings = MunaSettings.Create(projectSettings.accessKey);
             // Embed predictors
             var embeds = GetEmbeds();
-            var cache = new List<CachedPrediction>();
+            var cache = new List<PredictionCache.CachedPrediction>();
             foreach (var embed in embeds) {
                 var client = new DotNetClient(embed.url, embed.accessKey);
                 var muna = new Muna(client);
@@ -54,7 +54,7 @@ namespace Muna.Editor.Build {
                                 clientId: clientId,
                                 configurationId: @""
                             )).Result;
-                            return new CachedPrediction(prediction, clientId);
+                            return prediction.AsCached(clientId);
                         }
                         catch (AggregateException ex) {
                             Debug.LogWarning($"Muna: Failed to embed {tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
