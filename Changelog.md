@@ -1,5 +1,5 @@
 ## 0.0.48
-*INCOMPLETE*
++ Fixed some internal logs being displayed.
 
 ## 0.0.47
 + Fixed certain predictions failing on Android due to caching errors.

@@ -144,10 +144,6 @@ namespace Muna.Internal {
                 var embeddedPath = embeddedResources != null ?
                     PredictionService.GetResourcePath(embeddedResources[idx], ResourceCachePath) :
                     null;
-
-                Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
-                Debug.Log($"Cached path: {cachedPath} Embedded path: {embeddedPath}");
-
                 if (!File.Exists(cachedPath))
                     return false;
                 if (embeddedPath != null && cachedPath != embeddedPath)
