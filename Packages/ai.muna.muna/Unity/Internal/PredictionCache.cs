@@ -104,11 +104,16 @@ namespace Muna.Internal {
 
 
         #region --Operations--
-        private static string CacheRoot => Application.isEditor ?
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @".fxn") :
-            Path.Combine(Application.persistentDataPath, @"fxn");
-        internal static string ResourceCachePath => Path.Combine(CacheRoot, @"cache");
-        internal static string PredictorCachePath => Path.Combine(CacheRoot, @"predictors");
+        private static string? cacheRoot;
+        internal static string ResourceCachePath => Path.Combine(cacheRoot, @"cache");
+        internal static string PredictorCachePath => Path.Combine(cacheRoot, @"predictors");
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        private static void OnInitialize() {
+            cacheRoot = Application.isEditor ?
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @".fxn") :
+                Path.Combine(Application.persistentDataPath, @"fxn");
+        }
 
         private static string GetCachedPath(CachedPrediction prediction) => GetCachedPath(
             tag: prediction.tag,

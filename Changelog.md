@@ -1,5 +1,5 @@
 ## 0.0.49
-*INCOMPLETE*
++ Fixed Unity threading exception when preloading predictors from a background thread (#15).
 
 ## 0.0.48
 + Fixed some internal logs being displayed.

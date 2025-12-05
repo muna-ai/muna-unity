@@ -432,6 +432,7 @@ GameObject:
   - component: {fileID: 1167683567}
   - component: {fileID: 1167683566}
   - component: {fileID: 1167683565}
+  - component: {fileID: 1167683568}
   m_Layer: 0
   m_Name: Tests
   m_TagString: Untagged
@@ -615,6 +616,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prompt: Write me a poem about the joys of life. Make it at least 100 words.
+--- !u!114 &1167683568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167683551}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30635b0d8a0614feab02c0347de8a0b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 2800000, guid: a607e18455587418bac245e682a95998, type: 3}
 --- !u!1 &1413509856
 GameObject:
   m_ObjectHideFlags: 0
