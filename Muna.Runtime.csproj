@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Prediction.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/C/ValueList.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/EmbeddingService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/ChatService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/BetaClient.cs" />

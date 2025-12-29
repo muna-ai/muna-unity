@@ -90,6 +90,7 @@ namespace Muna.C {
             Flags flags = Flags.None
         ) where T : unmanaged {
             IntPtr value = default;
+            flags |= tensor.data != null ? Flags.CopyData : 0; // GC can move managed memory
             fixed (T* data = tensor)
                 CreateArrayValue(
                     data,
@@ -119,21 +120,28 @@ namespace Muna.C {
             return new Value(value);
         }
 
-        public static Value CreateImage(in Image image) {
+        public static Value CreateImage(
+            in Image image,
+            Flags flags = Flags.None
+        ) {
             IntPtr value = default;
+            flags |= image.data != null ? Flags.CopyData : 0; // GC can move managed memory
             fixed (byte* data = image)
                 CreateImageValue(
                     data,
                     image.width,
                     image.height,
                     image.channels,
-                    image.data != null ? Flags.CopyData : Flags.None,
+                    flags,
                     out value
                 ).Throw();
             return new Value(value);
         }
 
-        public static Value CreateBinary(Stream stream) {
+        public static Value CreateBinary(
+            Stream stream,
+            Flags flags = Flags.None
+        ) {
             byte[] data;
             if (stream is MemoryStream memoryStream)
                 data = memoryStream.ToArray();
@@ -142,7 +150,13 @@ namespace Muna.C {
                 stream.CopyTo(dstStream);
                 data = dstStream.ToArray();
             }
-            CreateBinaryValue(data, data.Length, Flags.CopyData, out var value).Throw();
+            flags |= Flags.CopyData;
+            CreateBinaryValue(
+                data,
+                data.Length,
+                flags,
+                out var value
+            ).Throw();
             return new Value(value);
         }
 

@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -100,14 +100,34 @@ namespace Muna.C {
         );
         [DllImport(Assembly, EntryPoint = @"FXNValueCreateNull")]
         public static extern Status CreateNullValue(out IntPtr value);
+        [DllImport(Assembly, EntryPoint = @"FXNValueCreateValueList")]
+        public static extern Status CreateValueList(out IntPtr value);
+        [DllImport(Assembly, EntryPoint = @"FXNValueCreateValueMap")]
+        public static extern Status CreateValueMap(out IntPtr map);
+        #endregion
+
+
+        #region --FXNValueList--
+        [DllImport(Assembly, EntryPoint = @"FXNValueListGetSize")]
+        public static extern Status GetValueListSize(
+            this IntPtr list,
+            out int size
+        );
+        [DllImport(Assembly, EntryPoint = @"FXNValueListGetValue")]
+        public static extern Status GetValueListValue(
+            this IntPtr list,
+            int index,
+            out IntPtr value
+        );
+        [DllImport(Assembly, EntryPoint = @"FXNValueListAppendValue")]
+        public static extern Status AppendValueListValue(
+            this IntPtr list,
+            IntPtr value
+        );
         #endregion
 
 
         #region --FXNValueMap--
-        [DllImport(Assembly, EntryPoint = @"FXNValueMapCreate")]
-        public static extern Status CreateValueMap(out IntPtr map);
-        [DllImport(Assembly, EntryPoint = @"FXNValueMapRelease")]
-        public static extern Status ReleaseValueMap(this IntPtr map);
         [DllImport(Assembly, EntryPoint = @"FXNValueMapGetSize")]
         public static extern Status GetValueMapSize(
             this IntPtr map,

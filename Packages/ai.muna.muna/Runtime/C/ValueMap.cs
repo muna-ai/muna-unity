@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -35,7 +35,7 @@ namespace Muna.C {
             return new Value(value);
         }
 
-        public void Dispose () => map.ReleaseValueMap();
+        public void Dispose () => map.ReleaseValue();
         #endregion
 
 

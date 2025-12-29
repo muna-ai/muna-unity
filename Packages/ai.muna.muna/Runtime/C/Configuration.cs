@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -68,7 +68,7 @@ namespace Muna.C {
                 var context = GCHandle.Alloc(tcs, GCHandleType.Normal);
                 SetInitializationHandler(OnFunctionInitialized, (IntPtr)context);
                 return tcs.Task;
-                [DllImport(Muna.Assembly, EntryPoint = @"FXNSetInitializationHandler")]
+                [DllImport(Function.Assembly, EntryPoint = @"FXNSetInitializationHandler")]
                 static extern Status SetInitializationHandler (Action<IntPtr> handler, IntPtr context);
             #else
                 return Task.CompletedTask;
@@ -87,7 +87,7 @@ namespace Muna.C {
             var context = GCHandle.Alloc(tcs, GCHandleType.Normal);
             AddConfigurationResource(configuration, type, path, OnAddConfigurationResource, (IntPtr)context);
             return tcs.Task;
-            [DllImport(Muna.Assembly, EntryPoint = @"FXNConfigurationAddResourceAsync")]
+            [DllImport(Function.Assembly, EntryPoint = @"FXNConfigurationAddResourceAsync")]
             static extern Status AddConfigurationResource(
                 IntPtr configuration,
                 [MarshalAs(UnmanagedType.LPUTF8Str)] string type,

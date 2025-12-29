@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 namespace Muna {
@@ -20,99 +20,104 @@ namespace Muna {
         [EnumMember(Value = @"null")]
         Null = 0,
         /// <summary>
-        /// Type is a generic half-precision float.
+        /// IEEE 754 half precision 16-bit float.
         /// </summary>
         [EnumMember(Value = @"float16")]
         Float16 = 1,
         /// <summary>
-        /// Type is `float` in C/C++/C#.
+        /// IEEE 754 single precision 32-bit float.
         /// </summary>
         [EnumMember(Value = @"float32")]
         Float32 = 2,
         /// <summary>
-        /// Type is `double` in C/C++/C#.
+        /// IEEE 754 double precision 64-bit float.
         /// </summary>
         [EnumMember(Value = @"float64")]
         Float64 = 3,
         /// <summary>
-        /// Type is a `int8_t` in C/C++ and `sbyte` in C#.
+        /// Signed 8-bit integer.
         /// </summary>
         [EnumMember(Value = @"int8")]
         Int8 = 4,
         /// <summary>
-        /// Type is `int16_t` in C/C++ and `short` in C#.
+        /// Signed 16-bit integer.
         /// </summary>
         [EnumMember(Value = @"int16")]
         Int16 = 5,
         /// <summary>
-        /// Type is `int32_t` in C/C++ and `int` in C#.
+        /// Signed 32-bit integer.
         /// </summary>
         [EnumMember(Value = @"int32")]
         Int32 = 6,
         /// <summary>
-        /// Type is `int64_t` in C/C++ and `long` in C#.
+        /// Signed 64-bit integer.
         /// </summary>
         [EnumMember(Value = @"int64")]
         Int64 = 7,
         /// <summary>
-        /// Type is `uint8_t` in C/C++ and `byte` in C#.
+        /// Unsigned 8-bit integer.
         /// </summary>
         [EnumMember(Value = @"uint8")]
         Uint8 = 8,
         /// <summary>
-        /// Type is a `uint16_t` in C/C++ and `ushort` in C#.
+        /// Unsigned 16-bit integer.
         /// </summary>
         [EnumMember(Value = @"uint16")]
         Uint16 = 9,
         /// <summary>
-        /// Type is a `uint32_t` in C/C++ and `uint` in C#.
+        /// Unsigned 32-bit integer.
         /// </summary>
         [EnumMember(Value = @"uint32")]
         Uint32 = 10,
         /// <summary>
-        /// Type is a `uint64_t` in C/C++ and `ulong` in C#.
+        /// Unsigned 64-bit integer.
         /// </summary>
         [EnumMember(Value = @"uint64")]
         Uint64 = 11,
         /// <summary>
-        /// Type is a `bool` in C/C++/C#.
+        /// 8-bit boolean where zero is `false` and non-zero is `true`.
         /// </summary>
         [EnumMember(Value = @"bool")]
         Bool = 12,
         /// <summary>
-        /// Type is `std::string` in C++ and `string` in C#.
+        /// UTF-8 encoded string.
         /// </summary>
         [EnumMember(Value = @"string")]
         String = 13,
         /// <summary>
-        /// Type is a generic list.
+        /// JSON-serializable list.
         /// </summary>
         [EnumMember(Value = @"list")]
         List = 14,
         /// <summary>
-        /// Type is a generic dictionary.
+        /// JSON-serializable dictionary.
         /// </summary>
         [EnumMember(Value = @"dict")]
         Dict = 15,
         /// <summary>
-        /// Type is an encoded image.
+        /// Pixel buffer with 8 bits per intensity, interleaved by channel.
         /// </summary>
         [EnumMember(Value = @"image")]
         Image = 16,
         /// <summary>
-        /// Type is a binary blob.
+        /// Binary blob.
         /// </summary>
         [EnumMember(Value = @"binary")]
         Binary = 17,
         /// <summary>
-        /// Type is an encoded audio.
+        /// 16-bit brain float.
         /// </summary>
-        [EnumMember(Value = @"audio")]
-        Audio = 18,
+        [EnumMember(Value = @"bfloat16")]
+        BFloat16 = 18,
         /// <summary>
-        /// Type is an encoded video.
+        /// Prediction value list.
         /// </summary>
-        [EnumMember(Value = @"video")]
-        Video = 19,        
+        [EnumMember(Value = @"value_list")]
+        ValueList = 19,
+        /// <summary>
+        /// Prediction value map.
+        /// </summary>
+        [EnumMember(Value = @"value_map")]
+        ValueMap = 20,
     }
 }
