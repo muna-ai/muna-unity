@@ -3,7 +3,7 @@
 //  Function
 //
 //  Created by Yusuf Olokoba on 4/19/2024.
-//  Copyright © 2025 NatML Inc. All rights reserved.
+//  Copyright © 2026 NatML Inc. All rights reserved.
 //
 
 #pragma once
@@ -34,7 +34,7 @@ typedef struct FXNPredictionStream FXNPredictionStream;
  @param stream
  Prediction stream.
 */
-FXN_API FXNStatus FXNPredictionStreamRelease (FXNPredictionStream* stream);
+FXN_API FXNStatus FXNPredictionStreamRelease(FXNPredictionStream* stream);
 #pragma endregion
 
 
@@ -56,7 +56,7 @@ FXN_API FXNStatus FXNPredictionStreamRelease (FXNPredictionStream* stream);
  @returns `FXN_OK` a prediction was successfully read from the stream.
  `FXN_ERROR_INVALID_OPERATION` if the stream has no more predictions.
 */
-FXN_API FXNStatus FXNPredictionStreamReadNext (
+FXN_API FXNStatus FXNPredictionStreamReadNext(
     FXNPredictionStream* stream,
     FXNPrediction** prediction
 );

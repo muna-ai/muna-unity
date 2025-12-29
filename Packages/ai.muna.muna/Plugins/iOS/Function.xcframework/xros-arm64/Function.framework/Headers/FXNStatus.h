@@ -3,7 +3,7 @@
 //  Function
 //
 //  Created by Yusuf Olokoba on 10/14/2023.
-//  Copyright © 2025 NatML Inc. All rights reserved.
+//  Copyright © 2026 NatML Inc. All rights reserved.
 //
 
 #pragma once

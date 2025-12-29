@@ -152,6 +152,7 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 11400000, guid: 92de1b52901b74bdd855132f39bb6969, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -851,7 +852,7 @@ PlayerSettings:
   webGLShowDiagnostics: 0
   webGLDataCaching: 1
   webGLDebugSymbols: 0
-  webGLEmscriptenArgs: '                                                                                                                                                                                           
+  webGLEmscriptenArgs: '                                                                                                                                                                                            
     -Wl,-uFXN_WEBGL_PUSH -Wl,-uFXN_WEBGL_INIT -lembind -sEXTRA_EXPORTED_RUNTIME_METHODS=FS
     -Wl,-uFXN_WEBGL_POP'
   webGLModulesDirectory: 

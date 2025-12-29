@@ -3,7 +3,7 @@
 //  Function
 //
 //  Created by Yusuf Olokoba on 5/27/2023.
-//  Copyright © 2025 NatML Inc. All rights reserved.
+//  Copyright © 2026 NatML Inc. All rights reserved.
 //
 
 #pragma once
@@ -59,7 +59,7 @@ typedef struct FXNConfiguration FXNConfiguration;
  @param status
  Result status.
 */
-typedef void (*FXNConfigurationAddResourceHandler) (
+typedef void (*FXNConfigurationAddResourceHandler)(
     void* context,
     FXNStatus status
 );
@@ -80,7 +80,7 @@ typedef void (*FXNConfigurationAddResourceHandler) (
  @param size
  Identifier size.
 */
-FXN_API FXNStatus FXNConfigurationGetUniqueID (
+FXN_API FXNStatus FXNConfigurationGetUniqueID(
     char* identifier,
     int32_t size
 );
@@ -98,7 +98,7 @@ FXN_API FXNStatus FXNConfigurationGetUniqueID (
  @param size
  Identifier size.
 */
-FXN_API FXNStatus FXNConfigurationGetClientID (
+FXN_API FXNStatus FXNConfigurationGetClientID(
     char* identifier,
     int32_t size
 );
@@ -113,7 +113,7 @@ FXN_API FXNStatus FXNConfigurationGetClientID (
  @param configuration
  Created configuration. MUST NOT be `NULL`.
 */
-FXN_API FXNStatus FXNConfigurationCreate (FXNConfiguration** configuration);
+FXN_API FXNStatus FXNConfigurationCreate(FXNConfiguration** configuration);
 
 /*!
  @function FXNConfigurationRelease
@@ -125,7 +125,7 @@ FXN_API FXNStatus FXNConfigurationCreate (FXNConfiguration** configuration);
  @param configuration
  Predictor configuration.
 */
-FXN_API FXNStatus FXNConfigurationRelease (FXNConfiguration* configuration);
+FXN_API FXNStatus FXNConfigurationRelease(FXNConfiguration* configuration);
 #pragma endregion
 
 
@@ -146,7 +146,7 @@ FXN_API FXNStatus FXNConfigurationRelease (FXNConfiguration* configuration);
  @param size
  Size of destination buffer.
 */
-FXN_API FXNStatus FXNConfigurationGetTag (
+FXN_API FXNStatus FXNConfigurationGetTag(
     FXNConfiguration* configuration,
     char* tag,
     int32_t size
@@ -166,7 +166,7 @@ FXN_API FXNStatus FXNConfigurationGetTag (
  @param tag
  Predictor tag.
 */
-FXN_API FXNStatus FXNConfigurationSetTag (
+FXN_API FXNStatus FXNConfigurationSetTag(
     FXNConfiguration* configuration,
     const char* tag
 );
@@ -187,7 +187,7 @@ FXN_API FXNStatus FXNConfigurationSetTag (
  @param size
  Size of destination buffer.
 */
-FXN_API FXNStatus FXNConfigurationGetToken (
+FXN_API FXNStatus FXNConfigurationGetToken(
     FXNConfiguration* configuration,
     char* token,
     int32_t size
@@ -207,7 +207,7 @@ FXN_API FXNStatus FXNConfigurationGetToken (
  @param token
  Configuration token.
 */
-FXN_API FXNStatus FXNConfigurationSetToken (
+FXN_API FXNStatus FXNConfigurationSetToken(
     FXNConfiguration* configuration,
     const char* token
 );
@@ -225,7 +225,7 @@ FXN_API FXNStatus FXNConfigurationSetToken (
  @param acceleration
  Acceleration.
 */
-FXN_API FXNStatus FXNConfigurationGetAcceleration (
+FXN_API FXNStatus FXNConfigurationGetAcceleration(
     FXNConfiguration* configuration,
     FXNAcceleration* acceleration
 );
@@ -243,7 +243,7 @@ FXN_API FXNStatus FXNConfigurationGetAcceleration (
  @param acceleration
  Acceleration used for making predictions predictions.
 */
-FXN_API FXNStatus FXNConfigurationSetAcceleration (
+FXN_API FXNStatus FXNConfigurationSetAcceleration(
     FXNConfiguration* configuration,
     FXNAcceleration acceleration
 );
@@ -263,7 +263,7 @@ FXN_API FXNStatus FXNConfigurationSetAcceleration (
  The type of this device is platform-dependent.
  See https://docs.fxn.ai/workflows/realtime#specifying-the-acceleration-device for more information.
 */
-FXN_API FXNStatus FXNConfigurationGetDevice (
+FXN_API FXNStatus FXNConfigurationGetDevice(
     FXNConfiguration* configuration,
     void** device
 );
@@ -284,7 +284,7 @@ FXN_API FXNStatus FXNConfigurationGetDevice (
  Pass `NULL` to use the default compute device.
  See https://docs.fxn.ai/workflows/realtime#specifying-the-acceleration-device for more information.
 */
-FXN_API FXNStatus FXNConfigurationSetDevice (
+FXN_API FXNStatus FXNConfigurationSetDevice(
     FXNConfiguration* configuration,
     void* device
 );
@@ -305,7 +305,7 @@ FXN_API FXNStatus FXNConfigurationSetDevice (
  @param path
  Resource path.
 */
-FXN_API FXNStatus FXNConfigurationAddResource (
+FXN_API FXNStatus FXNConfigurationAddResource(
     FXNConfiguration* configuration,
     const char* type,
     const char* path

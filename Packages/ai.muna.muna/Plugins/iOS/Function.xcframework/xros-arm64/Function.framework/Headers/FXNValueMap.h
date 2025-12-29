@@ -3,7 +3,7 @@
 //  Function
 //
 //  Created by Yusuf Olokoba on 10/14/2023.
-//  Copyright © 2025 NatML Inc. All rights reserved.
+//  Copyright © 2026 NatML Inc. All rights reserved.
 //
 
 #pragma once
@@ -15,40 +15,11 @@
 /*!
  @struct FXNValueMap
  
- @abstract Predictor value map.
+ @abstract Prediction value map.
 
- @discussion Predictor value map.
+ @discussion Prediction value map.
 */
-struct FXNValueMap;
-typedef struct FXNValueMap FXNValueMap;
-#pragma endregion
-
-
-#pragma region --Lifecycle--
-/*!
- @function FXNValueMapCreate
-
- @abstract Create a prediction value map.
-
- @discussion Create a prediction value map.
-
- @param map
- Created value map. MUST NOT be `NULL`.
-*/
-FXN_API FXNStatus FXNValueMapCreate (FXNValueMap** map);
-
-/*!
- @function FXNValueMapRelease
-
- @abstract Release the prediction value map.
-
- @discussion Release the prediction value map.
- This releases all values currently within the map.
-
- @param map
- Prediction value map.
-*/
-FXN_API FXNStatus FXNValueMapRelease (FXNValueMap* map);
+typedef FXNValue FXNValueMap;
 #pragma endregion
 
 
@@ -66,7 +37,7 @@ FXN_API FXNStatus FXNValueMapRelease (FXNValueMap* map);
  @param size
  Output size. MUST NOT be `NULL`.
 */
-FXN_API FXNStatus FXNValueMapGetSize (
+FXN_API FXNStatus FXNValueMapGetSize(
     FXNValueMap* map,
     int32_t* size
 );
@@ -90,7 +61,7 @@ FXN_API FXNStatus FXNValueMapGetSize (
  @param size
  Size of destination buffer.
 */
-FXN_API FXNStatus FXNValueMapGetKey (
+FXN_API FXNStatus FXNValueMapGetKey(
     FXNValueMap* map,
     int32_t index,
     char* key,
@@ -115,7 +86,7 @@ FXN_API FXNStatus FXNValueMapGetKey (
 
  @returns `FXN_OK` if the value map contains a value for the given key else `FXN_ERROR_INVALID_ARGUMENT`.
 */
-FXN_API FXNStatus FXNValueMapGetValue (
+FXN_API FXNStatus FXNValueMapGetValue(
     FXNValueMap* map,
     const char* key,
     FXNValue** value
@@ -140,7 +111,7 @@ FXN_API FXNStatus FXNValueMapGetValue (
  @param value
  Value. Pass `NULL` to remove the value from the map if present.
 */
-FXN_API FXNStatus FXNValueMapSetValue (
+FXN_API FXNStatus FXNValueMapSetValue(
     FXNValueMap* map,
     const char* key,
     FXNValue* value

@@ -3,7 +3,7 @@
 //  Function
 //
 //  Created by Yusuf Olokoba on 5/27/2023.
-//  Copyright © 2025 NatML Inc. All rights reserved.
+//  Copyright © 2026 NatML Inc. All rights reserved.
 //
 
 #pragma once
@@ -73,27 +73,35 @@
 
  @constant FXN_DTYPE_BFLOAT16
  16-bit brain float.
+
+ @constant FXN_DTYPE_VALUE_LIST
+ Prediction value list.
+
+ @constant FXN_DTYPE_VALUE_MAP
+ Prediction value map.
 */
 enum FXNDtype {
-    FXN_DTYPE_NULL      = 0,
-    FXN_DTYPE_FLOAT16   = 1,
-    FXN_DTYPE_FLOAT32   = 2,
-    FXN_DTYPE_FLOAT64   = 3,
-    FXN_DTYPE_INT8      = 4,
-    FXN_DTYPE_INT16     = 5,
-    FXN_DTYPE_INT32     = 6,
-    FXN_DTYPE_INT64     = 7,
-    FXN_DTYPE_UINT8     = 8,
-    FXN_DTYPE_UINT16    = 9,
-    FXN_DTYPE_UINT32    = 10,
-    FXN_DTYPE_UINT64    = 11,
-    FXN_DTYPE_BOOL      = 12,
-    FXN_DTYPE_STRING    = 13,
-    FXN_DTYPE_LIST      = 14,
-    FXN_DTYPE_DICT      = 15,
-    FXN_DTYPE_IMAGE     = 16,
-    FXN_DTYPE_BINARY    = 17,
-    FXN_DTYPE_BFLOAT16  = 18,
+    FXN_DTYPE_NULL          = 0,
+    FXN_DTYPE_FLOAT16       = 1,
+    FXN_DTYPE_FLOAT32       = 2,
+    FXN_DTYPE_FLOAT64       = 3,
+    FXN_DTYPE_INT8          = 4,
+    FXN_DTYPE_INT16         = 5,
+    FXN_DTYPE_INT32         = 6,
+    FXN_DTYPE_INT64         = 7,
+    FXN_DTYPE_UINT8         = 8,
+    FXN_DTYPE_UINT16        = 9,
+    FXN_DTYPE_UINT32        = 10,
+    FXN_DTYPE_UINT64        = 11,
+    FXN_DTYPE_BOOL          = 12,
+    FXN_DTYPE_STRING        = 13,
+    FXN_DTYPE_LIST          = 14,
+    FXN_DTYPE_DICT          = 15,
+    FXN_DTYPE_IMAGE         = 16,
+    FXN_DTYPE_BINARY        = 17,
+    FXN_DTYPE_BFLOAT16      = 18,
+    FXN_DTYPE_VALUE_LIST    = 19,
+    FXN_DTYPE_VALUE_MAP     = 20,
 };
 typedef enum FXNDtype FXNDtype;
 
@@ -141,7 +149,7 @@ typedef struct FXNValue FXNValue;
  @param value
  Value.
 */
-FXN_API FXNStatus FXNValueRelease (FXNValue* value);
+FXN_API FXNStatus FXNValueRelease(FXNValue* value);
 #pragma endregion
 
 
@@ -159,7 +167,7 @@ FXN_API FXNStatus FXNValueRelease (FXNValue* value);
  @param data
  Opaque pointer to value data.
 */
-FXN_API FXNStatus FXNValueGetData (
+FXN_API FXNStatus FXNValueGetData(
     FXNValue* value,
     void** data
 );
@@ -177,7 +185,7 @@ FXN_API FXNStatus FXNValueGetData (
  @param type
  Value data type.
 */
-FXN_API FXNStatus FXNValueGetType (
+FXN_API FXNStatus FXNValueGetType(
     FXNValue* value,
     FXNDtype* type
 );
@@ -196,7 +204,7 @@ FXN_API FXNStatus FXNValueGetType (
  @param dimensions
  Number of dimensions for a given value.
 */
-FXN_API FXNStatus FXNValueGetDimensions (
+FXN_API FXNStatus FXNValueGetDimensions(
     FXNValue* value,
     int32_t* dimensions
 );
@@ -217,7 +225,7 @@ FXN_API FXNStatus FXNValueGetDimensions (
  @param shapeLen
  Length of the destination array in elements.
 */
-FXN_API FXNStatus FXNValueGetShape (
+FXN_API FXNStatus FXNValueGetShape(
     FXNValue* value,
     int32_t* shape,
     int32_t shapeLen
@@ -254,7 +262,7 @@ FXN_API FXNStatus FXNValueGetShape (
  @param value
  Created value.
 */
-FXN_API FXNStatus FXNValueCreateArray (
+FXN_API FXNStatus FXNValueCreateArray(
     void* data,
     const int32_t* shape,
     int32_t dims,
@@ -276,7 +284,7 @@ FXN_API FXNStatus FXNValueCreateArray (
  @param value
  Created value.
 */
-FXN_API FXNStatus FXNValueCreateString (
+FXN_API FXNStatus FXNValueCreateString(
     const char* data,
     FXNValue** value
 );
@@ -294,7 +302,7 @@ FXN_API FXNStatus FXNValueCreateString (
  @param value
  Created value.
 */
-FXN_API FXNStatus FXNValueCreateList (
+FXN_API FXNStatus FXNValueCreateList(
     const char* data,
     FXNValue** value
 );
@@ -312,7 +320,7 @@ FXN_API FXNStatus FXNValueCreateList (
  @param value
  Created value.
 */
-FXN_API FXNStatus FXNValueCreateDict (
+FXN_API FXNStatus FXNValueCreateDict(
     const char* data,
     FXNValue** value
 );
@@ -346,7 +354,7 @@ FXN_API FXNStatus FXNValueCreateDict (
  The value `type` will be `FXN_DTYPE_IMAGE`.
  The value `shape` will be `(H,W,C)`.
 */
-FXN_API FXNStatus FXNValueCreateImage (
+FXN_API FXNStatus FXNValueCreateImage(
     const uint8_t* pixelBuffer,
     int32_t width,
     int32_t height,
@@ -374,8 +382,8 @@ FXN_API FXNStatus FXNValueCreateImage (
  @param value
  Created value.
 */
-FXN_API FXNStatus FXNValueCreateBinary (
-    void* buffer,
+FXN_API FXNStatus FXNValueCreateBinary(
+    const void* buffer,
     int32_t bufferLen, // CHECK // max buffer size becomes 2GB
     FXNValueFlags flags,
     FXNValue** value
@@ -391,5 +399,81 @@ FXN_API FXNStatus FXNValueCreateBinary (
  @param value
  Created value.
 */
-FXN_API FXNStatus FXNValueCreateNull (FXNValue** value);
+FXN_API FXNStatus FXNValueCreateNull(FXNValue** value);
+
+/*!
+ @function FXNValueCreateValueList
+
+ @abstract Create a value list.
+ 
+ @discussion Create a value list.
+
+ @param value
+ Created value.
+*/
+FXN_API FXNStatus FXNValueCreateValueList(FXNValue** value);
+
+/*!
+ @function FXNValueCreateValueMap
+
+ @abstract Create a value map.
+ 
+ @discussion Create a value map.
+
+ @param value
+ Created value.
+*/
+FXN_API FXNStatus FXNValueCreateValueMap(FXNValue** value);
+
+/*!
+ @function FXNValueCreateSerializedValue
+
+ @abstract Serialize a value.
+
+ @discussion Serialize a value.
+
+ @param value
+ Value.
+
+ @param mime
+ Target MIME type.
+ Pass `NULL` to use the default MIME type for the value type.
+
+ @param result
+ Serialized value.
+*/
+FXN_API FXNStatus FXNValueCreateSerializedValue(
+    FXNValue* value,
+    const char* mime,
+    FXNValue** result
+);
+
+/*!
+ @function FXNValueCreateFromSerializedValue
+
+ @abstract Create a value by deserializing a serialized value.
+ 
+ @discussion Create a value by deserializing a serialized value.
+
+ For serialized image data, the value will have shape `(H,W,C)`.
+ Supported formats: PNG, JPEG (auto-detected from buffer).
+
+ For serialized audio data, the value will have shape `(F,C)`.
+ Audio samples are normalized to [-1.0, 1.0] in interleaved layout.
+ Supported formats: WAV, MP3, FLAC, AAC, Opus (auto-detected from buffer).
+
+ @param value
+ Value containing encoded data.
+
+ @param mime
+ Value MIME type.
+
+ @param result
+ Deserialized value.
+*/
+FXN_API FXNStatus FXNValueCreateFromSerializedValue(
+    FXNValue* value,
+    const char* mime,
+    FXNValue** result
+);
 #pragma endregion

@@ -3,13 +3,14 @@
 //  Function
 //
 //  Created by Yusuf Olokoba on 5/27/2023.
-//  Copyright © 2025 NatML Inc. All rights reserved.
+//  Copyright © 2026 NatML Inc. All rights reserved.
 //
 
 #pragma once
 
 #include <Function/FXNStatus.h>
 #include <Function/FXNValue.h>
+#include <Function/FXNValueList.h>
 #include <Function/FXNValueMap.h>
 #include <Function/FXNConfiguration.h>
 #include <Function/FXNPrediction.h>

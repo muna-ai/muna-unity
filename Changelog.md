@@ -1,5 +1,7 @@
 ## 0.0.49
++ Fixed sporadic segmentation fault when making predictions on input tensors.
 + Fixed Unity threading exception when preloading predictors from a background thread (#15).
++ Upgraded to Function C 0.0.39.
 
 ## 0.0.48
 + Fixed some internal logs being displayed.

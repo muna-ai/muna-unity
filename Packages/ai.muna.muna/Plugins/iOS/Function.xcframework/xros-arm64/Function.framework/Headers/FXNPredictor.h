@@ -3,7 +3,7 @@
 //  Function
 //
 //  Created by Yusuf Olokoba on 10/14/2023.
-//  Copyright © 2025 NatML Inc. All rights reserved.
+//  Copyright © 2026 NatML Inc. All rights reserved.
 //
 
 #pragma once
@@ -39,7 +39,7 @@ typedef struct FXNPredictor FXNPredictor;
  @param predictor
  Created predictor.
 */
-FXN_API FXNStatus FXNPredictorCreate (
+FXN_API FXNStatus FXNPredictorCreate(
     FXNConfiguration* configuration,
     FXNPredictor** predictor
 );
@@ -54,7 +54,7 @@ FXN_API FXNStatus FXNPredictorCreate (
  @param predictor
  Predictor.
 */
-FXN_API FXNStatus FXNPredictorRelease (FXNPredictor* predictor);
+FXN_API FXNStatus FXNPredictorRelease(FXNPredictor* predictor);
 #pragma endregion
 
 
@@ -76,7 +76,7 @@ FXN_API FXNStatus FXNPredictorRelease (FXNPredictor* predictor);
  Prediction.
  You MUST release the prediction with `FXNPredictionRelease` when no longer needed.
 */
-FXN_API FXNStatus FXNPredictorCreatePrediction (
+FXN_API FXNStatus FXNPredictorCreatePrediction(
     FXNPredictor* predictor,
     FXNValueMap* inputs,
     FXNPrediction** prediction
@@ -100,7 +100,7 @@ FXN_API FXNStatus FXNPredictorCreatePrediction (
  Prediction stream.
  You MUST release the prediction stream with `FXNPredictionStreamRelease` when no longer needed.
 */
-FXN_API FXNStatus FXNPredictorStreamPrediction (
+FXN_API FXNStatus FXNPredictorStreamPrediction(
     FXNPredictor* predictor,
     FXNValueMap* inputs,
     FXNPredictionStream** stream
