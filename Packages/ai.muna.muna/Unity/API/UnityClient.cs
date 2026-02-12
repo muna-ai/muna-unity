@@ -94,7 +94,7 @@ namespace Muna.API {
         /// <param name="url">URL</param>
         public override async Task<Stream> Download(string url) {
             using var request = UnityWebRequest.Get(url);
-            request.timeout = 20;
+            request.timeout = 300;
             request.SendWebRequest();
             while (!request.isDone)
                 await Task.Yield();

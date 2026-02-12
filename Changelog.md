@@ -1,3 +1,6 @@
+## 0.0.50
++ Fixed sporadic timeout error when making some predictions.
+
 ## 0.0.49
 + Fixed sporadic segmentation fault when making predictions on input tensors.
 + Fixed Unity threading exception when preloading predictors from a background thread (#15).

@@ -76,7 +76,7 @@ namespace Muna.API {
                 out var cachedPrediction
             ))
                 return cachedPrediction as T;
-            // Create prediction and cache
+            // Create prediction
             var prediction = await base.Request<Prediction>(
                 method: @"POST",
                 path: @"/predictions",
@@ -88,7 +88,12 @@ namespace Muna.API {
                 },
                 headers
             );
-            prediction!.resources = await Task.WhenAll(prediction.resources.Select(GetCachedResource));
+            // Download resources
+            var resources = new PredictionResource[prediction!.resources.Length];
+            for (var i = 0; i < resources.Length; ++i)
+                resources[i] = await GetCachedResource(prediction.resources[i]);
+            prediction.resources = resources;
+            // Cache
             PredictionCache.Add(prediction.AsCached(clientId, configurationId));
             // Return
             return prediction as T;

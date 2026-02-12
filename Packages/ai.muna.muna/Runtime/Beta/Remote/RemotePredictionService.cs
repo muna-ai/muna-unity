@@ -37,13 +37,12 @@ namespace Muna.Beta.Services {
             RemoteAcceleration acceleration = default
         ) {
             await Configuration.InitializationTask;
-            var inputMap = (await Task.WhenAll(inputs.Select(async pair => (
-                name: pair.Key,
-                value: await ToValue(pair.Value)
-            )))).ToDictionary(pair => pair.name, pair => pair.value);
+            var inputMap = new Dictionary<string, RemoteValue>();
+            foreach (var pair in inputs)
+                inputMap[pair.Key] = await ToValue(pair.Value);
             var prediction = (await client.Request<RemotePrediction>(
                 method: @"POST",
-                path: $"/predictions/remote",
+                path: @"/predictions/remote",
                 payload: new () {
                     [@"tag"] = tag,
                     [@"inputs"] = inputMap,
@@ -51,11 +50,17 @@ namespace Muna.Beta.Services {
                     [@"clientId"] = Configuration.ClientId,
                 }
             ))!;
+            object?[]? results = null;
+            if (prediction.results != null) {
+                results = new object?[prediction.results.Length];
+                for (var i = 0; i < results.Length; ++i)
+                    results[i] = await ToObject(prediction.results[i]);
+            }
             return new Prediction {
                 id = prediction.id,
                 tag = prediction.tag,
                 created = prediction.created,
-                results = prediction.results != null ?await Task.WhenAll(prediction.results.Select(ToObject)) : null,
+                results = results,
                 latency = prediction.latency,
                 error = prediction.error,
                 logs = prediction.logs,
