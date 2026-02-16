@@ -237,7 +237,7 @@ namespace Muna.Services {
             };
         }
 
-        private static object SerializeEnum(Enum value) {
+        internal static object SerializeEnum(Enum value) {
             var fieldInfo = value.GetType().GetField(value.ToString());
             var attribute = fieldInfo?.GetCustomAttributes(typeof(EnumMemberAttribute), false)?.FirstOrDefault() as EnumMemberAttribute;
             return (attribute?.IsValueSetExplicitly ?? false) ? attribute.Value : Convert.ToInt32(value);

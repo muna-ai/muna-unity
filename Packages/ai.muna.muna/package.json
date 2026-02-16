@@ -5,7 +5,7 @@
     "description": "Run AI inference in Unity Engine.",
     "unity": "2022.3",
     "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
     },
     "keywords": [
         "fxn",

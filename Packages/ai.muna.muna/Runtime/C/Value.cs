@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -36,10 +36,10 @@ namespace Muna.C {
             }
         }
 
-        public Dtype type {
+        public Dtype dtype {
             get {
-                value.GetValueType(out var type).Throw();
-                return type;
+                value.GetValueType(out var dtype).Throw();
+                return dtype;
             }
         }
 
@@ -52,7 +52,7 @@ namespace Muna.C {
             }
         }
 
-        public object? ToObject() => type switch {
+        public object? ToObject() => dtype switch {
             Dtype.Null      => null,
             Dtype.Float32   => ToObject((float*)data, shape),
             Dtype.Float64   => ToObject((double*)data, shape),
@@ -70,8 +70,14 @@ namespace Muna.C {
             Dtype.Dict      => JsonConvert.DeserializeObject<JObject>(Marshal.PtrToStringUTF8((IntPtr)data)),
             Dtype.Image     => new Image(ToArray((byte*)data, shape), shape[1], shape[0], shape[2]),
             Dtype.Binary    => new MemoryStream(ToArray((byte*)data, shape)),
-            _               => throw new InvalidOperationException($"Cannot convert Muna value to object because value type is unsupported: {type}"),
+            _               => throw new InvalidOperationException($"Cannot convert Muna value to object because value type is unsupported: {dtype}"),
         };
+
+        public byte[] Serialize(string contentType) {
+            CreateSerializedValue(value, contentType, out var result).Throw();
+            using var serialized = new Value(result);
+            return ToArray((byte*)serialized.data, serialized.shape);
+        }
 
         public void Dispose() => value.ReleaseValue();
 
@@ -163,6 +169,19 @@ namespace Muna.C {
         public static Value CreateNull() {
             CreateNullValue(out var value).Throw();
             return new Value(value);
+        }
+
+        public static Value CreateFromBinary(
+            Stream stream,
+            string contentType
+        ) {
+            using var binaryValue = CreateBinary(stream);
+            CreateValueFromSerializedValue(
+                binaryValue,
+                contentType,
+                out var result
+            ).Throw();
+            return new Value(result);
         }
         #endregion
 

@@ -100,34 +100,36 @@ namespace Muna.C {
         );
         [DllImport(Assembly, EntryPoint = @"FXNValueCreateNull")]
         public static extern Status CreateNullValue(out IntPtr value);
-        [DllImport(Assembly, EntryPoint = @"FXNValueCreateValueList")]
-        public static extern Status CreateValueList(out IntPtr value);
-        [DllImport(Assembly, EntryPoint = @"FXNValueCreateValueMap")]
-        public static extern Status CreateValueMap(out IntPtr map);
-        #endregion
-
-
-        #region --FXNValueList--
-        [DllImport(Assembly, EntryPoint = @"FXNValueListGetSize")]
-        public static extern Status GetValueListSize(
-            this IntPtr list,
-            out int size
-        );
-        [DllImport(Assembly, EntryPoint = @"FXNValueListGetValue")]
-        public static extern Status GetValueListValue(
-            this IntPtr list,
-            int index,
+        [DllImport(Assembly, EntryPoint = @"FXNValueCreateImageList")]
+        public static extern Status CreateImageListValue(
+            [In] byte*[] pixelBuffers,
+            int* widths,
+            int* heights,
+            int* channels,
+            int count,
+            Value.Flags flags,
             out IntPtr value
         );
-        [DllImport(Assembly, EntryPoint = @"FXNValueListAppendValue")]
-        public static extern Status AppendValueListValue(
-            this IntPtr list,
-            IntPtr value
+        [DllImport(Assembly, EntryPoint = @"FXNValueCreateSerializedValue")]
+        public static extern Status CreateSerializedValue(
+            IntPtr value,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string? mime,
+            out IntPtr result
+        );
+        [DllImport(Assembly, EntryPoint = @"FXNValueCreateFromSerializedValue")]
+        public static extern Status CreateValueFromSerializedValue(
+            IntPtr value,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string mime,
+            out IntPtr result
         );
         #endregion
 
 
         #region --FXNValueMap--
+        [DllImport(Assembly, EntryPoint = @"FXNValueMapCreate")]
+        public static extern Status CreateValueMap(out IntPtr map);
+        [DllImport(Assembly, EntryPoint = @"FXNValueMapRelease")]
+        public static extern Status ReleaseValueMap(this IntPtr value);
         [DllImport(Assembly, EntryPoint = @"FXNValueMapGetSize")]
         public static extern Status GetValueMapSize(
             this IntPtr map,

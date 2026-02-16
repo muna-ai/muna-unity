@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -129,43 +129,58 @@ namespace Muna.Beta.OpenAI {
             // Retrieve predictor
             var predictor = await predictors.Retrieve(tag);
             if (predictor == null)
-                throw new ArgumentException($"{tag} cannot be used for OpenAI embedding API because the predictor could not be found.");
-            // Get required inputs
+                throw new ArgumentException(
+                    $"{tag} cannot be used with OpenAI embedding API because " +
+                    "the predictor could not be found. Check that your access key " +
+                    "is valid and that you have access to the predictor."
+                );
+            // Check that there is only one required input parameter
             var signature = predictor.signature!;
             var requiredInputParams = signature.inputs.Where(parameter => parameter.optional == false).ToArray();
             if (requiredInputParams.Length != 1)
-                throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it does not have exactly one required input parameter.");
-            // Check the text input parameter
-            var inputParam = requiredInputParams[0];
-            if (inputParam.type != Dtype.List)
-                throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it does not have the required text embedding input parameter.");
+                throw new InvalidOperationException(
+                    $"{tag} cannot be used with OpenAI embedding API because " +
+                    "it has more than one required input parameter."
+                );
+            // Check that the input parameter is `list[str]`
+            var inputParam = requiredInputParams.FirstOrDefault(p => p.dtype == Dtype.List);
+            if (inputParam == null)
+                throw new InvalidOperationException(
+                    $"{tag} cannot be used with OpenAI embedding API because " +
+                    "it does not have a valid text embedding input parameter."
+                );
             // Get the Matryoshka dim parameter (optional)
             var matryoshkaParam = signature.inputs.FirstOrDefault(parameter =>
                 new[] {
                     Dtype.Int8, Dtype.Int16, Dtype.Int32, Dtype.Int64,
                     Dtype.Uint8, Dtype.Uint16, Dtype.Uint32, Dtype.Uint64
-                }.Contains(parameter.type) &&
-                parameter.denotation == "embedding.dims"
+                }.Contains(parameter.dtype) &&
+                parameter.denotation == "openai.embeddings.dims"
             );
-            // Get the embedding output parameter
+            // Get the embedding output parameter index
             var (embeddingParamIdx, embeddingParam) = signature.outputs
                 .Select((parameter, idx) => (idx, parameter))
                 .Where(pair =>
-                    pair.parameter.type == Dtype.Float32 &&
+                    pair.parameter.dtype == Dtype.Float32 &&
                     pair.parameter.denotation == "embedding"
                 )
                 .FirstOrDefault();
             if (embeddingParam == null)
-                throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it has no outputs with an `embedding` denotation.");
-            // Get the index of the usage output (optional)
-            var (usageParamIdx, usageParam) = signature.outputs
+                throw new InvalidOperationException(
+                    $"{tag} cannot be used with OpenAI embedding API because " +
+                    "it has no outputs with an `embedding` denotation."
+                );
+            // Get usage output param
+            var usageParamIdx = signature.outputs
                 .Select((parameter, idx) => (idx, parameter))
                 .Where(pair =>
-                    pair.parameter.type == Dtype.Dict &&
-                    pair.parameter.denotation == "openai.embedding.usage"
+                    pair.parameter.schema != null &&
+                    pair.parameter.schema.TryGetValue("title", out var title) &&
+                    title?.ToString() == "Usage"
                 )
+                .Select(pair => (int?)pair.idx)
                 .FirstOrDefault();
-            // Create delegate
+            // Define delegate
             EmbeddingDelegate result = async (
                 string model,
                 string[] input,
@@ -188,22 +203,26 @@ namespace Muna.Beta.OpenAI {
                 // Check for error
                 if (prediction.error != null)
                     throw new InvalidOperationException(prediction.error);
-                // Check returned embedding
+                // Check embedding return type
                 var rawEmbeddingMatrix = prediction.results![embeddingParamIdx]!;
                 if (!(rawEmbeddingMatrix is Tensor<float> embeddingMatrix))
-                    throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it returned an object of type {rawEmbeddingMatrix.GetType()} instead of an embedding matrix.");
+                    throw new InvalidOperationException(
+                        $"{tag} returned object of type {rawEmbeddingMatrix.GetType()} instead of an embedding matrix"
+                    );
                 if (embeddingMatrix.shape.Length != 2) {
                     var shapeStr = "(" + string.Join(",", embeddingMatrix.shape) + ")";
-                    throw new InvalidOperationException($"{tag} cannot be used with OpenAI embedding API because it returned an embedding matrix with invalid shape: {shapeStr}");
+                    throw new InvalidOperationException(
+                        $"{tag} returned embedding matrix with invalid shape: {shapeStr}"
+                    );
                 }
                 // Create embedding response
                 var embeddings = Enumerable
                     .Range(0, embeddingMatrix.shape[0])
                     .Select(idx => ParseEmbedding(embeddingMatrix, idx, encodingFormat))
                     .ToArray();
-                var usage = usageParam != null ?
-                    (prediction.results![usageParamIdx]! as JObject)!.ToObject<CreateEmbeddingResponse.UsageInfo>() :
-                    default;
+                var usage = usageParamIdx != null ?
+                    (prediction.results![usageParamIdx.Value]! as JObject)!.ToObject<CreateEmbeddingResponse.UsageInfo>() :
+                    new CreateEmbeddingResponse.UsageInfo { PromptTokens = 0, TotalTokens = 0 };
                 var response = new CreateEmbeddingResponse {
                     Object = "list",
                     Model = model,
@@ -222,8 +241,8 @@ namespace Muna.Beta.OpenAI {
             Dictionary<string, object?> inputs,
             object acceleration
         ) => acceleration switch {
-            Acceleration acc => predictions.Create(tag, inputs, acc),
-            RemoteAcceleration acc => remotePredictions.Create(tag, inputs, acc),
+            Acceleration acc        => predictions.Create(tag, inputs, acc),
+            RemoteAcceleration acc  => remotePredictions.Create(tag, inputs, acc),
             _ => throw new InvalidOperationException($"Cannot create {tag} prediction because acceleration is invalid: {acceleration}")
         };
 

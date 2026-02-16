@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -28,7 +28,7 @@ namespace Muna.Beta {
         /// <summary>
         /// Value type.
         /// </summary>
-        public Dtype type;
+        public Dtype dtype;
 
         /// <summary>
         /// Value shape.

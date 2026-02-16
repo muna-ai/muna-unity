@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
       }
     },
     "com.unity.editorcoroutines": {
@@ -61,7 +61,7 @@
       }
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.1",
+      "version": "3.2.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {},

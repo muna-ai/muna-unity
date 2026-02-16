@@ -35,7 +35,7 @@ namespace Muna.C {
             return new Value(value);
         }
 
-        public void Dispose () => map.ReleaseValue();
+        public void Dispose() => map.ReleaseValueMap();
         #endregion
 
 

@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -83,8 +83,8 @@ namespace Muna.Beta.OpenAI {
         /// <param name="input">The text to generate audio for.</param>
         /// <param name="voice">The voice to use when generating the audio.</param>
         /// <param name="speed">The speed of the generated audio. Defaults to 1.0.</param>
-        /// <param name="responseFormat">The format to return audio in. Currently only `ResponseFormat.PCM` is supported.</param>
-        /// <param name="streamFormat">The format to stream the audio in. Currently only `StreamFormat.Audio` is supported.</param>
+        /// <param name="responseFormat">Audio output format.</param>
+        /// <param name="streamFormat">The format to stream the audio in.</param>
         /// <param name="acceleration">Prediction acceleration. Must be `Acceleration` or `RemoteAcceleration` instance.</param>
         /// <returns>Generated audio.</returns>
         public async Task<BinaryData> Create(
@@ -148,40 +148,56 @@ namespace Muna.Beta.OpenAI {
             // Retrieve predictor
             var predictor = await predictors.Retrieve(tag);
             if (predictor == null)
-                throw new ArgumentException($"{tag} cannot be used for OpenAI speech API because the predictor could not be found.");
+                throw new ArgumentException(
+                    $"{tag} cannot be used with OpenAI speech API because " +
+                    "the predictor could not be found. Check that your access key " +
+                    "is valid and that you have access to the predictor."
+                );
             // Get required inputs
             var signature = predictor.signature!;
             var requiredInputParams = signature.inputs.Where(parameter => parameter.optional == false).ToArray();
             if (requiredInputParams.Length != 2)
-                throw new InvalidOperationException($"${tag} cannot be used with OpenAI speech API because it does not have exactly two required input parameters.");
+                throw new InvalidOperationException(
+                    $"{tag} cannot be used with OpenAI speech API because " +
+                    "it does not have exactly two required input parameters."
+                );
             // Get the text input parameter
-            var inputParam = requiredInputParams.FirstOrDefault(parameter => parameter.type == Dtype.String);
+            var inputParam = requiredInputParams.FirstOrDefault(parameter => parameter.dtype == Dtype.String);
             if (inputParam == null)
-                throw new InvalidOperationException($"${tag} cannot be used with OpenAI speech API because it does not have the required speech input parameter.");
+                throw new InvalidOperationException(
+                    $"{tag} cannot be used with OpenAI speech API because " +
+                    "it does not have the required speech input parameter."
+                );
             // Get the voice input parameter
             var voiceParam = requiredInputParams.FirstOrDefault(parameter =>
-                parameter.type == Dtype.String &&
-                parameter.denotation == "audio.voice"
+                parameter.dtype == Dtype.String &&
+                parameter.denotation == "openai.audio.speech.voice"
             );
             if (voiceParam == null)
-                throw new InvalidOperationException($"${tag} cannot be used with OpenAI speech API because it does not have the required speech voice parameter.");
+                throw new InvalidOperationException(
+                    $"{tag} cannot be used with OpenAI speech API because " +
+                    "it does not have the required speech voice parameter."
+                );
             // Get the speed input parameter (optional)
             var speedParam = signature.inputs.FirstOrDefault(parameter =>
-                new[] { Dtype.Float32, Dtype.Float64 }.Contains((Dtype)parameter.type!) &&
-                parameter.denotation == "audio.speed"
+                new[] { Dtype.Float32, Dtype.Float64 }.Contains(parameter.dtype) &&
+                parameter.denotation == "openai.audio.speech.speed"
             );
-            // Get the audio output parameter
+            // Get the audio output parameter index
             var (audioParamIdx, audioParam) = signature.outputs
                 .Select((parameter, idx) => (idx, parameter))
                 .Where(pair =>
-                    pair.parameter.type == Dtype.Float32 &&
+                    pair.parameter.dtype == Dtype.Float32 &&
                     pair.parameter.denotation == "audio"
                 )
                 .FirstOrDefault();
             if (audioParam == null)
-                throw new InvalidOperationException($"{tag} cannot be used with OpenAI speech API because it has no outputs with an `audio` denotation.");
-            // Create delegate
-            SpeechDelegate result = async(
+                throw new InvalidOperationException(
+                    $"{tag} cannot be used with OpenAI speech API because " +
+                    "it has no outputs with an `audio` denotation."
+                );
+            // Define delegate
+            SpeechDelegate result = async (
                 string model,
                 string input,
                 string voice,
@@ -190,12 +206,12 @@ namespace Muna.Beta.OpenAI {
                 StreamFormat streamFormat,
                 object acceleration
             ) => {
-                // Check response format
-                if (responseFormat != ResponseFormat.PCM)
-                    throw new ArgumentException($"Cannot create speech with response format  {responseFormat} because only `ResponseFormat.PCM` is supported.");
                 // Check stream format
                 if (streamFormat != StreamFormat.Audio)
-                    throw new ArgumentException($"Cannot create speech with stream format  {streamFormat} because only `StreamFormat.Audio` is supported.");
+                    throw new ArgumentException(
+                        $"Cannot create speech with stream format `{streamFormat}` " +
+                        "because only `Audio` is currently supported."
+                    );
                 // Build prediction input map
                 var inputMap = new Dictionary<string, object?> {
                     [inputParam.name] = input,
@@ -213,17 +229,22 @@ namespace Muna.Beta.OpenAI {
                 if (prediction.error != null)
                     throw new InvalidOperationException(prediction.error);
                 // Check returned audio
-                var result = prediction.results![audioParamIdx]!;
-                if (!(result is Tensor<float> tensor))
-                    throw new InvalidOperationException($"{tag} cannot be used with OpenAI speech API because it returned an object of type {result.GetType()} instead of an audio tensor.");
-                if (tensor.shape.Length != 1 && tensor.shape.Length != 2) {
-                    var shapeStr = "(" + string.Join(",", tensor.shape) + ")";
-                    throw new InvalidOperationException($"{tag} cannot be used with OpenAI speech API because it returned an audio tensor with an invalid shape: {shapeStr}");
-                }
+                var rawAudio = prediction.results![audioParamIdx]!;
+                if (!(rawAudio is Tensor<float> audio))
+                    throw new InvalidOperationException(
+                        $"{tag} returned object of type {rawAudio.GetType()} instead of an audio tensor"
+                    );
+                if (audio.shape.Length != 1 && audio.shape.Length != 2)
+                    throw new InvalidOperationException(
+                        $"{tag} returned audio tensor with invalid shape: ({string.Join(",", audio.shape)})"
+                    );
                 // Create response
-                var channels = tensor.shape.Length == 2 ? tensor.shape[0] : 1; // Assume planar
-                var mediaType = $"audio/pcm;rate={audioParam.sampleRate};channels={channels}";
-                var response = ToBinaryData(tensor, mediaType);
+                var (content, contentType) = CreateResponseData(
+                    audio,
+                    sampleRate: audioParam.sampleRate!.Value,
+                    responseFormat: responseFormat
+                );
+                var response = new BinaryData(content, contentType);
                 // Return
                 return response;
             };
@@ -236,20 +257,36 @@ namespace Muna.Beta.OpenAI {
             Dictionary<string, object?> inputs,
             object acceleration
         ) => acceleration switch {
-            Acceleration acc => predictions.Create(tag, inputs, acc),
-            RemoteAcceleration acc => remotePredictions.Create(tag, inputs, acc),
+            Acceleration acc        => predictions.Create(tag, inputs, acc),
+            RemoteAcceleration acc  => remotePredictions.Create(tag, inputs, acc),
             _ => throw new InvalidOperationException($"Cannot create {tag} prediction because acceleration is invalid: {acceleration}")
         };
-        
-        private static unsafe BinaryData ToBinaryData<T>(
-            Tensor<T> tensor,
-            string? mediaType = null
-        ) where T : unmanaged {
-            var elementCount = tensor.shape.Aggregate(1, (a, b) => a * b);
-            var data = new byte[elementCount * sizeof(T)];
-            fixed (void* src = tensor, dst = data)
-                Buffer.MemoryCopy(src, dst, data.Length, data.Length);
-            return new BinaryData(data, mediaType);
+
+        private static unsafe (byte[] content, string contentType) CreateResponseData(
+            Tensor<float> audio,
+            int sampleRate,
+            ResponseFormat responseFormat
+        ) {
+            var channels = audio.shape.Length == 2 ? audio.shape[1] : 1; // Assume interleaved
+            if (responseFormat == ResponseFormat.PCM) {
+                var contentType = string.Join(";",
+                    "audio/pcm",
+                    $"rate={sampleRate}",
+                    $"channels={channels}",
+                    "encoding=float",
+                    "bits=32"
+                );
+                var elementCount = audio.shape.Aggregate(1, (a, b) => a * b);
+                var data = new byte[elementCount * sizeof(float)];
+                fixed (float* src = audio)
+                    fixed (byte* dst = data)
+                        Buffer.MemoryCopy(src, dst, data.Length, data.Length);
+                return (data, contentType);
+            }
+            using var audioValue = C.Value.CreateArray(audio, C.Value.Flags.CopyData);
+            var mime = $"audio/{EdgePredictionService.SerializeEnum(responseFormat)};rate={sampleRate}";
+            var serializedData = audioValue.Serialize(mime);
+            return (serializedData, mime);
         }
         #endregion
     }

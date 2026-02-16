@@ -9,6 +9,7 @@
 namespace Muna {
 
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Predictor parameter.
@@ -24,7 +25,7 @@ namespace Muna {
         /// <summary>
         /// Parameter type.
         /// </summary>
-        public Dtype type;
+        public Dtype dtype;
 
         /// <summary>
         /// Parameter description.
@@ -42,14 +43,24 @@ namespace Muna {
         public bool? optional;
 
         /// <summary>
-        /// Parameter value range for numeric parameters.
-        /// </summary>
-        public float[]? range;
-
-        /// <summary>
         /// Parameter value choices for enumeration parameters.
         /// </summary>
         public EnumerationMember[]? enumeration;
+
+        /// <summary>
+        /// Parameter JSON schema.
+        /// </summary>
+        public Dictionary<string, object>? schema;
+
+        /// <summary>
+        /// Parameter minumum value.
+        /// </summary>
+        public float? min;
+
+        /// <summary>
+        /// Parameter maximum value.
+        /// </summary>
+        public float? max;
 
         /// <summary>
         /// Parameter audio sample rate.
