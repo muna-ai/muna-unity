@@ -74,11 +74,8 @@
  @constant FXN_DTYPE_BFLOAT16
  16-bit brain float.
 
- @constant FXN_DTYPE_VALUE_LIST
- Prediction value list.
-
- @constant FXN_DTYPE_VALUE_MAP
- Prediction value map.
+ @constant FXN_DTYPE_IMAGE_LIST
+ List of pixel buffers.
 */
 enum FXNDtype {
     FXN_DTYPE_NULL          = 0,
@@ -100,8 +97,7 @@ enum FXNDtype {
     FXN_DTYPE_IMAGE         = 16,
     FXN_DTYPE_BINARY        = 17,
     FXN_DTYPE_BFLOAT16      = 18,
-    FXN_DTYPE_VALUE_LIST    = 19,
-    FXN_DTYPE_VALUE_MAP     = 20,
+    FXN_DTYPE_IMAGE_LIST    = 19,
 };
 typedef enum FXNDtype FXNDtype;
 
@@ -352,7 +348,6 @@ FXN_API FXNStatus FXNValueCreateDict(
  @param value
  Created value.
  The value `type` will be `FXN_DTYPE_IMAGE`.
- The value `shape` will be `(H,W,C)`.
 */
 FXN_API FXNStatus FXNValueCreateImage(
     const uint8_t* pixelBuffer,
@@ -402,28 +397,44 @@ FXN_API FXNStatus FXNValueCreateBinary(
 FXN_API FXNStatus FXNValueCreateNull(FXNValue** value);
 
 /*!
- @function FXNValueCreateValueList
+ @function FXNValueCreateImageList
 
- @abstract Create a value list.
+ @abstract Create an image list value from one or more pixel buffers.
  
- @discussion Create a value list.
+ @discussion Create an image list value from one or more pixel buffers.
+
+ @param pixelBuffers
+ Pixel buffers.
+
+ @param widths
+ Pixel buffer widths.
+
+ @param heights
+ Pixel buffer heights.
+
+ @param channels
+ Pixel buffer channels.
+ Each item MUST be 1, 3, or 4.
+
+ @param count
+ Number of images in the list.
+
+ @param flags
+ Value creation flags.
 
  @param value
  Created value.
+ The value `type` will be `FXN_DTYPE_IMAGE_LIST`.
 */
-FXN_API FXNStatus FXNValueCreateValueList(FXNValue** value);
-
-/*!
- @function FXNValueCreateValueMap
-
- @abstract Create a value map.
- 
- @discussion Create a value map.
-
- @param value
- Created value.
-*/
-FXN_API FXNStatus FXNValueCreateValueMap(FXNValue** value);
+FXN_API FXNStatus FXNValueCreateImageList(
+    const uint8_t* const * pixelBuffers,
+    const int32_t* widths,
+    const int32_t* heights,
+    const int32_t* channels,
+    int32_t count,
+    FXNValueFlags flags,
+    FXNValue** value
+);
 
 /*!
  @function FXNValueCreateSerializedValue

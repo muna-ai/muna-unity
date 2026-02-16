@@ -23,6 +23,34 @@ typedef FXNValue FXNValueMap;
 #pragma endregion
 
 
+#pragma region --Lifecycle--
+/*!
+ @function FXNValueMapCreate
+
+ @abstract Create a prediction value map.
+
+ @discussion Create a prediction value map.
+
+ @param map
+ Created value map. MUST NOT be `NULL`.
+*/
+FXN_API FXNStatus FXNValueMapCreate(FXNValueMap** map);
+
+/*!
+ @function FXNValueMapRelease
+
+ @abstract Release the prediction value map.
+
+ @discussion Release the prediction value map.
+ This releases all values currently within the map.
+
+ @param map
+ Prediction value map.
+*/
+FXN_API FXNStatus FXNValueMapRelease(FXNValueMap* map);
+#pragma endregion
+
+
 #pragma region --Operations--
 /*!
  @function FXNValueMapGetSize
