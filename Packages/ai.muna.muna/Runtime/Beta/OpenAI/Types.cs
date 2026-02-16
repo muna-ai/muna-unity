@@ -137,40 +137,8 @@ namespace Muna.Beta.OpenAI {
         /// <summary>
         /// Message role.
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum ChatRole {
-            /// <summary>
-            /// Assistant.
-            /// </summary>
-            [EnumMember(Value = @"assistant")]
-            Assistant = 1,
-            /// <summary>
-            /// User
-            /// </summary>
-            [EnumMember(Value = @"user")]
-            User = 2,
-            /// <summary>
-            /// Developer.
-            /// </summary>
-            [EnumMember(Value = @"developer")]
-            Developer = 3,
-            /// <summary>
-            /// System.
-            /// </summary>
-            [EnumMember(Value = @"system")]
-            System = 4,
-            /// <summary>
-            /// Tool.
-            /// </summary>
-            [EnumMember(Value = @"tool")]
-            Tool = 5,
-        }
-
-        /// <summary>
-        /// Message role.
-        /// </summary>
         [JsonProperty(@"role")]
-        public ChatRole Role;
+        public string Role;
 
         /// <summary>
         /// Message content.
@@ -351,7 +319,7 @@ namespace Muna.Beta.OpenAI {
                 /// Role of the author of this message.
                 /// </summary>
                 [JsonProperty(@"role")]
-                public ChatMessage.ChatRole? Role;
+                public string? Role;
 
                 /// <summary>
                 /// Content of the message chunk.

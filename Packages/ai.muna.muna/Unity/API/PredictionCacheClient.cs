@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -46,8 +46,7 @@ namespace Muna.API {
         public override async Task<T?> Request<T>(
             string method,
             string path,
-            Dictionary<string, object?>? payload = default,
-            Dictionary<string, string>? headers = default
+            Dictionary<string, object?>? payload = default
         ) where T : class {
             // Check payload
             var tag = GetValue<string>(payload, @"tag");
@@ -60,7 +59,7 @@ namespace Muna.API {
                 string.IsNullOrEmpty(clientId)          ||
                 string.IsNullOrEmpty(configurationId)
             )
-                return await base.Request<T>(method, path, payload, headers);
+                return await base.Request<T>(method, path, payload);
             // Get embedded prediction if available
             var cache = MunaSettings.Instance!.cache;
             var embeddedPrediction = cache.FirstOrDefault(p => 
@@ -85,8 +84,7 @@ namespace Muna.API {
                     [@"clientId"] = clientId,
                     [@"configurationId"] = configurationId,
                     [@"predictionId"] = embeddedPrediction?.id,
-                },
-                headers
+                }
             );
             // Download resources
             var resources = new PredictionResource[prediction!.resources.Length];

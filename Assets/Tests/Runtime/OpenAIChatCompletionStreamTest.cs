@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 namespace Muna.Tests {
@@ -21,10 +21,7 @@ namespace Muna.Tests {
             var stream = openai.Chat.Completions.Stream(
                 model: PredictorTag,
                 messages: new[] {
-                    new ChatMessage {
-                        Role = ChatMessage.ChatRole.User,
-                        Content = prompt
-                    }
+                    new ChatMessage { Role = @"user", Content = prompt }
                 }
             );
             await foreach (var chunk in stream) {

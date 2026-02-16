@@ -48,6 +48,7 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.58f2/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Tests/Editor/OpenAITest.cs" />
     <Compile Include="Assets/Tests/Editor/UserTest.cs" />
     <Compile Include="Assets/Tests/Editor/PredictionTest.cs" />
     <Compile Include="Assets/Tests/Editor/PredictorTest.cs" />

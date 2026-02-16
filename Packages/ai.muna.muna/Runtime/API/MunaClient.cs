@@ -1,6 +1,6 @@
 /*
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -27,17 +27,30 @@ namespace Muna.API {
         /// <summary>
         /// Make a request to a REST endpoint.
         /// </summary>
-        /// <typeparam name="T">Deserialized response type.</typeparam>
+        /// <typeparam name="T">Response type.</typeparam>
         /// <param name="method">HTTP request method.</param>
         /// <param name="path">Endpoint path.</param>
         /// <param name="payload">Request body.</param>
-        /// <param name="headers">Request headers.</param>
-        /// <returns>Deserialized response.</returns>
+        /// <returns>Response.</returns>
         public abstract Task<T?> Request<T>(
             string method,
             string path,
-            Dictionary<string, object?>? payload = default,
-            Dictionary<string, string>? headers = default
+            Dictionary<string, object?>? payload = default
+        ) where T : class;
+
+        /// <summary>
+        /// Make a request to a REST endpoint and consume 
+        /// the response as a server-sent events stream.
+        /// </summary>
+        /// <typeparam name="T">Response type.</typeparam>
+        /// <param name="method">HTTP request method.</param>
+        /// <param name="path">Endpoint path.</param>
+        /// <param name="payload">Request body.</param>
+        /// <returns>Response stream.</returns>
+        public abstract IAsyncEnumerable<T> Stream<T>(
+            string method,
+            string path,
+            Dictionary<string, object?>? payload = default
         ) where T : class;
 
         /// <summary>

@@ -40,7 +40,7 @@ namespace Muna.Beta.Services {
             var inputMap = new Dictionary<string, RemoteValue>();
             foreach (var pair in inputs)
                 inputMap[pair.Key] = await ToValue(pair.Value);
-            var prediction = (await client.Request<RemotePrediction>(
+            var prediction = await client.Request<RemotePrediction>(
                 method: @"POST",
                 path: @"/predictions/remote",
                 payload: new () {
@@ -49,22 +49,37 @@ namespace Muna.Beta.Services {
                     [@"acceleration"] = acceleration,
                     [@"clientId"] = Configuration.ClientId,
                 }
-            ))!;
-            object?[]? results = null;
-            if (prediction.results != null) {
-                results = new object?[prediction.results.Length];
-                for (var i = 0; i < results.Length; ++i)
-                    results[i] = await ToObject(prediction.results[i]);
-            }
-            return new Prediction {
-                id = prediction.id,
-                tag = prediction.tag,
-                created = prediction.created,
-                results = results,
-                latency = prediction.latency,
-                error = prediction.error,
-                logs = prediction.logs,
-            };
+            );
+            return await ParseRemotePrediction(prediction);
+        }
+
+        /// <summary>
+        /// Stream a prediction.
+        /// </summary>
+        /// <param name="tag">Predictor tag.</param>
+        /// <param name="inputs">Input values.</param>
+        /// <param name="acceleration">Prediction acceleration.</param>
+        public async IAsyncEnumerable<Prediction> Stream(
+            string tag,
+            Dictionary<string, object?> inputs,
+            RemoteAcceleration acceleration = default
+        ) {
+            await Configuration.InitializationTask;
+            var inputMap = new Dictionary<string, RemoteValue>();
+            foreach (var pair in inputs)
+                inputMap[pair.Key] = await ToValue(pair.Value);
+            await foreach (var evt in client.Stream<RemotePredictionEvent>(
+                method: @"POST",
+                path: @"/predictions/remote",
+                payload: new () {
+                    [@"tag"] = tag,
+                    [@"inputs"] = inputMap,
+                    [@"acceleration"] = acceleration,
+                    [@"clientId"] = Configuration.ClientId,
+                    [@"stream"] = true
+                }
+            ))
+                yield return await ParseRemotePrediction(evt.data);
         }
         #endregion
 
@@ -168,9 +183,34 @@ namespace Muna.Beta.Services {
             return (Image)value.ToObject()!;
         }
 
+        private async Task<Prediction> ParseRemotePrediction(RemotePrediction prediction) {
+            object?[]? results = null;
+            if (prediction?.results != null) {
+                results = new object?[prediction.results.Length];
+                for (var i = 0; i < results.Length; ++i)
+                    results[i] = await ToObject(prediction.results[i]);
+            }
+            return new Prediction {
+                id = prediction.id,
+                tag = prediction.tag,
+                created = prediction.created,
+                results = results,
+                latency = prediction.latency,
+                error = prediction.error,
+                logs = prediction.logs,
+            };
+        }
+
         [Preserve, Serializable]
         private class RemotePrediction : Prediction {
             public new RemoteValue[]? results;
+        }
+
+        [Preserve, Serializable]
+        private class RemotePredictionEvent {
+            [JsonProperty(@"event")]
+            public string @event;
+            public RemotePrediction data;
         }
         #endregion
     }
