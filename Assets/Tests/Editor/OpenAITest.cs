@@ -86,6 +86,7 @@ namespace Muna.Tests {
             );
             Assert.NotNull(response);
             Assert.IsFalse(response.IsEmpty);
+            Assert.That(response.MediaType, Does.StartWith(@"audio/mp3"));
         }
     }
 }

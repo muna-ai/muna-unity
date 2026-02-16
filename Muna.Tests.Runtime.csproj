@@ -59,7 +59,6 @@
     <Compile Include="Assets/Tests/Runtime/SystemInfoTest.cs" />
     <Compile Include="Assets/Tests/Runtime/AccessKeyTest.cs" />
     <Compile Include="Assets/Tests/Runtime/ImageTest.cs" />
-    <Compile Include="Assets/Tests/Runtime/TextGenerationTest.cs" />
     <Compile Include="Assets/Tests/Runtime/OpenAISpeechCreateTest.cs" />
     <Compile Include="Assets/Tests/Runtime/RemoteGreetingTest.cs" />
   </ItemGroup>
