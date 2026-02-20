@@ -1,3 +1,6 @@
+## 0.0.51
+*INCOMPLETE*
+
 ## 0.0.50
 + Added support for `aac`, `flac`, `mp3`, `opus`, `wav` response formats in `muna.Beta.Openai.Audio.Speech.Create` method.
 + Fixed errors when making remote predictions with image inputs or outputs.
