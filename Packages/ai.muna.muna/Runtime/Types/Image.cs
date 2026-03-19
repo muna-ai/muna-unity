@@ -61,7 +61,7 @@ namespace Muna {
         /// <param name="width">Image width.</param>
         /// <param name="height">Image height</param>
         /// <param name="channels">Image channels.</param>
-        public unsafe Image(byte* data, int width, int height, int channels) { // Enables zero copy into `FXNValue`
+        public Image(byte* data, int width, int height, int channels) { // Enables zero copy into `FXNValue`
             this.data = null!;
             this.nativeData = data;
             this.width = width;

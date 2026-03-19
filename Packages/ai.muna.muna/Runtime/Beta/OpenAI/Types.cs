@@ -241,6 +241,44 @@ namespace Muna.Beta.OpenAI {
     }
     
     /// <summary>
+    /// Transcription result.
+    /// </summary>
+    public sealed class Transcription {
+
+#pragma warning disable 8618
+        /// <summary>
+        /// Transcribed text.
+        /// </summary>
+        [JsonProperty(@"text")]
+        public string Text;
+#pragma warning restore 8618
+
+        /// <summary>
+        /// Token usage statistics for the request.
+        /// </summary>
+        [JsonProperty(@"usage")]
+        public UsageInfo Usage;
+
+        /// <summary>
+        /// Usage statistics for models that track audio input duration.
+        /// </summary>
+        public struct UsageInfo {
+
+            /// <summary>
+            /// Usage type. Always `duration`.
+            /// </summary>
+            [JsonProperty(@"type")]
+            public string Type;
+
+            /// <summary>
+            /// Duration of the input audio in seconds.
+            /// </summary>
+            [JsonProperty(@"seconds")]
+            public float Seconds;
+        }
+    }
+
+    /// <summary>
     /// Chat completion chunk.
     /// </summary>
     public sealed class ChatCompletionChunk {

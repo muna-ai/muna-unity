@@ -1,8 +1,8 @@
 ## 0.0.51
-*INCOMPLETE*
++ Added `muna.Beta.OpenAI.Audio.Transcriptions.Create` method for using speech-to-text models via our OpenAI-compatible client.
 
 ## 0.0.50
-+ Added support for `aac`, `flac`, `mp3`, `opus`, `wav` response formats in `muna.Beta.Openai.Audio.Speech.Create` method.
++ Added support for `aac`, `flac`, `mp3`, `opus`, `wav` response formats in `muna.Beta.OpenAI.Audio.Speech.Create` method.
 + Fixed errors when making remote predictions with image inputs or outputs.
 + Fixed sporadic timeout error when making some predictions.
 + Replaced `Parameter.range` field to `Parameter.min` and `Parameter.max` fields.

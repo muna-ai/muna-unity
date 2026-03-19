@@ -21,6 +21,11 @@ namespace Muna.Beta.OpenAI {
         /// Create speech.
         /// </summary>
         public readonly SpeechService Speech;
+
+        /// <summary>
+        /// Create transcriptions.
+        /// </summary>
+        public readonly TranscriptionService Transcriptions;
         #endregion
 
 
@@ -32,6 +37,7 @@ namespace Muna.Beta.OpenAI {
             RemotePredictionService remotePredictions
         ) {
             Speech = new SpeechService(predictors, predictions, remotePredictions);
+            Transcriptions = new TranscriptionService(predictors, predictions, remotePredictions);
         }
         #endregion
     }
