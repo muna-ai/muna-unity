@@ -1,3 +1,6 @@
+## 0.0.52
+*INCOMPLETE*
+
 ## 0.0.51
 + Added `muna.Beta.OpenAI.Audio.Transcriptions.Create` method for using speech-to-text models via our OpenAI-compatible client.
 
