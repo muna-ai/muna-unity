@@ -5,8 +5,10 @@
 
 namespace Muna.Tests {
 
+    using System.IO;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using UnityEngine;
     using Beta.OpenAI;
 
     internal sealed class OpenAITest {
@@ -87,6 +89,19 @@ namespace Muna.Tests {
             Assert.NotNull(response);
             Assert.IsFalse(response.IsEmpty);
             Assert.That(response.MediaType, Does.StartWith(@"audio/mp3"));
+        }
+
+        [Test(Description = @"Should create a transcription")]
+        public async Task CreateTranscription() {
+            var path = Path.Combine(Application.streamingAssetsPath, @"librispeech_sample.wav");
+            using var file = File.OpenRead(path);
+            var response = await muna.Beta.OpenAI.Audio.Transcriptions.Create(
+                model: "@moonshine/moonshine-base",
+                file: file,
+                acceleration: Acceleration.Auto
+            );
+            Assert.NotNull(response);
+            Assert.IsNotEmpty(response.Text);
         }
     }
 }
