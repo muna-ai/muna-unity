@@ -13,8 +13,6 @@ namespace Muna.Beta.OpenAI {
     using System.Linq;
     using System.Threading.Tasks;
     using Services;
-    using PredictorService = global::Muna.Services.PredictorService;
-    using EdgePredictionService = global::Muna.Services.PredictionService;
 
     /// <summary>
     /// Create transcriptions.
@@ -27,18 +25,18 @@ namespace Muna.Beta.OpenAI {
         /// </summary>
         /// <param name="model">Audio transcription model tag.</param>
         /// <param name="file">Audio file to transcribe as a `Stream` in `flac`, `mp3`, `m4a`, `ogg`, or `wav` format.</param>
+        /// <param name="acceleration">Prediction acceleration.</param>
         /// <param name="language">The language of the input audio.</param>
         /// <param name="prompt">Text to guide the model's style or continue a previous audio segment.</param>
         /// <param name="temperature">The sampling temperature, between 0 and 1.</param>
-        /// <param name="acceleration">Prediction acceleration. Must be `Acceleration` or `RemoteAcceleration` instance.</param>
         /// <returns>Transcription result.</returns>
         public Task<Transcription> Create(
             string model,
             Stream file,
-            string? language = null,
-            string? prompt = null,
+            string? language = default,
+            string? prompt = default,
             float temperature = 0f,
-            object? acceleration = null
+            string? acceleration = default
         ) => Create(
             model,
             file: (object)file,
@@ -56,15 +54,15 @@ namespace Muna.Beta.OpenAI {
         /// <param name="language">The language of the input audio.</param>
         /// <param name="prompt">Text to guide the model's style or continue a previous audio segment.</param>
         /// <param name="temperature">The sampling temperature, between 0 and 1.</param>
-        /// <param name="acceleration">Prediction acceleration. Must be `Acceleration` or `RemoteAcceleration` instance.</param>
+        /// <param name="acceleration">Prediction acceleration.</param>
         /// <returns>Transcription result.</returns>
         public Task<Transcription> Create(
             string model,
             Audio file,
-            string? language = null,
-            string? prompt = null,
+            string? language = default,
+            string? prompt = default,
             float temperature = 0f,
-            object? acceleration = null
+            string? acceleration = default
         ) => Create(
             model,
             file: (object)file,
@@ -78,8 +76,7 @@ namespace Muna.Beta.OpenAI {
 
         #region --Operations--
         private readonly PredictorService predictors;
-        private readonly EdgePredictionService predictions;
-        private readonly RemotePredictionService remotePredictions;
+        private readonly PredictionService predictions;
         private readonly Dictionary<string, TranscriptionDelegate> cache;
         private delegate Task<Transcription> TranscriptionDelegate(
             string model,
@@ -87,18 +84,43 @@ namespace Muna.Beta.OpenAI {
             string? language,
             string? prompt,
             float temperature,
-            object acceleration
+            string? acceleration
         );
 
         internal TranscriptionService(
             PredictorService predictors,
-            EdgePredictionService predictions,
-            RemotePredictionService remotePredictions
+            PredictionService predictions
         ) {
             this.predictors = predictors;
             this.predictions = predictions;
-            this.remotePredictions = remotePredictions;
             this.cache = new();
+        }
+
+        private async Task<Transcription> Create(
+            string model,
+            object file,
+            string? language,
+            string? prompt,
+            float temperature,
+            string? acceleration
+        ) {
+            // Ensure we have a delegate
+            if (!cache.ContainsKey(model)) {
+                var @delegate = await CreateTranscriptionDelegate(model);
+                cache.Add(model, @delegate);
+            }
+            // Make prediction
+            var handler = cache[model];
+            var result = await handler(
+                model: model,
+                file: file,
+                language: language,
+                prompt: prompt,
+                temperature: temperature,
+                acceleration: acceleration
+            );
+            // Return
+            return result;
         }
 
         private async Task<TranscriptionDelegate> CreateTranscriptionDelegate(string tag) {
@@ -160,7 +182,7 @@ namespace Muna.Beta.OpenAI {
                 string? language,
                 string? prompt,
                 float temperature,
-                object acceleration
+                string? acceleration
             ) => {
                 // Read audio samples
                 var samples = ReadAudioSamples(file, audioParam.sampleRate!.Value);
@@ -175,7 +197,7 @@ namespace Muna.Beta.OpenAI {
                 if (temperatureParam != null)
                     inputMap[temperatureParam.name] = temperature;
                 // Create prediction
-                var prediction = await CreatePrediction(
+                var prediction = await predictions.Create(
                     model,
                     inputs: inputMap,
                     acceleration: acceleration
@@ -205,43 +227,6 @@ namespace Muna.Beta.OpenAI {
             // Return
             return result;
         }
-
-        private async Task<Transcription> Create(
-            string model,
-            object file,
-            string? language,
-            string? prompt,
-            float temperature,
-            object? acceleration
-        ) {
-            // Ensure we have a delegate
-            if (!cache.ContainsKey(model)) {
-                var @delegate = await CreateTranscriptionDelegate(model);
-                cache.Add(model, @delegate);
-            }
-            // Make prediction
-            var handler = cache[model];
-            var result = await handler(
-                model,
-                file,
-                language,
-                prompt,
-                temperature,
-                acceleration: acceleration ?? Acceleration.Auto
-            );
-            // Return
-            return result;
-        }
-
-        private Task<Prediction> CreatePrediction(
-            string tag,
-            Dictionary<string, object?> inputs,
-            object acceleration
-        ) => acceleration switch {
-            Acceleration acc        => predictions.Create(tag, inputs, acc),
-            RemoteAcceleration acc  => remotePredictions.Create(tag, inputs, acc),
-            _ => throw new InvalidOperationException($"Cannot create {tag} prediction because acceleration is invalid: {acceleration}")
-        };
 
         private static Tensor<float> ReadAudioSamples(object file, int sampleRate) {
             if (file is Audio audio) {

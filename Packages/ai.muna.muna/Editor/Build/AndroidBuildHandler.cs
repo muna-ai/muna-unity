@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 namespace Muna.Editor.Build {
@@ -79,7 +79,7 @@ namespace Muna.Editor.Build {
                     try {
                         if (resource.type != @"dso")
                             continue;
-                        var baseName = Path.GetFileName(PredictionService.GetResourcePath(resource, libDir));
+                        var baseName = Path.GetFileName(LocalPredictionService.GetResourcePath(resource, libDir));
                         var libName = $"lib{baseName}.so";
                         var path = Path.Combine(libDir, libName);
                         using var dsoStream = Task.Run(() => client.Download(resource.url)).Result;

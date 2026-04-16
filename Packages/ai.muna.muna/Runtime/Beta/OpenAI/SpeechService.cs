@@ -15,8 +15,6 @@ namespace Muna.Beta.OpenAI {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
     using Services;
-    using PredictorService = global::Muna.Services.PredictorService;
-    using EdgePredictionService = global::Muna.Services.PredictionService;
 
     /// <summary>
     /// Create speech.
@@ -85,7 +83,7 @@ namespace Muna.Beta.OpenAI {
         /// <param name="speed">The speed of the generated audio. Defaults to 1.0.</param>
         /// <param name="responseFormat">Audio output format.</param>
         /// <param name="streamFormat">The format to stream the audio in.</param>
-        /// <param name="acceleration">Prediction acceleration. Must be `Acceleration` or `RemoteAcceleration` instance.</param>
+        /// <param name="acceleration">Prediction acceleration.</param>
         /// <returns>Generated audio.</returns>
         public async Task<BinaryData> Create(
             string model,
@@ -94,7 +92,7 @@ namespace Muna.Beta.OpenAI {
             float speed = 1f,
             ResponseFormat responseFormat = ResponseFormat.MP3,
             StreamFormat streamFormat = StreamFormat.Audio,
-            object? acceleration = null
+            string? acceleration = default
         ) {
             // Ensure we have a delegate
             if (!cache.ContainsKey(model)) {
@@ -110,7 +108,7 @@ namespace Muna.Beta.OpenAI {
                 speed,
                 responseFormat,
                 streamFormat,
-                acceleration: acceleration ?? Acceleration.Auto
+                acceleration: acceleration
             );
             // Return
             return result;
@@ -120,8 +118,7 @@ namespace Muna.Beta.OpenAI {
 
         #region --Operations--
         private readonly PredictorService predictors;
-        private readonly EdgePredictionService predictions;
-        private readonly RemotePredictionService remotePredictions;
+        private readonly PredictionService predictions;
         private readonly Dictionary<string, SpeechDelegate> cache;
         private delegate Task<BinaryData> SpeechDelegate(
             string model,
@@ -130,17 +127,15 @@ namespace Muna.Beta.OpenAI {
             float speed,
             ResponseFormat responseFormat,
             StreamFormat streamFormat,
-            object acceleration
+            string? acceleration
         );
 
         internal SpeechService(
             PredictorService predictors,
-            EdgePredictionService predictions,
-            RemotePredictionService remotePredictions
+            PredictionService predictions
         ) {
             this.predictors = predictors;
             this.predictions = predictions;
-            this.remotePredictions = remotePredictions;
             this.cache = new();
         }
 
@@ -204,7 +199,7 @@ namespace Muna.Beta.OpenAI {
                 float speed,
                 ResponseFormat responseFormat,
                 StreamFormat streamFormat,
-                object acceleration
+                string? acceleration
             ) => {
                 // Check stream format
                 if (streamFormat != StreamFormat.Audio)
@@ -220,7 +215,7 @@ namespace Muna.Beta.OpenAI {
                 if (speedParam != null)
                     inputMap[speedParam.name] = speed;
                 // Create prediction
-                var prediction = await CreatePrediction(
+                var prediction = await predictions.Create(
                     model,
                     inputs: inputMap,
                     acceleration: acceleration
@@ -252,16 +247,6 @@ namespace Muna.Beta.OpenAI {
             return result;
         }
 
-        private Task<Prediction> CreatePrediction(
-            string tag,
-            Dictionary<string, object?> inputs,
-            object acceleration
-        ) => acceleration switch {
-            Acceleration acc        => predictions.Create(tag, inputs, acc),
-            RemoteAcceleration acc  => remotePredictions.Create(tag, inputs, acc),
-            _ => throw new InvalidOperationException($"Cannot create {tag} prediction because acceleration is invalid: {acceleration}")
-        };
-
         private static unsafe (byte[] content, string contentType) CreateResponseData(
             Tensor<float> audio,
             int sampleRate,
@@ -284,7 +269,7 @@ namespace Muna.Beta.OpenAI {
                 return (data, contentType);
             }
             using var audioValue = C.Value.CreateArray(audio, C.Value.Flags.CopyData);
-            var mime = $"audio/{EdgePredictionService.SerializeEnum(responseFormat)};rate={sampleRate}";
+            var mime = $"audio/{responseFormat.SerializeEnum()};rate={sampleRate}";
             var serializedData = audioValue.Serialize(mime);
             return (serializedData, mime);
         }

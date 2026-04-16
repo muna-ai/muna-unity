@@ -87,7 +87,7 @@ namespace Muna.API {
                 }
             );
             // Download resources
-            var resources = new PredictionResource[prediction!.resources.Length];
+            var resources = new PredictionResource[prediction!.resources!.Length];
             for (var i = 0; i < resources.Length; ++i)
                 resources[i] = await GetCachedResource(prediction.resources[i]);
             prediction.resources = resources;
@@ -102,7 +102,7 @@ namespace Muna.API {
         #region --Operations--
 
         private async Task<PredictionResource> GetCachedResource(PredictionResource resource) {
-            var path = PredictionService.GetResourcePath(resource, PredictionCache.ResourceCachePath);
+            var path = LocalPredictionService.GetResourcePath(resource, PredictionCache.ResourceCachePath);
             if (!File.Exists(path)) {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 using var dataStream = await Download(resource.url);

@@ -1,5 +1,8 @@
 ## 0.0.52
-*INCOMPLETE*
++ Added support for remote and adaptive `acceleration` in `muna.Predictions.Create` method.
++ Removed `muna.Beta.Predictions.Remote.Create` method. Use `muna.Predictions.Create` method instead.
++ Removed `muna.beta.Predictions.Remote.Stream` method. Use `muna.Predictions.Stream` method instead.
++ Removed `muna.Beta.RemoteAcceleration` type. Use `muna.Acceleration` type instead.
 
 ## 0.0.51
 + Added `muna.Beta.OpenAI.Audio.Transcriptions.Create` method for using speech-to-text models via our OpenAI-compatible client.

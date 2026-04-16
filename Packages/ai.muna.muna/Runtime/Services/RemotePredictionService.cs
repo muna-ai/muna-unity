@@ -1,11 +1,11 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
 
-namespace Muna.Beta.Services {
+namespace Muna.Services {
 
     using System;
     using System.Collections;
@@ -21,7 +21,7 @@ namespace Muna.Beta.Services {
     /// <summary>
     /// Make remote predictions.
     /// </summary>
-    public sealed class RemotePredictionService {
+    internal sealed class RemotePredictionService {
 
         #region --Client API--
         /// <summary>
@@ -34,7 +34,7 @@ namespace Muna.Beta.Services {
         public async Task<Prediction> Create(
             string tag,
             Dictionary<string, object?> inputs,
-            RemoteAcceleration acceleration = default
+            string acceleration
         ) {
             await Configuration.InitializationTask;
             var inputMap = new Dictionary<string, RemoteValue>();
@@ -62,7 +62,7 @@ namespace Muna.Beta.Services {
         public async IAsyncEnumerable<Prediction> Stream(
             string tag,
             Dictionary<string, object?> inputs,
-            RemoteAcceleration acceleration = default
+            string acceleration
         ) {
             await Configuration.InitializationTask;
             var inputMap = new Dictionary<string, RemoteValue>();

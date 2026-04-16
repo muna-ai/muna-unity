@@ -5,7 +5,7 @@
 
 #nullable enable
 
-namespace Muna.Beta {
+namespace Muna {
 
     using System;
     using System.IO;
@@ -63,6 +63,14 @@ namespace Muna.Beta {
             var result = new MemoryStream();
             stream.CopyTo(result);
             return result;
+        }
+
+        internal static object? SerializeEnum(this Enum? value) {
+            if (value == null)
+                return null;
+            var fieldInfo = value.GetType().GetField(value.ToString());
+            var attribute = fieldInfo?.GetCustomAttributes(typeof(EnumMemberAttribute), false)?.FirstOrDefault() as EnumMemberAttribute;
+            return (attribute?.IsValueSetExplicitly ?? false) ? attribute.Value : Convert.ToInt32(value);
         }
     }
 }

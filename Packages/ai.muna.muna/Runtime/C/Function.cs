@@ -197,12 +197,12 @@ namespace Muna.C {
         [DllImport(Assembly, EntryPoint = @"FXNConfigurationGetAcceleration")]
         public static extern Status GetConfigurationAcceleration(
             this IntPtr configuration,
-            out Acceleration acceleration
+            out int acceleration
         );
         [DllImport(Assembly, EntryPoint = @"FXNConfigurationSetAcceleration")]
         public static extern Status SetConfigurationAcceleration(
             this IntPtr configuration,
-            Acceleration acceleration
+            int acceleration
         );
         [DllImport(Assembly, EntryPoint = @"FXNConfigurationSetDevice")]
         public static extern Status SetConfigurationDevice(

@@ -13,8 +13,6 @@ namespace Muna.Beta.OpenAI {
     using System.Threading.Tasks;
     using Newtonsoft.Json.Linq;
     using Services;
-    using PredictorService = global::Muna.Services.PredictorService;
-    using EdgePredictionService = global::Muna.Services.PredictionService;
 
     /// <summary>
     /// Create chat completions.
@@ -46,7 +44,7 @@ namespace Muna.Beta.OpenAI {
             float? topP = null,
             float? frequencyPenalty = null,
             float? presencePenalty = null,
-            object? acceleration = null
+            string? acceleration = null
         ) {
             // Ensure we have a delegate
             if (!cache.ContainsKey(model))
@@ -64,7 +62,7 @@ namespace Muna.Beta.OpenAI {
                 topP,
                 frequencyPenalty,
                 presencePenalty,
-                acceleration: acceleration ?? Acceleration.Auto
+                acceleration: acceleration
             );
             // Return
             return (ChatCompletion)result;
@@ -87,14 +85,14 @@ namespace Muna.Beta.OpenAI {
         public async IAsyncEnumerable<ChatCompletionChunk> Stream(
             string model,
             ChatMessage[] messages,
-            Dictionary<string, object?>? responseFormat = null,
-            string? reasoningEffort = null,
-            int? maxCompletionTokens = null,
-            float? temperature = null,
-            float? topP = null,
-            float? frequencyPenalty = null,
-            float? presencePenalty = null,
-            object? acceleration = null
+            Dictionary<string, object?>? responseFormat = default,
+            string? reasoningEffort = default,
+            int? maxCompletionTokens = default,
+            float? temperature = default,
+            float? topP = default,
+            float? frequencyPenalty = default,
+            float? presencePenalty = default,
+            string? acceleration = default
         ) {
             // Ensure we have a delegate
             if (!cache.ContainsKey(model))
@@ -112,7 +110,7 @@ namespace Muna.Beta.OpenAI {
                 topP,
                 frequencyPenalty,
                 presencePenalty,
-                acceleration: acceleration ?? Acceleration.Auto
+                acceleration: acceleration ?? @"local_auto"
             );
             // Return
             var stream = (IAsyncEnumerable<ChatCompletionChunk>)result;
@@ -124,8 +122,7 @@ namespace Muna.Beta.OpenAI {
 
         #region --Operations--
         private readonly PredictorService predictors;
-        private readonly EdgePredictionService predictions;
-        private readonly RemotePredictionService remotePredictions;
+        private readonly PredictionService predictions;
         private readonly Dictionary<string, CompletionDelegate> cache;
         private delegate Task<object> CompletionDelegate(
             string model,
@@ -138,17 +135,15 @@ namespace Muna.Beta.OpenAI {
             float? topP,
             float? frequencyPenalty,
             float? presencePenalty,
-            object acceleration
+            string? acceleration
         );
 
         internal ChatCompletionService(
             PredictorService predictors,
-            EdgePredictionService predictions,
-            RemotePredictionService remotePredictions
+            PredictionService predictions
         ) {
             this.predictors = predictors;
             this.predictions = predictions;
-            this.remotePredictions = remotePredictions;
             this.cache = new();
         }
 
@@ -236,7 +231,7 @@ namespace Muna.Beta.OpenAI {
                 float? topP,
                 float? frequencyPenalty,
                 float? presencePenalty,
-                object acceleration
+                string? acceleration
             ) => {
                 // Build prediction input map
                 var inputMap = new Dictionary<string, object?> { [inputParam.name] = messages };
@@ -255,7 +250,7 @@ namespace Muna.Beta.OpenAI {
                 if (presencePenaltyParam != null && presencePenalty != null)
                     inputMap[presencePenaltyParam.name] = presencePenalty.Value;
                 // Stream predictions
-                var predictionStream = StreamPrediction(model, inputMap, acceleration);
+                var predictionStream = predictions.Stream(model, inputMap, acceleration);
                 if (stream)
                     return (object)GatherCompletionChunks(predictionStream, completionParamIdx.Value);
                 else
@@ -264,16 +259,6 @@ namespace Muna.Beta.OpenAI {
             // Return
             return result;
         }
-
-        private IAsyncEnumerable<Prediction> StreamPrediction(
-            string tag,
-            Dictionary<string, object?> inputs,
-            object acceleration
-        ) => acceleration switch {
-            Acceleration acc        => predictions.Stream(tag, inputs, acc),
-            RemoteAcceleration acc  => remotePredictions.Stream(tag, inputs, acc),
-            _ => throw new InvalidOperationException($"Cannot stream {tag} prediction because acceleration is invalid: {acceleration}")
-        };
 
         private static async Task<ChatCompletion> GatherChatCompletion(
             IAsyncEnumerable<Prediction> predictions,

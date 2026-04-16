@@ -8,8 +8,6 @@
 namespace Muna.Beta.OpenAI {
 
     using Services;
-    using PredictorService = global::Muna.Services.PredictorService;
-    using EdgePredictionService = global::Muna.Services.PredictionService;
 
     /// <summary>
     /// Create chat conversations.
@@ -28,10 +26,9 @@ namespace Muna.Beta.OpenAI {
 
         internal ChatService(
             PredictorService predictors,
-            EdgePredictionService predictions,
-            RemotePredictionService remotePredictions
+            PredictionService predictions
         ) {
-            Completions = new ChatCompletionService(predictors, predictions, remotePredictions);
+            Completions = new ChatCompletionService(predictors, predictions);
         }
         #endregion
     }

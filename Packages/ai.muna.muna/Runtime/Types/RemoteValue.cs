@@ -5,7 +5,7 @@
 
 #nullable enable
 
-namespace Muna.Beta {
+namespace Muna {
 
     using System;
     using System.IO;

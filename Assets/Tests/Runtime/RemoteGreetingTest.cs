@@ -11,17 +11,17 @@ namespace Muna.Tests {
 
     internal sealed class RemoteGreetingTest : MonoBehaviour {
 
-        public RemoteAcceleration acceleration;
+        public Acceleration acceleration;
         private const string Tag = "@fxn/greeting";
 
         private async void Start() {
             var muna = MunaUnity.Create();
-            var prediction = await muna.Beta.Predictions.Remote.Create(
+            var prediction = await muna.Predictions.Create(
                 tag: Tag,
                 inputs: new() {
                     [@"name"] = "Yusuf"
                 },
-                acceleration: acceleration
+                acceleration: acceleration.ToAccelerationString()
             );
             Debug.Log(JsonConvert.SerializeObject(prediction, Formatting.Indented));
         }

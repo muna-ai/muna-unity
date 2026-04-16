@@ -8,8 +8,6 @@
 namespace Muna.Beta.OpenAI {
 
     using Services;
-    using PredictorService = global::Muna.Services.PredictorService;
-    using EdgePredictionService = global::Muna.Services.PredictionService;
 
     /// <summary>
     /// Create speech and transcriptions.
@@ -33,11 +31,10 @@ namespace Muna.Beta.OpenAI {
 
         internal AudioService(
             PredictorService predictors,
-            EdgePredictionService predictions,
-            RemotePredictionService remotePredictions
+            PredictionService predictions
         ) {
-            Speech = new SpeechService(predictors, predictions, remotePredictions);
-            Transcriptions = new TranscriptionService(predictors, predictions, remotePredictions);
+            Speech = new SpeechService(predictors, predictions);
+            Transcriptions = new TranscriptionService(predictors, predictions);
         }
         #endregion
     }

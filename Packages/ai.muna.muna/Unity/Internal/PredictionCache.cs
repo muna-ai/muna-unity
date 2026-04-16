@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -147,7 +147,7 @@ namespace Muna.Internal {
                 var cachedResource = cachedResources[idx];
                 var cachedPath = new Uri(cachedResource.url).LocalPath;
                 var embeddedPath = embeddedResources != null ?
-                    PredictionService.GetResourcePath(embeddedResources[idx], ResourceCachePath) :
+                    LocalPredictionService.GetResourcePath(embeddedResources[idx], ResourceCachePath) :
                     null;
                 if (!File.Exists(cachedPath))
                     return false;

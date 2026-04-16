@@ -8,9 +8,7 @@
 namespace Muna.Beta.OpenAI {
 
     using System;
-    using System.Runtime.Serialization;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
 
     /// <summary>
     /// Binary data with an optional content type.

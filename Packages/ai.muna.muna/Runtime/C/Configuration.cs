@@ -35,7 +35,7 @@ namespace Muna.C {
             set => configuration.SetConfigurationToken(value).Throw();
         }
 
-        public Acceleration acceleration {
+        public int acceleration {
             get => configuration.GetConfigurationAcceleration(out var acceleration).Throw() == Status.Ok ? acceleration : default;
             set => configuration.SetConfigurationAcceleration(value).Throw();
         }

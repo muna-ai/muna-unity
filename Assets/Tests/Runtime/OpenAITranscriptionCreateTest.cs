@@ -20,8 +20,7 @@ namespace Muna.Tests {
             using var file = await LoadStreamingAsset(@"librispeech_sample.wav");
             var response = await openai.Audio.Transcriptions.Create(
                 model: ModelTag,
-                file: file,
-                acceleration: Acceleration.Auto
+                file: file
             );
             Debug.Log(response.Text);
         }

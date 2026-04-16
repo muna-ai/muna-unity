@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 using System.Reflection;
@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCompany(@"NatML Inc.")]
 [assembly: AssemblyTitle(@"Muna.Editor")]
 [assembly: AssemblyVersion(Muna.Muna.Version)]
-[assembly: AssemblyCopyright(@"Copyright © 2025 NatML Inc. All Rights Reserved.")]
+[assembly: AssemblyCopyright(@"Copyright © 2026 NatML Inc. All Rights Reserved.")]
 [assembly: InternalsVisibleTo(@"Muna.Tests.Editor")]
 [assembly: InternalsVisibleTo(@"Muna.Tests.Runtime")]
 

@@ -16,8 +16,6 @@ namespace Muna.Beta.OpenAI {
     using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Linq;
     using Services;
-    using PredictorService = global::Muna.Services.PredictorService;
-    using EdgePredictionService = global::Muna.Services.PredictionService;
 
     /// <summary>
     /// Create embeddings.
@@ -54,9 +52,9 @@ namespace Muna.Beta.OpenAI {
         public Task<CreateEmbeddingResponse> Create(
             string model,
             string input,
-            int? dimensions = null,
+            int? dimensions = default,
             EncodingFormat encodingFormat = EncodingFormat.Float,
-            object? acceleration = null
+            string? acceleration = default
         ) => Create(
             model,
             new[] { input },
@@ -79,7 +77,7 @@ namespace Muna.Beta.OpenAI {
             string[] input,
             int? dimensions = null,
             EncodingFormat encodingFormat = EncodingFormat.Float,
-            object? acceleration = null
+            string? acceleration = null
         ) {
             // Ensure we have a delegate
             if (!cache.ContainsKey(model)) {
@@ -93,7 +91,7 @@ namespace Muna.Beta.OpenAI {
                 input,
                 dimensions,
                 encodingFormat,
-                acceleration: acceleration ?? Acceleration.Auto
+                acceleration: acceleration ?? @"local_auto"
             );
             // Return
             return result;
@@ -103,25 +101,22 @@ namespace Muna.Beta.OpenAI {
 
         #region --Operations--
         private readonly PredictorService predictors;
-        private readonly EdgePredictionService predictions;
-        private readonly RemotePredictionService remotePredictions;
+        private readonly PredictionService predictions;
         private readonly Dictionary<string, EmbeddingDelegate> cache;
         private delegate Task<CreateEmbeddingResponse> EmbeddingDelegate(
             string model,
             string[] input,
             int? dimensions,
             EncodingFormat encodingFormat,
-            object acceleration
+            string acceleration
         );
 
         internal EmbeddingService(
             PredictorService predictors,
-            EdgePredictionService predictions,
-            RemotePredictionService remotePredictions
+            PredictionService predictions
         ) {
             this.predictors = predictors;
             this.predictions = predictions;
-            this.remotePredictions = remotePredictions;
             this.cache = new();
         }
 
@@ -186,7 +181,7 @@ namespace Muna.Beta.OpenAI {
                 string[] input,
                 int? dimensions,
                 EncodingFormat encodingFormat,
-                object acceleration
+                string acceleration
             ) => {
                 // Build prediction input map
                 var inputMap = new Dictionary<string, object?> {
@@ -195,7 +190,7 @@ namespace Muna.Beta.OpenAI {
                 if (dimensions != null && matryoshkaParam != null)
                     inputMap[matryoshkaParam.name] = dimensions.Value;
                 // Create prediction
-                var prediction = await CreatePrediction(
+                var prediction = await predictions.Create(
                     model,
                     inputs: inputMap,
                     acceleration: acceleration
@@ -235,16 +230,6 @@ namespace Muna.Beta.OpenAI {
             // Return
             return result;
         }
-
-        private Task<Prediction> CreatePrediction(
-            string tag,
-            Dictionary<string, object?> inputs,
-            object acceleration
-        ) => acceleration switch {
-            Acceleration acc        => predictions.Create(tag, inputs, acc),
-            RemoteAcceleration acc  => remotePredictions.Create(tag, inputs, acc),
-            _ => throw new InvalidOperationException($"Cannot create {tag} prediction because acceleration is invalid: {acceleration}")
-        };
 
         private unsafe Embedding ParseEmbedding(
             Tensor<float> matrix,

@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCompany(@"NatML Inc.")]
 [assembly: AssemblyTitle(@"Muna.Runtime")]
 [assembly: AssemblyVersion(Muna.Muna.Version)]
-[assembly: AssemblyCopyright(@"Copyright © 2025 NatML Inc. All Rights Reserved.")]
+[assembly: AssemblyCopyright(@"Copyright © 2026 NatML Inc. All Rights Reserved.")]
 [assembly: InternalsVisibleTo(@"Muna.Unity")]
 [assembly: InternalsVisibleTo(@"Muna.Editor")]
 [assembly: InternalsVisibleTo(@"Muna.Tests.Editor")]

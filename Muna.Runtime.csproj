@@ -50,25 +50,26 @@
   <ItemGroup>
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Prediction.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/EmbeddingService.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Types/ValueUtils.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/ChatService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Services/UserService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/BetaClient.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Remote/RemoteAcceleration.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Types/RemoteValue.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Types/ValueUtils.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/PredictionStream.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/ImageService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Prediction.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/API/MunaClient.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Services/RemotePredictionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Image.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Remote/PredictionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Parameter.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/Types.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/OpenAIClient.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Services/PredictorService.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Services/LocalPredictionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Services/PredictionService.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Types.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Configuration.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/AudioService.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Remote/RemotePredictionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/SpeechService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/API/DotNetClient.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Function.cs" />
@@ -80,8 +81,6 @@
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Dtype.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Muna.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Value.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Types/RemoteValue.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Types/Audio.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/CompletionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Predictor.cs" />
   </ItemGroup>

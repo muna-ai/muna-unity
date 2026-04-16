@@ -38,12 +38,11 @@ namespace Muna.Beta.OpenAI {
 
         internal OpenAIClient(
             PredictorService predictors,
-            EdgePredictionService predictions,
-            RemotePredictionService remotePredictions
+            PredictionService predictions
         ) {
-            Chat = new ChatService(predictors, predictions, remotePredictions);
-            Embeddings = new EmbeddingService(predictors, predictions, remotePredictions);
-            Audio = new AudioService(predictors, predictions, remotePredictions);
+            Chat = new ChatService(predictors, predictions);
+            Embeddings = new EmbeddingService(predictors, predictions);
+            Audio = new AudioService(predictors, predictions);
         }
         #endregion
     }
