@@ -1,3 +1,6 @@
+## 0.0.53
++ Upgraded to Function C 0.0.46.
+
 ## 0.0.52
 + Added `muna.Json` type for handling JSON outputs from predictions. Note that this is a breaking change.
 + Added support for remote and adaptive `acceleration` in `muna.Predictions.Create` method.
