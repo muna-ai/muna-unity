@@ -176,6 +176,6 @@ namespace Muna {
         /// <summary>
         /// Convert an acceleration constant to a string.
         /// </summary>
-        public static string ToAccelerationString(this Acceleration acc) => (string)acc.SerializeEnum()!;
+        public static string AsString(this Acceleration acc) => (string)acc.SerializeEnum()!;
     }
 }

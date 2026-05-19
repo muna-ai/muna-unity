@@ -1,4 +1,5 @@
 ## 0.0.52
++ Added `muna.Json` type for handling JSON outputs from predictions. Note that this is a breaking change.
 + Added support for remote and adaptive `acceleration` in `muna.Predictions.Create` method.
 + Removed `muna.Beta.Predictions.Remote.Create` method. Use `muna.Predictions.Create` method instead.
 + Removed `muna.beta.Predictions.Remote.Stream` method. Use `muna.Predictions.Stream` method instead.

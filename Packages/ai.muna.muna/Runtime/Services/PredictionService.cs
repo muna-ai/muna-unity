@@ -65,9 +65,9 @@ namespace Muna.Services {
             string? acceleration = default,
             IntPtr device = default
         ) {
-            var stream = acceleration == default || acceleration.StartsWith("local_")
-                ? local.Stream(tag, inputs, acceleration, device)
-                : remote.Stream(tag, inputs, acceleration);
+            var stream = acceleration == default || acceleration.StartsWith("local_") ?
+                local.Stream(tag, inputs, acceleration, device) :
+                remote.Stream(tag, inputs, acceleration);
             await foreach (var prediction in stream)
                 yield return prediction;
         }
@@ -77,9 +77,7 @@ namespace Muna.Services {
         /// </summary>
         /// <param name="tag">Predictor tag.</param>
         /// <returns>Whether the predictor was successfully deleted from memory.</returns>
-        public Task<bool> Delete(string tag) {
-            return local.Delete(tag);
-        }
+        public Task<bool> Delete(string tag) => local.Delete(tag);
         #endregion
 
 

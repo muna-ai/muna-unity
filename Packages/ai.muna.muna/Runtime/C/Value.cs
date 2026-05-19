@@ -66,8 +66,8 @@ namespace Muna.C {
             Dtype.Uint64    => ToObject((ulong*)data, shape),
             Dtype.Bool      => ToObject((bool*)data, shape),
             Dtype.String    => Marshal.PtrToStringUTF8((IntPtr)data),
-            Dtype.List      => JsonConvert.DeserializeObject<JArray>(Marshal.PtrToStringUTF8((IntPtr)data)),
-            Dtype.Dict      => JsonConvert.DeserializeObject<JObject>(Marshal.PtrToStringUTF8((IntPtr)data)),
+            Dtype.List      => new Json(ToArray((byte*)data, GetUtf8Length(data))),
+            Dtype.Dict      => new Json(ToArray((byte*)data, GetUtf8Length(data))),
             Dtype.Image     => new Image(ToArray((byte*)data, shape), shape[1], shape[0], shape[2]),
             Dtype.Binary    => new MemoryStream(ToArray((byte*)data, shape)),
             _               => throw new InvalidOperationException($"Cannot convert Muna value to object because value type is unsupported: {dtype}"),
@@ -201,9 +201,13 @@ namespace Muna.C {
         }
 
         private static unsafe T[] ToArray<T>(T* data, int[] shape) where T : unmanaged {
-            var count = shape.Aggregate(1, (a, b) => a * b);
-            var result = new T[count];
-            var size = count * sizeof(T);
+            var length = shape.Aggregate(1, (a, b) => a * b);
+            return ToArray(data, length);
+        }
+
+        private static unsafe T[] ToArray<T>(T* data, int length) where T : unmanaged {
+            var result = new T[length];
+            var size = length * sizeof(T);
             fixed (void* dst = result)
                 Buffer.MemoryCopy(data, dst, size, size);
             return result;
@@ -223,6 +227,16 @@ namespace Muna.C {
             bool    _ => Dtype.Bool,
                     _ => Dtype.Null,
         };
+
+        private static int GetUtf8Length(void* ptr) {
+            if (ptr == null)
+                return 0;
+            var len = 0;
+            var data = (byte*)ptr;
+            while (data[len] != 0)
+                len++;
+            return len;
+        }
         #endregion
     }
 }

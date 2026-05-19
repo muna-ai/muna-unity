@@ -42,7 +42,7 @@
     <UnityVersion>6000.0.58f2</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="/Users/yusuf/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.1/Analyzers/Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="/Users/yusuf/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.58f2/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.58f2/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.58f2/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
@@ -60,6 +60,7 @@
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Prediction.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/API/MunaClient.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Services/RemotePredictionService.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/Types/Json.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Image.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Parameter.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/Types.cs" />

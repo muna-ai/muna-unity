@@ -21,7 +21,7 @@ namespace Muna.Tests {
                 inputs: new() {
                     [@"name"] = "Yusuf"
                 },
-                acceleration: acceleration.ToAccelerationString()
+                acceleration: acceleration.AsString()
             );
             Debug.Log(JsonConvert.SerializeObject(prediction, Formatting.Indented));
         }

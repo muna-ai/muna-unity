@@ -26,7 +26,7 @@ namespace Muna.Tests {
                     new ChatMessage { Role = @"user", Content = @"What is the capital of France?" },
                     new ChatMessage { Role = @"user", Content = @"And how many people live there?" }
                 },
-                acceleration: Acceleration.LocalAuto.ToAccelerationString()
+                acceleration: Acceleration.LocalAuto.AsString()
             );
             Assert.NotNull(response);
             Assert.IsNotEmpty(response.Choices);
@@ -41,7 +41,7 @@ namespace Muna.Tests {
                     new ChatMessage { Role = @"user", Content = @"What is the capital of France?" },
                     new ChatMessage { Role = @"user", Content = @"And how many people live there?" }
                 },
-                acceleration: Acceleration.LocalAuto.ToAccelerationString()
+                acceleration: Acceleration.LocalAuto.AsString()
             );
             var count = 0;
             await foreach (var chunk in chunks) {
@@ -84,7 +84,7 @@ namespace Muna.Tests {
                 input: @"Hello from Muna",
                 voice: @"expr-voice-2-f",
                 responseFormat: SpeechService.ResponseFormat.MP3,
-                acceleration: Acceleration.LocalAuto.ToAccelerationString()
+                acceleration: Acceleration.LocalAuto.AsString()
             );
             Assert.NotNull(response);
             Assert.IsFalse(response.IsEmpty);
@@ -98,7 +98,7 @@ namespace Muna.Tests {
             var response = await muna.Beta.OpenAI.Audio.Transcriptions.Create(
                 model: "@moonshine/moonshine-base",
                 file: file,
-                acceleration: Acceleration.LocalAuto.ToAccelerationString()
+                acceleration: Acceleration.LocalAuto.AsString()
             );
             Assert.NotNull(response);
             Assert.IsNotEmpty(response.Text);
