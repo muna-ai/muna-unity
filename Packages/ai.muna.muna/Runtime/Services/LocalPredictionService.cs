@@ -12,7 +12,6 @@ namespace Muna.Services {
     using System.Collections.Generic;
     using System.Linq;
     using System.IO;
-    using System.Runtime.Serialization;
     using System.Threading.Tasks;
     using API;
     using Configuration = C.Configuration;
@@ -167,7 +166,7 @@ namespace Muna.Services {
             return path;
         }
 
-        internal static unsafe Value ToValue(object? value) => value switch {
+        internal static Value ToValue(object? value) => value switch {
             Value           x => x,
             IntPtr          x => new Value(x),
             float           x => Value.CreateArray(x),
