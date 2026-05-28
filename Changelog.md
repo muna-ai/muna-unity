@@ -1,3 +1,6 @@
+## 0.0.54
+*INCOMPLETE*
+
 ## 0.0.53
 + Fixed predictors that require OpenCL failing to load.
 + Upgraded to Function C 0.0.46.
