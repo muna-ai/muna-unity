@@ -26,16 +26,11 @@ def _download_fxnc(url: str, path: Path):
         path.unlink()
         print(f"Extracted {path}")
 
-def _create_aar(path: str | Path, *, version: str):
-    MANIFEST_SOURCE = """<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="ai.muna.muna.unity" />"""
-    METADATA_PROPERTIES = dedent(f"""
-    aarFormatVersion=1.0
-    aarMetadataVersion=1.0
-    minCompileSdk=1
-    minCompileSdkExtension=0
-    minAndroidGradlePluginVersion=1.0.0
-    coreLibraryDesugaringEnabled=false
-    """).lstrip()
+def _create_aar(
+    path: str | Path,
+    *,
+    version: str
+):
     with TemporaryDirectory() as tmpdir:
         aar_root = Path(tmpdir) / "aar"
         aar_root.mkdir()
@@ -102,6 +97,26 @@ def main(): # CHECK # Linux # Android AAR
     # Create AAR
     aar_path = LIB_PATH_BASE / "Android" / "Muna.aar"
     _create_aar(aar_path, version=version)
+
+MANIFEST_SOURCE = dedent("""\
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="ai.muna.muna.unity">
+    <application>
+        <uses-native-library android:name="libOpenCL.so"       android:required="false" />
+        <uses-native-library android:name="libOpenCL-pixel.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL-car.so"   android:required="false" />
+    </application>
+</manifest>
+""").lstrip()
+
+METADATA_PROPERTIES = dedent(f"""
+aarFormatVersion=1.0
+aarMetadataVersion=1.0
+minCompileSdk=1
+minCompileSdkExtension=0
+minAndroidGradlePluginVersion=1.0.0
+coreLibraryDesugaringEnabled=false
+""").lstrip()
 
 if __name__ == "__main__":
     main()

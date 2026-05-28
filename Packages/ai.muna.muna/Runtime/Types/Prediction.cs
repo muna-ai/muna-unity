@@ -95,32 +95,32 @@ namespace Muna {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum Acceleration : int {
         /// <summary>
-        /// Automatically choose the best acceleration for the current device.
+        /// Automatically choose the ideal local acceleration.
         /// </summary>
         [EnumMember(Value = @"local_auto")]
         LocalAuto,
         /// <summary>
-        /// Predictions run on the CPU.
+        /// Predictions run on the local CPU.
         /// </summary>
         [EnumMember(Value = @"local_cpu")]
         LocalCPU,
         /// <summary>
-        /// Predictions run on the GPU.
+        /// Predictions run on the local GPU.
         /// </summary>
         [EnumMember(Value = @"local_gpu")]
         LocalGPU,
         /// <summary>
-        /// Predictions run on the neural processor.
+        /// Predictions run on the local neural processor.
         /// </summary>
         [EnumMember(Value = @"local_npu")]
         LocalNPU,
         /// <summary>
-        /// Automatically choose the best acceleration.
+        /// Automatically choose the ideal remote acceleration.
         /// </summary>
         [EnumMember(Value = @"remote_auto")]
         RemoteAuto,
         /// <summary>
-        /// Predictions run on a CPU.
+        /// Predictions run on a remote CPU.
         /// </summary>
         [EnumMember(Value = @"remote_cpu")]
         RemoteCPU,
