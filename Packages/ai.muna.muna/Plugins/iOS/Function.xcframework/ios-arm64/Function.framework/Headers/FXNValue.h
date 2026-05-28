@@ -76,6 +76,15 @@
 
  @constant FXN_DTYPE_IMAGE_LIST
  List of pixel buffers.
+
+ @constant FXN_DTYPE_ARRAY_LIST
+ List of arrays.
+
+ @constant FXN_DTYPE_COMPLEX64
+ Complex number with single precision 32-bit float real and imaginary parts.
+
+ @constant FXN_DTYPE_COMPLEX128
+ Complex number with double precision 64-bit float real and imaginary parts.
 */
 enum FXNDtype {
     FXN_DTYPE_NULL          = 0,
@@ -98,6 +107,9 @@ enum FXNDtype {
     FXN_DTYPE_BINARY        = 17,
     FXN_DTYPE_BFLOAT16      = 18,
     FXN_DTYPE_IMAGE_LIST    = 19,
+    FXN_DTYPE_ARRAY_LIST    = 20,
+    FXN_DTYPE_COMPLEX64     = 21,
+    FXN_DTYPE_COMPLEX128    = 22,
 };
 typedef enum FXNDtype FXNDtype;
 
@@ -395,6 +407,45 @@ FXN_API FXNStatus FXNValueCreateBinary(
  Created value.
 */
 FXN_API FXNStatus FXNValueCreateNull(FXNValue** value);
+
+/*!
+ @function FXNValueCreateArrayList
+
+ @abstract Create an array list value from one or more arrays.
+ 
+ @discussion Create an array list value from one or more arrays.
+
+ @param data
+ Array data buffers.
+
+ @param shapes
+ Array shapes.
+
+ @param dims
+ Number of dimensions for each array.
+
+ @param dtypes
+ Array data types.
+
+ @param count
+ Number of arrays in the list.
+
+ @param flags
+ Value creation flags.
+
+ @param value
+ Created value.
+ The value `type` will be `FXN_DTYPE_ARRAY_LIST`.
+*/
+FXN_API FXNStatus FXNValueCreateArrayList(
+    const void* const * data,
+    const int32_t* const * shapes,
+    const int32_t* dims,
+    const FXNDtype* dtypes,
+    int32_t count,
+    FXNValueFlags flags,
+    FXNValue** value
+);
 
 /*!
  @function FXNValueCreateImageList

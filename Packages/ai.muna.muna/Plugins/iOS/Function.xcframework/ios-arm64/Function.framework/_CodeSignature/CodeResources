@@ -8,6 +8,10 @@
 		<data>
 		EbS43j0cFG4OOKyLtGP86eGSvNM=
 		</data>
+		<key>Headers/FXNDialect.h</key>
+		<data>
+		COucs1FapiRW9D8Cx+hLF06gWYM=
+		</data>
 		<key>Headers/FXNPrediction.h</key>
 		<data>
 		v1B/+UYieWkZ7HQJHfEy5HrDomc=
@@ -26,7 +30,7 @@
 		</data>
 		<key>Headers/FXNValue.h</key>
 		<data>
-		aMJccp1hyJ5m38Dx6Mqd5/X4Pcs=
+		mTW3POEsssVSrEKMVtXYr54CNIw=
 		</data>
 		<key>Headers/FXNValueMap.h</key>
 		<data>
@@ -34,7 +38,7 @@
 		</data>
 		<key>Headers/FXNVersion.h</key>
 		<data>
-		aBaj10m5iQr6BVdLbXPJWWI9e3Q=
+		3EPScggApjguJdsZuQrvhQ0MNdo=
 		</data>
 		<key>Headers/Function.h</key>
 		<data>
@@ -42,7 +46,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		0sYp0ptfz+WbSNuC+hZsMxMg32Q=
+		Y2PgpObKc3l13MbRpgv7bRHlZkg=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -60,6 +64,13 @@
 			<key>hash2</key>
 			<data>
 			y9ybe3TrcDp/r4fokSfYRP4Yk6rWRcJgkVdE9kqE20I=
+			</data>
+		</dict>
+		<key>Headers/FXNDialect.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			tWdezyXwOCrYMu5BvZPYXqfvwGC2MnqDjCAKxB4nqeA=
 			</data>
 		</dict>
 		<key>Headers/FXNPrediction.h</key>
@@ -94,7 +105,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ofPzTpY+zRHKtcYtYASVmQ/5wI+pvlx7i0VFGD1UUUc=
+			0/bUpgqRw/eFTKnvqzqSt67RVndmCXAn25estQGzclo=
 			</data>
 		</dict>
 		<key>Headers/FXNValueMap.h</key>
@@ -108,7 +119,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			rQZqOi4RrU2IkH2Rn7ny+WTviqEW777bGkZTJ9PWag4=
+			8C7t5pFT5zvmko968rrul9xZS/tqvzeMwrLMzRQDRro=
 			</data>
 		</dict>
 		<key>Headers/Function.h</key>
