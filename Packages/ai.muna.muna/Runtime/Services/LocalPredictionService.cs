@@ -206,6 +206,8 @@ namespace Muna.Services {
             Enum            x => ToValue(x.SerializeEnum()),
             IList           x => Value.CreateList(x),
             IDictionary     x => Value.CreateDict(x),
+            Json            x when x.IsArray => Value.CreateList(x),
+            Json            x when x.IsObject => Value.CreateDict(x),
             Image           x => Value.CreateImage(x),
             Stream          x => Value.CreateBinary(x),          
             null              => Value.CreateNull(),

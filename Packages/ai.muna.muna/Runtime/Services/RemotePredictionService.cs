@@ -50,7 +50,7 @@ namespace Muna.Services {
                     [@"clientId"] = Configuration.ClientId,
                 }
             );
-            return await ParseRemotePrediction(prediction);
+            return await ParseRemotePrediction(prediction!);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Muna.Services {
 
         internal RemotePredictionService(MunaClient client) => this.client = client;
 
-        private async Task<RemoteValue> ToValue(object? value) => value switch { // INCOMPLETE // Image
+        private async Task<RemoteValue> ToValue(object? value) => value switch { // INCOMPLETE // Image // Json
             null              => new() { dtype = Dtype.Null },
             float           x => new() { data = await Upload(new [] { x }.ToStream()), dtype = Dtype.Float32, shape = new int[0] },
             double          x => new() { data = await Upload(new [] { x }.ToStream()), dtype = Dtype.Float64, shape = new int[0] },
@@ -127,6 +127,8 @@ namespace Muna.Services {
             string          x => new() { data = await Upload(x.ToStream(), mime: @"text/plain"), dtype = Dtype.String },
             IList           x => new() { data = await Upload(JsonConvert.SerializeObject(x).ToStream(), mime: @"application/json"), dtype = Dtype.List },
             IDictionary     x => new() { data = await Upload(JsonConvert.SerializeObject(x).ToStream(), mime: @"application/json"), dtype = Dtype.Dict },
+            Json            x when x.IsArray    => new() { data = await Upload(x.ToString().ToStream(), mime: @"application/json"), dtype = Dtype.List },
+            Json            x when x.IsObject   => new() { data = await Upload(x.ToString().ToStream(), mime: @"application/json"), dtype = Dtype.Dict },
             Image           x => new() { data = "", dtype = Dtype.Image },
             Stream          x => new() { data = await Upload(x), dtype = Dtype.Binary },
             Enum            x => await ToValue(x.ToObject()),
@@ -151,8 +153,8 @@ namespace Muna.Services {
                 Dtype.Uint64    => stream.ToObject<ulong>(value.shape!),
                 Dtype.Bool      => stream.ToObject<bool>(value.shape!),
                 Dtype.String    => new StreamReader(stream).ReadToEnd(),
-                Dtype.List      => JsonConvert.DeserializeObject<JArray>(new StreamReader(stream).ReadToEnd()),
-                Dtype.Dict      => JsonConvert.DeserializeObject<JObject>(new StreamReader(stream).ReadToEnd()),
+                Dtype.List      => new Json(new StreamReader(stream).ReadToEnd()),
+                Dtype.Dict      => new Json(new StreamReader(stream).ReadToEnd()),
                 Dtype.Image     => DeserializeImageValue(stream),
                 Dtype.Binary    => stream.Clone(),
                 _               => throw new InvalidOperationException($"Failed to deserialize value with type {value.dtype} because it is not supported"),
@@ -185,7 +187,7 @@ namespace Muna.Services {
 
         private async Task<Prediction> ParseRemotePrediction(RemotePrediction prediction) {
             object?[]? results = null;
-            if (prediction?.results != null) {
+            if (prediction.results != null) {
                 results = new object?[prediction.results.Length];
                 for (var i = 0; i < results.Length; ++i)
                     results[i] = await ToObject(prediction.results[i]);

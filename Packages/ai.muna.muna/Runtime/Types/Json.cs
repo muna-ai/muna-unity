@@ -23,12 +23,28 @@ namespace Muna {
         /// <summary>
         /// Create the JSON object from UTF-8 encoded data.
         /// </summary>
-        public Json(byte[] data) => this.data = data;
+        public Json(byte[] data) {
+            this.data = data;
+            this.text = Encoding.UTF8.GetString(data);
+        }
 
         /// <summary>
         /// Create the JSON object from a string.
         /// </summary>
-        public Json(string data) => this.data = Encoding.UTF8.GetBytes(data);
+        public Json(string text) {
+            this.data = Encoding.UTF8.GetBytes(text);
+            this.text = text;
+        }
+
+        /// <summary>
+        /// Whether the JSON is an object.
+        /// </summary>
+        public bool IsObject => text.AsSpan().TrimStart().StartsWith("{");
+
+        /// <summary>
+        /// Whether the JSON is an array.
+        /// </summary>
+        public bool IsArray => text.AsSpan().TrimStart().StartsWith("[");
 
         /// <summary>
         /// Deserialize the JSON object.
@@ -58,14 +74,13 @@ namespace Muna {
         /// <summary>
         /// Decode the raw JSON data to a string.
         /// </summary>
-        public override string ToString() => data != null ?
-            Encoding.UTF8.GetString(data) :
-            string.Empty; 
+        public override string ToString() => text ?? "undefined"; 
         #endregion
 
 
         #region --Operations--
         private readonly byte[]? data;
+        private readonly string? text;
 
         private JsonTextReader CreateReader() {
             var stream = new MemoryStream(data, writable: false);

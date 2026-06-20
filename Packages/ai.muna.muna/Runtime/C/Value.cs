@@ -13,7 +13,6 @@ namespace Muna.C {
     using System.Linq;
     using System.Runtime.InteropServices;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using static Function;
 
     public unsafe sealed class Value : IDisposable {
@@ -120,9 +119,19 @@ namespace Muna.C {
             return new Value(value);
         }
 
+        public static Value CreateList(Json json) {
+            CreateListValue(json.ToString(), out var value).Throw();
+            return new Value(value);
+        }
+
         public static Value CreateDict(IDictionary dict) {
             var json = JsonConvert.SerializeObject(dict);
             CreateDictValue(json, out var value).Throw();
+            return new Value(value);
+        }
+
+        public static Value CreateDict(Json json) {
+            CreateDictValue(json.ToString(), out var value).Throw();
             return new Value(value);
         }
 

@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Project Path="Muna.Runtime.csproj" />
+  <Project Path="Muna.Tests.Editor.csproj" />
+  <Project Path="Muna.Editor.csproj" />
+  <Project Path="Muna.Unity.csproj" />
+  <Project Path="Muna.Tests.Runtime.csproj" />
+</Solution>
