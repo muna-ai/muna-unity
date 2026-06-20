@@ -1,6 +1,6 @@
 {
     "name": "ai.muna.muna",
-    "version": "0.0.54",
+    "version": "0.0.55",
     "displayName": "Muna",
     "description": "Run AI inference in Unity Engine.",
     "unity": "2022.3",
