@@ -46,6 +46,21 @@ namespace Muna {
         public bool IsArray => FirstNonWhitespaceByte() == (byte)'[';
 
         /// <summary>
+        /// Retrieve the raw JSON data as a span.
+        /// </summary>
+        public ReadOnlySpan<byte> AsSpan() => data;
+
+        /// <summary>
+        /// Create a JSON text reader over the JSON data.
+        /// </summary>
+        /// <returns></returns>
+        public JsonTextReader CreateReader() {
+            var stream = new MemoryStream(data, writable: false);
+            var streamReader = new StreamReader(stream, Encoding.UTF8);
+            return new JsonTextReader(streamReader);
+        }
+
+        /// <summary>
         /// Deserialize the JSON object.
         /// </summary>
         public T? ToObject<T>() => ToObject<T>(Serializer);
@@ -59,11 +74,6 @@ namespace Muna {
             using var reader = CreateReader();
             return serializer.Deserialize<T>(reader);
         }
-
-        /// <summary>
-        /// Retrieve the raw JSON data as a span.
-        /// </summary>
-        public ReadOnlySpan<byte> AsSpan() => data;
 
         /// <summary>
         /// Decode the raw JSON data to a string.
@@ -103,12 +113,6 @@ namespace Muna {
         private readonly string? text;
         private static readonly JsonSerializer Serializer = JsonSerializer.CreateDefault();
         private static readonly UTF8Encoding NoBomUtf8 = new(false);
-
-        private JsonTextReader CreateReader() {
-            var stream = new MemoryStream(data, writable: false);
-            var streamReader = new StreamReader(stream, Encoding.UTF8);
-            return new JsonTextReader(streamReader);
-        }
 
         private byte FirstNonWhitespaceByte() {
             if (data == null)

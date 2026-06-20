@@ -1,5 +1,5 @@
 ## 0.0.55
-*INCOMPLETE*
++ Added `Json.CreateReader` method for creating a JSON text reader from a JSON object.
 
 ## 0.0.54
 + Added `Json.From<T>` method for constructing JSON from .NET objects.
