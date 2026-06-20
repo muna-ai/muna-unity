@@ -19,7 +19,6 @@ using System.Runtime.CompilerServices;
 namespace Muna {
 
     using System;
-    using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using UnityEngine;
     using Unity.Collections.LowLevel.Unsafe;
@@ -52,71 +51,114 @@ namespace Muna {
         }
 
         /// <summary>
-        /// Convert a texture to an image.
+        /// Copy pixel data from a texture into an image.
         /// NOTE: The texture format must be `R8`, `Alpha8`, `RGB24`, or `RGBA32`.
         /// </summary>
-        /// <param name="texture">Input texture.</param>
-        /// <param name="pixelBuffer">Pixel buffer to store image data. Use this to prevent allocations.</param>
-        /// <returns>Image.</returns>
-        public static unsafe Image ToImage(
+        /// <param name="texture">Texture to copy pixel data from.</param>
+        /// <param name="image">Image to copy pixel data to.</param>
+        public static unsafe void CopyTo(
             this Texture2D texture,
-            byte[]? pixelBuffer = null
+            Image image
         ) {
             // Check texture
             if (texture == null)
                 throw new ArgumentNullException(nameof(texture));
             // Check that texture is readable
             if (!texture.isReadable)
-                throw new InvalidOperationException(@"Texture cannot be converted to a Muna image because it is not readable");
-            // Allocate buffer
-            var channels = TextureFormatToImageChannels.GetValueOrDefault(texture.format, 4);
-            var rowStride = texture.width * channels;
-            var bufferSize = rowStride * texture.height;
-            pixelBuffer ??= new byte[bufferSize];
-            if (pixelBuffer.Length < bufferSize)
-                throw new InvalidOperationException($"Texture cannot be converted to a Muna image because pixel buffer length was expected to be greater than or equal to {bufferSize} but got {pixelBuffer.Length}");
+                throw new ArgumentException(@"Cannot copy pixel data from texture because it is not readable");
+            // Check dims
+            if (image.width != texture.width || image.height != texture.height)
+                throw new ArgumentException($"Cannot copy {texture.width}x{texture.height} texture into {image.width}x{image.height} image");
+            // Check channels
+            var channels = ChannelsForFormat(texture.format);
+            if (channels == 0)
+                throw new ArgumentException($"Cannot convert texture to image because texture format is {texture.format} but expected [R8, Alpha8, RGB24, RGBA32]");
+            if (image.channels != channels)
+                throw new ArgumentException($"Cannot copy {texture.format} texture into {image.channels} channel image");
             // Copy
-            var colorData = !TextureFormatToImageChannels.ContainsKey(texture.format) ? texture.GetPixels32() : null;
-            fixed (void* dst = pixelBuffer, colors = colorData) {
-                var src = colors == null ? texture.GetRawTextureData<byte>().GetUnsafePtr() : colors;
+            var rowStride = texture.width * channels;
+            fixed (void* dst = image)
                 UnsafeUtility.MemCpyStride(
-                    dst,
+                    (byte*)dst + (rowStride * (image.height - 1)),
+                    -rowStride,
+                    texture.GetRawTextureData<byte>().GetUnsafePtr(),
                     rowStride,
-                    (byte*)src + (rowStride * (texture.height - 1)),
+                    rowStride,
+                    image.height
+                );
+        }
+        
+        /// <summary>
+        /// Copy pixel data from an image into a texture.
+        /// NOTE: The texture format must be `R8`, `Alpha8`, `RGB24`, or `RGBA32`.
+        /// </summary>
+        /// <param name="image">Image to copy pixel data from.</param>
+        /// <param name="texture">Texture to copy pixel data to.</param>
+        public static unsafe void CopyTo(
+            this Image image,
+            Texture2D texture
+        ) {
+            // Check texture
+            if (texture == null)
+                throw new ArgumentNullException(nameof(texture));
+            // Check that texture is readable
+            if (!texture.isReadable)
+                throw new ArgumentException(@"Cannot copy pixel data to texture because it is not readable");
+            // Check dims
+            if (image.width != texture.width || image.height != texture.height)
+                throw new ArgumentException($"Cannot copy {image.width}x{image.height} image into {texture.width}x{texture.height} texture");
+            // Check channels
+            if (image.channels != ChannelsForFormat(texture.format))
+                throw new ArgumentException($"Cannot copy {image.channels} channel image into {texture.format} texture");
+            // Copy
+            var rowStride = image.width * image.channels;
+            fixed (byte* src = image)
+                UnsafeUtility.MemCpyStride(
+                    texture.GetRawTextureData<byte>().GetUnsafePtr(),
+                    rowStride,
+                    src + (rowStride * (image.height - 1)),
                     -rowStride,
                     rowStride,
-                    texture.height
+                    image.height
                 );
-            }
+        }
+
+        /// <summary>
+        /// Convert a texture to an image.
+        /// NOTE: The texture format must be `R8`, `Alpha8`, `RGB24`, or `RGBA32`.
+        /// </summary>
+        /// <param name="texture">Input texture.</param>
+        /// <returns>Image.</returns>
+        public static Image ToImage(this Texture2D texture) {
+            // Check channels
+            var channels = ChannelsForFormat(texture.format);
+            if (channels == 0)
+                throw new ArgumentException($"Cannot convert texture to image because texture format is {texture.format} but expected [R8, Alpha8, RGB24, RGBA32]");
+            // Copy
+            var image = new Image(
+                data: new byte[texture.width * texture.height * channels],
+                width: texture.width,
+                height: texture.height,
+                channels: channels
+            );
+            CopyTo(texture, image);
             // Return
-            return new Image(pixelBuffer, texture.width, texture.height, channels);
+            return image;
         }
 
         /// <summary>
         /// Convert an image to a texture.
         /// </summary>
-        /// <param name="value">Image.</param>
-        /// <param name="texture">Optional destination texture.</param>
+        /// <param name="image">Input image.</param>
         /// <returns>Texture.</returns>
-        public static unsafe Texture2D ToTexture(
-            this Image image,
-            Texture2D? texture = null
-        ) {
-            if (!ImageChannelsToTextureFormat.TryGetValue(image.channels, out var format))
-                throw new InvalidOperationException($"Image cannot be converted to a Texture2D because it has unsupported channel count: {image.channels}");
-            texture = texture != null ? texture : new Texture2D(image.width, image.height, format, false);
-            if (texture.width != image.width || texture.height != image.height || texture.format != format)
-                texture.Reinitialize(image.width, image.height, format, false);
-            var rowStride = image.width * image.channels;
-            fixed (byte* srcData = image)
-                UnsafeUtility.MemCpyStride(
-                    texture.GetRawTextureData<byte>().GetUnsafePtr(),
-                    rowStride,
-                    srcData + (rowStride * (image.height - 1)),
-                    -rowStride,
-                    rowStride,
-                    image.height
-                );
+        public static Texture2D ToTexture(this Image image) {
+            var texture = new Texture2D(
+                image.width,
+                image.height,
+                FormatForChannels(image.channels),
+                false
+            );
+            CopyTo(image, texture);
             texture.Apply();
             return texture;
         }
@@ -126,7 +168,7 @@ namespace Muna {
         /// </summary>
         /// <param name="data">Binary data containing linear PCM audio.</param>
         /// <returns>Audio clip.</returns>
-        public static unsafe AudioClip ToAudioClip(this BinaryData data) {
+        public static AudioClip ToAudioClip(this BinaryData data) {
             // Check that this contains LPCM data
             if (string.IsNullOrEmpty(data.MediaType) || !data.MediaType.StartsWith(@"audio/pcm"))
                 throw new ArgumentException($"Failed to create audio clip from binary data because media type was expected to be 'audio/pcm' but got: '{data.MediaType}'");
@@ -161,16 +203,20 @@ namespace Muna {
 
 
         #region --Operations--
-        private static readonly Dictionary<TextureFormat, int> TextureFormatToImageChannels = new() {
-            [TextureFormat.R8] = 1,
-            [TextureFormat.Alpha8] = 1,
-            [TextureFormat.RGB24] = 3,
-            [TextureFormat.RGBA32] = 4,
+
+        private static int ChannelsForFormat(TextureFormat format) => format switch {
+            TextureFormat.R8        => 1,
+            TextureFormat.Alpha8    => 1,
+            TextureFormat.RGB24     => 3,
+            TextureFormat.RGBA32    => 4,
+            _                       => 0,  
         };
-        private static readonly Dictionary<int, TextureFormat> ImageChannelsToTextureFormat = new() {
-            [1] = TextureFormat.Alpha8,
-            [3] = TextureFormat.RGB24,
-            [4] = TextureFormat.RGBA32,
+
+        private static TextureFormat FormatForChannels(int channels) => channels switch {
+            1 => TextureFormat.Alpha8,
+            3 => TextureFormat.RGB24,
+            4 => TextureFormat.RGBA32,
+            _ => 0
         };
         #endregion
     }

@@ -113,20 +113,8 @@ namespace Muna.C {
             return new Value(value);
         }
 
-        public static Value CreateList(IList list) {
-            var json = JsonConvert.SerializeObject(list);
-            CreateListValue(json, out var value).Throw();
-            return new Value(value);
-        }
-
         public static Value CreateList(Json json) {
             CreateListValue(json.ToString(), out var value).Throw();
-            return new Value(value);
-        }
-
-        public static Value CreateDict(IDictionary dict) {
-            var json = JsonConvert.SerializeObject(dict);
-            CreateDictValue(json, out var value).Throw();
             return new Value(value);
         }
 

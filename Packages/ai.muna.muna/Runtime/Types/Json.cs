@@ -11,7 +11,6 @@ namespace Muna {
     using System.IO;
     using System.Text;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// JSON value.
@@ -25,7 +24,7 @@ namespace Muna {
         /// </summary>
         public Json(byte[] data) {
             this.data = data;
-            this.text = Encoding.UTF8.GetString(data);
+            this.text = null; // decode lazily
         }
 
         /// <summary>
@@ -39,31 +38,26 @@ namespace Muna {
         /// <summary>
         /// Whether the JSON is an object.
         /// </summary>
-        public bool IsObject => text.AsSpan().TrimStart().StartsWith("{");
+        public bool IsObject => FirstNonWhitespaceByte() == (byte)'{';
 
         /// <summary>
         /// Whether the JSON is an array.
         /// </summary>
-        public bool IsArray => text.AsSpan().TrimStart().StartsWith("[");
+        public bool IsArray => FirstNonWhitespaceByte() == (byte)'[';
 
         /// <summary>
         /// Deserialize the JSON object.
         /// </summary>
-        public T? ToObject<T>() {
+        public T? ToObject<T>() => ToObject<T>(Serializer);
+
+        /// <summary>
+        /// Deserialize the JSON object using a provided serializer.
+        /// </summary>
+        public T? ToObject<T>(JsonSerializer serializer) {
             if (data == null)
                 return default;
             using var reader = CreateReader();
-            return JsonSerializer.CreateDefault().Deserialize<T>(reader);
-        }
-
-        /// <summary>
-        /// Materialize as a JToken DOM for flexible member access.
-        /// </summary>
-        public JToken AsJToken() {
-            if (data == null)
-                return JValue.CreateNull();
-            using var reader = CreateReader();
-            return JToken.ReadFrom(reader);
+            return serializer.Deserialize<T>(reader);
         }
 
         /// <summary>
@@ -74,18 +68,56 @@ namespace Muna {
         /// <summary>
         /// Decode the raw JSON data to a string.
         /// </summary>
-        public override string ToString() => text ?? "undefined"; 
+        public override string ToString() => 
+            text ??
+            (data != null ? Encoding.UTF8.GetString(data) : "undefined");
+
+        /// <summary>
+        /// Create a JSON object from a given object.
+        /// </summary>
+        /// <typeparam name="T">Object type.</typeparam>
+        /// <param name="value">Input value.</param>
+        /// <returns>Serialized JSON object.</returns>
+        public static Json From<T>(T value) => From<T>(value, Serializer);
+
+        /// <summary>
+        /// Create a JSON object from a given object.
+        /// </summary>
+        /// <typeparam name="T">Object type.</typeparam>
+        /// <param name="value">Input value.</param>
+        /// <param name="serializer">Custom JSON serializer.</param>
+        /// <returns>Serialized JSON object.</returns>
+        public static Json From<T>(T value, JsonSerializer serializer) {
+            using var stream = new MemoryStream();        // or pooled, if hot
+            using (var streamWriter = new StreamWriter(stream, NoBomUtf8, 1024, leaveOpen: true))
+            using (var jsonWriter = new JsonTextWriter(streamWriter)) {
+                serializer.Serialize(jsonWriter, value);
+            }
+            return new Json(stream.ToArray());
+        }
         #endregion
 
 
         #region --Operations--
         private readonly byte[]? data;
         private readonly string? text;
+        private static readonly JsonSerializer Serializer = JsonSerializer.CreateDefault();
+        private static readonly UTF8Encoding NoBomUtf8 = new(false);
 
         private JsonTextReader CreateReader() {
             var stream = new MemoryStream(data, writable: false);
             var streamReader = new StreamReader(stream, Encoding.UTF8);
             return new JsonTextReader(streamReader);
+        }
+
+        private byte FirstNonWhitespaceByte() {
+            if (data == null)
+                return 0;
+            foreach (var b in data) {
+                if (b != (byte)' ' && b != (byte)'\t' && b != (byte)'\n' && b != (byte)'\r')
+                    return b;
+            }
+            return 0;
         }
         #endregion
     }

@@ -52,6 +52,7 @@
     <Compile Include="Assets/Tests/Runtime/FxncVersionTest.cs" />
     <Compile Include="Assets/Tests/Runtime/OpenAITranscriptionCreateTest.cs" />
     <Compile Include="Assets/Tests/Runtime/OpenAIChatCompletionStreamTest.cs" />
+    <Compile Include="Assets/Tests/Runtime/JsonTest.cs" />
     <Compile Include="Assets/Tests/Runtime/CreatePredictionOnBackgroundThreadTest.cs" />
     <Compile Include="Assets/Tests/Runtime/OpenAIEmbeddingCreateTest.cs" />
     <Compile Include="Assets/Tests/Runtime/StreamingTest.cs" />

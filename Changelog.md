@@ -1,5 +1,6 @@
 ## 0.0.54
-*INCOMPLETE*
++ Added `Json.From<T>` method for constructing JSON from .NET objects.
++ Added `MunaUnity.CopyTo` method for copying pixel data from an image to a texture and vice-versa.
 
 ## 0.0.53
 + Fixed predictors that require OpenCL failing to load.
