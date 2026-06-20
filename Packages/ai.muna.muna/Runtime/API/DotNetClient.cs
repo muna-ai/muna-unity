@@ -7,6 +7,7 @@
 
 namespace Muna.API {
 
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Net.Http;
@@ -34,6 +35,8 @@ namespace Muna.API {
             client = new();
             var ua = new ProductInfoHeaderValue(@"MunaDotNet", Muna.Version);
             client.DefaultRequestHeaders.UserAgent.Add(ua);
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            cachePath = Path.Combine(homeDir, ".fxn");
         }
 
         /// <summary>

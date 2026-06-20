@@ -30,11 +30,5 @@ namespace Muna.Editor {
 
         [MenuItem(@"Tools/Muna/Report an Issue", false, BasePriority + 4)]
         private static void ReportIssue() => Help.BrowseURL(@"https://github.com/muna-ai/muna-unity");
-
-        [MenuItem(@"Tools/Muna/Clear Predictor Cache", false, BasePriority + 5)]
-        private static void ClearPredictorCache() {
-            Directory.Delete(PredictionCache.PredictorCachePath, true);
-            UnityEngine.Debug.Log("Muna: Cleared predictor cache.");
-        }
     }
 }

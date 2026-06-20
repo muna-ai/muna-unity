@@ -25,6 +25,11 @@ namespace Muna.API {
         public readonly string url;
 
         /// <summary>
+        /// Muna cache path.
+        /// </summary>
+        public string cachePath { get; protected set; }
+
+        /// <summary>
         /// Make a request to a REST endpoint.
         /// </summary>
         /// <typeparam name="T">Response type.</typeparam>

@@ -1,6 +1,6 @@
 /* 
 *   Muna
-*   Copyright © 2025 NatML Inc. All rights reserved.
+*   Copyright © 2026 NatML Inc. All rights reserved.
 */
 
 #nullable enable
@@ -27,7 +27,7 @@ namespace Muna.Internal {
         /// Predictor cache.
         /// </summary>
         [field: SerializeField, HideInInspector]
-        public List<PredictionCache.CachedPrediction> cache { get; internal set; } = new();
+        public List<CachedPrediction> cache { get; internal set; } = new();
 
         /// <summary>
         /// Settings instance for this project.

@@ -12,6 +12,7 @@ namespace Muna.API {
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
+    using UnityEngine;
     using UnityEngine.Networking;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -32,7 +33,12 @@ namespace Muna.API {
         public UnityClient(
             string url,
             string? accessKey
-        ) : base(url.TrimEnd('/'), accessKey) { }
+        ) : base(url.TrimEnd('/'), accessKey) {
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            cachePath = Application.isEditor ?
+                Path.Combine(homeDir, @".fxn") :
+                Path.Combine(Application.persistentDataPath, @"fxn");
+        }
 
         /// <summary>
         /// Make a request to a REST endpoint.
@@ -59,7 +65,9 @@ namespace Muna.API {
                 client.SetRequestHeader(@"Authorization", $"Bearer {accessKey}");
             // Add payload
             if (payload != null) {
-                var serializationSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+                var serializationSettings = new JsonSerializerSettings {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
                 var payloadStr = JsonConvert.SerializeObject(payload, serializationSettings);
                 client.SetRequestHeader(@"Content-Type",  @"application/json");
                 client.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(payloadStr));
@@ -110,7 +118,9 @@ namespace Muna.API {
                 client.SetRequestHeader(@"Authorization", $"Bearer {accessKey}");
             client.SetRequestHeader(@"Accept", @"text/event-stream");
             if (payload != null) {
-                var serializationSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+                var serializationSettings = new JsonSerializerSettings {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
                 var payloadStr = JsonConvert.SerializeObject(payload, serializationSettings);
                 client.SetRequestHeader(@"Content-Type", @"application/json");
                 client.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(payloadStr));
@@ -192,7 +202,7 @@ namespace Muna.API {
             string? mime = null
         ) {
             using var client = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT) {
-                uploadHandler = new UploadHandlerRaw(ToArray(stream)),
+                uploadHandler = new UploadHandlerRaw(stream.ToArray<byte>()),
                 downloadHandler = new DownloadHandlerBuffer(),
                 disposeDownloadHandlerOnDispose = true,
                 disposeUploadHandlerOnDispose = true,
@@ -218,6 +228,10 @@ namespace Muna.API {
             };
             return payload.ToObject<T>()!;
         }
+        #endregion
+
+
+        #region --Download Handler--
 
         private class SSEDownloadHandler : DownloadHandlerScript {
             public readonly Queue<string> lines = new();
@@ -241,14 +255,6 @@ namespace Muna.API {
                     buffer = string.Empty;
                 }
             }
-        }
-
-        private static byte[] ToArray(Stream stream) {
-            if (stream is MemoryStream memoryStream)
-                return memoryStream.ToArray();
-            using var dstStream = new MemoryStream();
-            stream.CopyTo(dstStream);
-            return dstStream.ToArray();
         }
         #endregion
     }

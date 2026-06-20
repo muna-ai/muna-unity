@@ -91,17 +91,9 @@ namespace Muna.Services {
 
         #region --Operations--
         private readonly MunaClient client;
-        private readonly string cachePath;
         private readonly Dictionary<string, C.Predictor> cache = new();
 
-        internal LocalPredictionService(MunaClient client) {
-            this.client = client;
-            this.cachePath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                ".fxn",
-                "cache"
-            );
-        }
+        internal LocalPredictionService(MunaClient client) => this.client = client;
 
         private Task<Prediction> CreateRawPrediction(
             string tag,
@@ -147,7 +139,8 @@ namespace Muna.Services {
             var uri = new Uri(resource.url);
             if (uri.IsFile)
                 return uri.LocalPath;
-            var path = GetResourcePath(resource, cachePath);
+            var resourceDir = Path.Combine(client.cachePath, @"cache");
+            var path = GetResourcePath(resource, resourceDir);
             if (File.Exists(path))
                 return path;
             Directory.CreateDirectory(Path.GetDirectoryName(path));

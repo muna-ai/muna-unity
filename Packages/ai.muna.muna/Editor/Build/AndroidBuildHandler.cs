@@ -20,8 +20,8 @@ namespace Muna.Editor.Build {
 
     internal sealed class AndroidBuildHandler : BuildHandler, IPostGenerateGradleAndroidProject {
 
-        private static List<PredictionCache.CachedPrediction> cache;
-        private static Dictionary<AndroidArchitecture, string> ArchToClientId = new() {
+        private static List<CachedPrediction> cache;
+        private static Dictionary<AndroidArchitecture, string> ArchToTargetId = new() {
             [AndroidArchitecture.ARMv7]     = @"android-armeabi-v7a",
             [AndroidArchitecture.ARM64]     = @"android-arm64-v8a",
         };
@@ -34,7 +34,7 @@ namespace Muna.Editor.Build {
             var projectSettings = MunaProjectSettings.instance;
             var settings = MunaSettings.Create(projectSettings.accessKey);
             var embeds = GetEmbeds();
-            var targets = ArchToClientId
+            var targets = ArchToTargetId
                 .Where(pair => PlayerSettings.Android.targetArchitectures.HasFlag(pair.Key))
                 .Select(pair => pair.Value)
                 .ToArray();
@@ -49,9 +49,12 @@ namespace Muna.Editor.Build {
                                 clientId: target,
                                 configurationId: @""
                             )).Result;
-                            return prediction.AsCached(target);
+                            return new CachedPrediction(prediction) { target = target };
                         } catch (AggregateException ex) {
-                            Debug.LogWarning($"Muna: Failed to embed {tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");
+                            Debug.LogWarning(
+                                $"Muna: Failed to embed {tag} predictor with error: {ex.InnerException}. " +
+                                "Predictions with this predictor will likely fail at runtime."
+                            );
                             return null;
                         }
                     }));
@@ -69,7 +72,7 @@ namespace Muna.Editor.Build {
                 return;
             foreach (var prediction in cache) {
                 // Check
-                var arch = prediction.clientId.Replace("android-", string.Empty).Replace(":", string.Empty);
+                var arch = prediction.target.Replace("android-", string.Empty).Replace(":", string.Empty);
                 var libDir = Path.Combine(projectPath, @"src", @"main", @"jniLibs", arch);
                 if (!Directory.Exists(libDir))
                     continue;

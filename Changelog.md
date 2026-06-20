@@ -1,5 +1,5 @@
 ## 0.0.56
-*INCOMPLETE*
++ Improved caching infrastructure.
 
 ## 0.0.55
 + Added `Json.CreateReader` method for creating a JSON text reader from a JSON object.

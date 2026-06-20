@@ -25,8 +25,8 @@ namespace Muna.Editor.Build {
 
     internal sealed class macOSBuildHandler : BuildHandler, IPostprocessBuildWithReport {
 
-        private List<PredictionCache.CachedPrediction> cache;
-        private static readonly string[] ClientIds = new[] {
+        private List<CachedPrediction> cache;
+        private static readonly string[] TargetIds = new[] {
             "macos-arm64",
             "macos-x86_64"
         };
@@ -41,20 +41,20 @@ namespace Muna.Editor.Build {
             var settings = MunaSettings.Create(projectSettings.accessKey);
             // Embed predictors
             var embeds = GetEmbeds();
-            var cache = new List<PredictionCache.CachedPrediction>();
+            var cache = new List<CachedPrediction>();
             foreach (var embed in embeds) {
                 var client = new DotNetClient(embed.url, embed.accessKey);
                 var muna = new Muna(client);
-                var predictions = (from tag in embed.tags from clientId in ClientIds select (clientId, tag))
+                var predictions = (from tag in embed.tags from target in TargetIds select (target, tag))
                     .Select((pair) => {
-                        var (clientId, tag) = pair;
+                        var (target, tag) = pair;
                         try {
                             var prediction = Task.Run(() => muna.Predictions.Create(
                                 tag,
-                                clientId: clientId,
+                                clientId: target,
                                 configurationId: @""
                             )).Result;
-                            return prediction.AsCached(clientId);
+                            return new CachedPrediction(prediction) { target = target };
                         }
                         catch (AggregateException ex) {
                             Debug.LogWarning($"Muna: Failed to embed {tag} predictor with error: {ex.InnerException}. Predictions with this predictor will likely fail at runtime.");

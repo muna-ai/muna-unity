@@ -8,12 +8,10 @@
 namespace Muna.API {
 
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using UnityEngine;
     using Internal;
-    using Services;
 
     /// <summary>
     /// Muna API client for Unity Engine.
@@ -50,13 +48,13 @@ namespace Muna.API {
         ) where T : class {
             // Check payload
             var tag = GetValue<string>(payload, @"tag");
-            var clientId = GetValue<string>(payload, @"clientId");
+            var target = GetValue<string>(payload, @"clientId");
             var configurationId = GetValue<string>(payload, @"configurationId");
             if (
                 method != @"POST"                       ||
                 path != @"/predictions"                 ||
                 string.IsNullOrEmpty(tag)               ||
-                string.IsNullOrEmpty(clientId)          ||
+                string.IsNullOrEmpty(target)            ||
                 string.IsNullOrEmpty(configurationId)
             )
                 return await base.Request<T>(method, path, payload);
@@ -64,35 +62,22 @@ namespace Muna.API {
             var cache = MunaSettings.Instance!.cache;
             var embeddedPrediction = cache.FirstOrDefault(p => 
                 p.tag == tag &&
-                MatchClientIds(p.clientId!, clientId)
+                ClientIdsCompatible(p.target!, target)
             );
-            // Load from prediction cache
-            if (PredictionCache.Get(
-                tag,
-                clientId,
-                configurationId,
-                embeddedPrediction?.resources,
-                out var cachedPrediction
-            ))
-                return cachedPrediction as T;
-            // Create prediction
-            var prediction = await base.Request<Prediction>(
-                method: @"POST",
-                path: @"/predictions",
-                payload: new() {
-                    [@"tag"] = tag,
-                    [@"clientId"] = clientId,
-                    [@"configurationId"] = configurationId,
-                    [@"predictionId"] = embeddedPrediction?.id,
-                }
+            if (embeddedPrediction == null)
+                return await base.Request<T>(method, path, payload);
+            // Check for configuration token
+            var configuration = await GetOrCreateConfigToken(
+                embeddedPrediction,
+                configurationId
             );
-            // Download resources
-            var resources = new PredictionResource[prediction!.resources!.Length];
-            for (var i = 0; i < resources.Length; ++i)
-                resources[i] = await GetCachedResource(prediction.resources[i]);
-            prediction.resources = resources;
-            // Cache
-            PredictionCache.Add(prediction.AsCached(clientId, configurationId));
+            var prediction = new Prediction {
+                id = embeddedPrediction.id,
+                tag = embeddedPrediction.tag,
+                created = embeddedPrediction.created,
+                resources = embeddedPrediction.resources,
+                configuration = configuration,
+            };
             // Return
             return prediction as T;
         }
@@ -101,28 +86,30 @@ namespace Muna.API {
 
         #region --Operations--
 
-        private async Task<PredictionResource> GetCachedResource(PredictionResource resource) {
-            var path = LocalPredictionService.GetResourcePath(resource, PredictionCache.ResourceCachePath);
-            if (!File.Exists(path)) {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-                using var dataStream = await Download(resource.url);
-                using var fileStream = File.Create(path);
-                dataStream.CopyTo(fileStream);
-            }
-            return new PredictionResource { type = resource.type, url = $"file://{path}" };
-        }
-
-        private static T? GetValue<T>(
-            Dictionary<string, object?>? payload,
-            string key
+        private async Task<string> GetOrCreateConfigToken(
+            CachedPrediction prediction,
+            string configurationId
         ) {
-            if (payload?.TryGetValue(key, out var value) ?? false)
-                return (T?)value;
-            else
-                return default;
+            var key = $"{prediction.tag}.{prediction.target}.{configurationId}";
+            if (PlayerPrefs.HasKey(key))
+                return PlayerPrefs.GetString(key);
+            var runtimePrediction = await base.Request<Prediction>(
+                method: @"POST",
+                path: @"/predictions",
+                payload: new() {
+                    [@"tag"] = prediction.tag,
+                    [@"clientId"] = prediction.target,
+                    [@"configurationId"] = configurationId,
+                    [@"predictionId"] = prediction.id,
+                }
+            );
+            var token = runtimePrediction!.configuration!;
+            PlayerPrefs.SetString(key, token);
+            PlayerPrefs.Save();
+            return token;
         }
 
-        private static bool MatchClientIds(string a, string b) {
+        private static bool ClientIdsCompatible(string a, string b) {
             if (a == b)
                 return true;
             if (a.Contains("android") && b.Contains("android")) {
@@ -134,6 +121,16 @@ namespace Muna.API {
                     return true;
             }
             return false;
+        }
+
+        private static T? GetValue<T>(
+            Dictionary<string, object?>? payload,
+            string key
+        ) {
+            if (payload?.TryGetValue(key, out var value) ?? false)
+                return (T?)value;
+            else
+                return default;
         }
         #endregion
     }
