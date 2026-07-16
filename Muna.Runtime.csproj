@@ -60,14 +60,12 @@
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/ImageService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Prediction.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/API/MunaClient.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Services/RemotePredictionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Json.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Image.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Parameter.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/Types.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/OpenAIClient.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Services/PredictorService.cs" />
-    <Compile Include="Packages/ai.muna.muna/Runtime/Services/LocalPredictionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Services/PredictionService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/Types.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Configuration.cs" />

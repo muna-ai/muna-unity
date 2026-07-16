@@ -105,6 +105,8 @@ namespace Muna.C {
         #endif
         }
 
+        public void SetMetadata(string key, string value) => configuration.SetMetadata(key, value).Throw();
+
         public void Dispose() => configuration.ReleaseConfiguration();
         #endregion
 

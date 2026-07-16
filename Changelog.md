@@ -1,5 +1,5 @@
 ## 0.0.57
-*INCOMPLETE*
++ Upgraded to Function C 0.0.48.
 
 ## 0.0.56
 + Improved caching infrastructure.

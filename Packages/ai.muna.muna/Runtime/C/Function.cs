@@ -220,6 +220,12 @@ namespace Muna.C {
             [MarshalAs(UnmanagedType.LPUTF8Str)] string type,
             [MarshalAs(UnmanagedType.LPUTF8Str)] string path
         );
+        [DllImport(Assembly, EntryPoint = @"FXNConfigurationSetMetadata")]
+        public static extern Status SetMetadata(
+            this IntPtr configuration,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string key,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string value
+        );
         #endregion
 
 
