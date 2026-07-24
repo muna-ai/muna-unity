@@ -249,44 +249,51 @@ FXN_API FXNStatus FXNConfigurationSetAcceleration(
 );
 
 /*!
- @function FXNConfigurationGetDevice
+ @function FXNConfigurationGetDevices
 
- @abstract Get the compute device used for compute acceleration.
+ @abstract Get the compute devices used for compute acceleration.
 
- @discussion Get the compute device used for compute acceleration.
+ @discussion Get the compute devices used for compute acceleration.
+ The type of the devices is platform-dependent.
+ See https://docs.muna.ai/predictions/accelerate for more information.
 
  @param configuration
  Predictor configuration.
 
- @param device
- Compute device.
- The type of this device is platform-dependent.
- See https://docs.fxn.ai/workflows/realtime#specifying-the-acceleration-device for more information.
+ @param devices
+ Compute devices. Pass `NULL` to perform a length query.
+
+ @param count
+ Device count. Required.
 */
-FXN_API FXNStatus FXNConfigurationGetDevice(
+FXN_API FXNStatus FXNConfigurationGetDevices(
     FXNConfiguration* configuration,
-    void** device
+    void** devices,
+    int32_t* count
 );
 
 /*!
- @function FXNConfigurationSetDevice
+ @function FXNConfigurationSetDevices
 
  @abstract Specify the compute device used for compute acceleration.
 
  @discussion Specify the compute device used for compute acceleration.
+ The type of the devices is platform-dependent.
+ See https://docs.muna.ai/predictions/accelerate for more information.
 
  @param configuration
  Predictor configuration.
 
- @param device
- Compute device.
- The type of this device is platform-dependent.
- Pass `NULL` to use the default compute device.
- See https://docs.fxn.ai/workflows/realtime#specifying-the-acceleration-device for more information.
+ @param devices
+ Compute devices.
+
+ @param count
+ Device count.
 */
-FXN_API FXNStatus FXNConfigurationSetDevice(
+FXN_API FXNStatus FXNConfigurationSetDevices(
     FXNConfiguration* configuration,
-    void* device
+    const void** devices,
+    int32_t count
 );
 
 /*!
@@ -309,5 +316,54 @@ FXN_API FXNStatus FXNConfigurationAddResource(
     FXNConfiguration* configuration,
     const char* type,
     const char* path
+);
+
+/*!
+ @function FXNConfigurationGetMetadata
+
+ @abstract Get configuration metadata.
+
+ @discussion Get configuration metadata.
+ Returns `FXN_ERROR_INVALID_ARGUMENT` when key is not present.
+
+ @param configuration
+ Predictor configuration.
+
+ @param key
+ Metadata key.
+
+ @param value
+ Output metadata value.
+
+ @param size
+ Output buffer size.
+*/
+FXN_API FXNStatus FXNConfigurationGetMetadata(
+    FXNConfiguration* configuration,
+    const char* key,
+    char* value,
+    int32_t size
+);
+
+/*!
+ @function FXNConfigurationSetMetadata
+
+ @abstract Set configuration metadata.
+
+ @discussion Set configuration metadata.
+
+ @param configuration
+ Predictor configuration.
+
+ @param key
+ Metadata key.
+
+ @param value
+ Metadata value. Pass `NULL` to unset value.
+*/
+FXN_API FXNStatus FXNConfigurationSetMetadata(
+    FXNConfiguration* configuration,
+    const char* key,
+    const char* value
 );
 #pragma endregion
