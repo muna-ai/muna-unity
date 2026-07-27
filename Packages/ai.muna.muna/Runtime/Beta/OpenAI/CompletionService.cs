@@ -11,7 +11,7 @@ namespace Muna.Beta.OpenAI {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Newtonsoft.Json.Linq;
+    using Newtonsoft.Json;
     using Services;
 
     /// <summary>
@@ -174,34 +174,34 @@ namespace Muna.Beta.OpenAI {
             // Get optional inputs
             var responseFormatParam = signature.inputs.FirstOrDefault(p =>
                 p.dtype == Dtype.Dict &&
-                p.denotation == "openai.chat.completions.response_format"
+                p.denotation == @"openai.chat.completions.response_format"
             );
             var reasoningEffortParam = signature.inputs.FirstOrDefault(p =>
                 p.dtype == Dtype.String &&
-                p.denotation == "openai.chat.completions.reasoning_effort"
+                p.denotation == @"openai.chat.completions.reasoning_effort"
             );
             var maxOutputTokensParam = signature.inputs.FirstOrDefault(p =>
                 new[] {
                     Dtype.Int8, Dtype.Int16, Dtype.Int32, Dtype.Int64,
                     Dtype.Uint8, Dtype.Uint16, Dtype.Uint32, Dtype.Uint64
                 }.Contains(p.dtype) &&
-                p.denotation == "openai.chat.completions.max_output_tokens"
+                p.denotation == @"openai.chat.completions.max_output_tokens"
             );
             var temperatureParam = signature.inputs.FirstOrDefault(p =>
                 new[] { Dtype.Float32, Dtype.Float64 }.Contains(p.dtype) &&
-                p.denotation == "openai.chat.completions.temperature"
+                p.denotation == @"openai.chat.completions.temperature"
             );
             var topPParam = signature.inputs.FirstOrDefault(p =>
                 new[] { Dtype.Float32, Dtype.Float64 }.Contains(p.dtype) &&
-                p.denotation == "openai.chat.completions.top_p"
+                p.denotation == @"openai.chat.completions.top_p"
             );
             var frequencyPenaltyParam = signature.inputs.FirstOrDefault(p =>
                 new[] { Dtype.Float32, Dtype.Float64 }.Contains(p.dtype) &&
-                p.denotation == "openai.chat.completions.frequency_penalty"
+                p.denotation == @"openai.chat.completions.frequency_penalty"
             );
             var presencePenaltyParam = signature.inputs.FirstOrDefault(p =>
                 new[] { Dtype.Float32, Dtype.Float64 }.Contains(p.dtype) &&
-                p.denotation == "openai.chat.completions.presence_penalty"
+                p.denotation == @"openai.chat.completions.presence_penalty"
             );
             // Get chat completion output param
             var completionParamIdx = signature.outputs
@@ -209,8 +209,8 @@ namespace Muna.Beta.OpenAI {
                 .Where(pair =>
                     pair.parameter.dtype == Dtype.Dict &&
                     pair.parameter.schema != null &&
-                    pair.parameter.schema.TryGetValue("title", out var title) &&
-                    (title?.ToString() == "ChatCompletion" || title?.ToString() == "ChatCompletionChunk")
+                    pair.parameter.schema.TryGetValue(@"title", out var title) &&
+                    (title?.ToString() == @"ChatCompletion" || title?.ToString() == @"ChatCompletionChunk")
                 )
                 .Select(pair => (int?)pair.idx)
                 .FirstOrDefault();
@@ -252,9 +252,9 @@ namespace Muna.Beta.OpenAI {
                 // Stream predictions
                 var predictionStream = predictions.Stream(model, inputMap, acceleration);
                 if (stream)
-                    return (object)GatherCompletionChunks(predictionStream, completionParamIdx.Value);
+                    return GatherCompletionChunks(predictionStream, completionParamIdx.Value);
                 else
-                    return (object)await GatherChatCompletion(predictionStream, completionParamIdx.Value);
+                    return await GatherChatCompletion(predictionStream, completionParamIdx.Value);
             };
             // Return
             return result;
@@ -264,11 +264,11 @@ namespace Muna.Beta.OpenAI {
             IAsyncEnumerable<Prediction> predictions,
             int completionParamIdx
         ) {
-            var outputs = new List<JObject>();
+            var outputs = new List<Json>();
             await foreach (var prediction in predictions) {
                 if (prediction.error != null)
                     throw new InvalidOperationException(prediction.error);
-                outputs.Add((prediction.results![completionParamIdx] as JObject)!);
+                outputs.Add((Json)prediction.results![completionParamIdx]!);
             }
             return ParseChatCompletion(outputs);
         }
@@ -280,56 +280,32 @@ namespace Muna.Beta.OpenAI {
             await foreach (var prediction in predictions) {
                 if (prediction.error != null)
                     throw new InvalidOperationException(prediction.error);
-                var output = (prediction.results![completionParamIdx] as JObject)!;
+                var output = (Json)prediction.results![completionParamIdx]!;
                 yield return ParseChatCompletionChunk(output);
             }
         }
 
-        private static ChatCompletion ParseChatCompletion(List<JObject> outputs) {
+        private static ChatCompletion ParseChatCompletion(List<Json> outputs) {
             if (outputs.Count == 0)
                 throw new InvalidOperationException(
                     "Failed to parse chat completion because model did not return any outputs"
                 );
-            if (outputs.All(o => o["object"]?.ToString() == "chat.completion")) {
+            if (outputs.All(o => GetObjectType(o) == @"chat.completion")) {
                 var completions = outputs.Select(o => o.ToObject<ChatCompletion>()!).ToList();
                 return completions.Last();
             }
-            if (outputs.All(o => o["object"]?.ToString() == "chat.completion.chunk")) {
+            if (outputs.All(o => GetObjectType(o) == @"chat.completion.chunk")) {
                 var chunks = outputs.Select(o => o.ToObject<ChatCompletionChunk>()!).ToList();
                 return MergeChunks(chunks);
             }
-            throw new InvalidOperationException(
-                "Failed to parse chat completion from model outputs"
-            );
+            throw new InvalidOperationException("Failed to parse chat completion from model outputs");
         }
 
-        private static ChatCompletionChunk ParseChatCompletionChunk(JObject output) {
-            // Try as ChatCompletionChunk
-            if (output["object"]?.ToString() == "chat.completion.chunk")
-                return output.ToObject<ChatCompletionChunk>()!;
-            // Try as ChatCompletion and convert to chunk
-            if (output["object"]?.ToString() == "chat.completion") {
-                var completion = output.ToObject<ChatCompletion>()!;
-                return new ChatCompletionChunk {
-                    Object = "chat.completion.chunk",
-                    Id = completion.Id,
-                    Created = completion.Created,
-                    Model = completion.Model,
-                    Choices = completion.Choices.Select(choice => new ChatCompletionChunk.Choice {
-                        Index = choice.Index,
-                        Delta = new ChatCompletionChunk.Choice.MessageDelta {
-                            Role = choice.Message.Role,
-                            Content = choice.Message.Content
-                        },
-                        FinishReason = choice.FinishReason
-                    }).ToArray(),
-                    Usage = completion.Usage
-                };
-            }
-            throw new InvalidOperationException(
-                "Failed to parse streaming chat completion chunk from model output"
-            );
-        }
+        private static ChatCompletionChunk ParseChatCompletionChunk(Json output) => GetObjectType(output) switch {
+            @"chat.completion.chunk"    => output.ToObject<ChatCompletionChunk>()!,
+            @"chat.completion"          => ToChunk(output.ToObject<ChatCompletion>()!),
+            _                           => throw new InvalidOperationException(@"Failed to parse streaming chat completion chunk from model output")
+        };
 
         private static ChatCompletion MergeChunks(List<ChatCompletionChunk> chunks) {
             var choicesMap = new Dictionary<int, List<ChatCompletionChunk.Choice>>();
@@ -368,7 +344,7 @@ namespace Muna.Beta.OpenAI {
             var role = choices
                 .Select(c => c.Delta?.Role)
                 .FirstOrDefault(r => r != null) ?? @"assistant";
-            var content = string.Join("",
+            var content = string.Join(@"",
                 choices
                     .Where(c => c.Delta?.Content != null)
                     .Select(c => c.Delta!.Content)
@@ -384,6 +360,32 @@ namespace Muna.Beta.OpenAI {
                 },
                 FinishReason = finishReason
             };
+        }
+
+        private static ChatCompletionChunk ToChunk(ChatCompletion completion) => new() {
+            Object  = @"chat.completion.chunk",
+            Id      = completion.Id,
+            Created = completion.Created,
+            Model   = completion.Model,
+            Choices = completion.Choices.Select(choice => new ChatCompletionChunk.Choice {
+                Index = choice.Index,
+                Delta = new ChatCompletionChunk.Choice.MessageDelta {
+                    Role = choice.Message.Role,
+                    Content = choice.Message.Content
+                },
+                FinishReason = choice.FinishReason
+            }).ToArray(),
+            Usage = completion.Usage
+        };
+
+        private static string GetObjectType(Json json) => json.ToObject<CompletionEnvelope>()?.@object!;
+        #endregion
+
+
+        #region --Types--
+        private sealed class CompletionEnvelope {
+            [JsonProperty("object")]
+            public string? @object;
         }
         #endregion
     }

@@ -216,7 +216,7 @@ namespace Muna.Beta.OpenAI {
                     .Select(idx => ParseEmbedding(embeddingMatrix, idx, encodingFormat))
                     .ToArray();
                 var usage = usageParamIdx != null ?
-                    (prediction.results![usageParamIdx.Value]! as JObject)!.ToObject<CreateEmbeddingResponse.UsageInfo>() :
+                    ((Json)prediction.results![usageParamIdx.Value]!).ToObject<CreateEmbeddingResponse.UsageInfo>() :
                     new CreateEmbeddingResponse.UsageInfo { PromptTokens = 0, TotalTokens = 0 };
                 var response = new CreateEmbeddingResponse {
                     Object = "list",

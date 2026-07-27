@@ -1,5 +1,5 @@
 ## 0.0.58
-*INCOMPLETE*
++ Fixed null reference exception when using `muna.Beta.OpenAI.Chat.Completions.Create` method.
 
 ## 0.0.57
 + Upgraded to Function C 0.0.48.
