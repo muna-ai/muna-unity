@@ -383,6 +383,7 @@ namespace Muna.Beta.OpenAI {
 
 
         #region --Types--
+        [Preserve]
         private sealed class CompletionEnvelope {
             [JsonProperty("object")]
             public string? @object;

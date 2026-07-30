@@ -1,5 +1,5 @@
 ## 0.0.59
-*INCOMPLETE*
++ Fixed JSON error when creating chat completions with `muna.Beta.OpenAI.Chat.Completions.Create` method.
 
 ## 0.0.58
 + Fixed null reference exception when using `muna.Beta.OpenAI.Chat.Completions.Create` method.
