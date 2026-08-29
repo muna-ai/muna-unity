@@ -1,3 +1,6 @@
+## 0.0.60
+*INCOMPLETE*
+
 ## 0.0.59
 + Fixed JSON error when creating chat completions with `muna.Beta.OpenAI.Chat.Completions.Create` method.
 + Removed `Predictor.card` field.

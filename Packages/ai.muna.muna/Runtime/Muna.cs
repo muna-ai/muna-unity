@@ -94,7 +94,7 @@ namespace Muna {
 
         #region --Operations--
         public readonly MunaClient client;
-        public const string Version = @"0.0.59";
+        public const string Version = @"0.0.60";
         internal const string URL = @"https://api.muna.ai/v1";
         #endregion
     }
