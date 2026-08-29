@@ -29,7 +29,6 @@ namespace Muna.API {
         /// </summary>
         /// <param name="url">Muna API URL.</param>
         /// <param name="accessKey">Muna access key.</param>
-        /// <param name="cache">Prediction cache.</param>
         public UnityClient(
             string url,
             string? accessKey
@@ -214,6 +213,27 @@ namespace Muna.API {
                 await Task.Yield();
             if (client.error != null)
                 throw new InvalidOperationException($"Failed to upload stream with error: {client.error}");
+        }
+
+        /// <summary>
+        /// Get a cache entry.
+        /// </summary>
+        /// <param name="key">Cache entry key.</param>
+        public override string? GetCacheEntry(string key) => PlayerPrefs.HasKey(key) ?
+            PlayerPrefs.GetString(key) :
+            null;
+
+        /// <summary>
+        /// Set a cache entry.
+        /// </summary>
+        /// <param name="key">Cache entry key.</param>
+        /// <param name="value">Cache entry value. Pass `null` to unset the key.</param>
+        public override void SetCacheEntry(string key, string? value) {
+            if (value != null)
+                PlayerPrefs.SetString(key, value);
+            else
+                PlayerPrefs.DeleteKey(key);
+            PlayerPrefs.Save();
         }
         #endregion
 

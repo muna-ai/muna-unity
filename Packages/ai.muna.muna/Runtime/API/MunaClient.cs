@@ -75,6 +75,19 @@ namespace Muna.API {
             string url,
             string? mime = null
         );
+
+        /// <summary>
+        /// Get a cache entry.
+        /// </summary>
+        /// <param name="key">Cache entry key.</param>
+        public abstract string? GetCacheEntry(string key);
+
+        /// <summary>
+        /// Set a cache entry.
+        /// </summary>
+        /// <param name="key">Cache entry key.</param>
+        /// <param name="value">Cache entry value. Pass `null` to unset the key.</param>
+        public abstract void SetCacheEntry(string key, string? value);
         #endregion
 
 
@@ -109,6 +122,9 @@ namespace Muna.API {
 
         public readonly int status;
 
-        public MunaAPIException(string message, int status)  : base(message) => this.status = status;
+        public MunaAPIException(
+            string message,
+            int status
+        ) : base(message) => this.status = status;
     }
 }

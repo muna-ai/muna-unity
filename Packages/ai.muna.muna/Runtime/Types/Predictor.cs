@@ -56,25 +56,9 @@ namespace Muna {
         public DateTime created;
 
         /// <summary>
-        /// Predictor card.
-        /// </summary>
-        public string? card;
-
-        /// <summary>
-        /// Predictor media URL.
-        /// We encourage animated GIFs where possible.
-        /// </summary>
-        public string? media;
-
-        /// <summary>
         /// Predictor signature.
         /// </summary>
         public Signature? signature;
-
-        /// <summary>
-        /// Predictor license URL.
-        /// </summary>
-        public string? license;
     }
 
     /// <summary>

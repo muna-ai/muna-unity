@@ -43,7 +43,7 @@
     <UnityVersion>6000.0.76f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="/Users/yusuf/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="/Users/yusuf/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.3.1/Analyzers/Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.76f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.76f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.0.76f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
@@ -73,6 +73,7 @@
     <Compile Include="Packages/ai.muna.muna/Runtime/Beta/OpenAI/SpeechService.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/API/DotNetClient.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/Function.cs" />
+    <Compile Include="Packages/ai.muna.muna/Runtime/API/PredictionCache.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Tensor.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/Types/Predictor.cs" />
     <Compile Include="Packages/ai.muna.muna/Runtime/C/ValueMap.cs" />

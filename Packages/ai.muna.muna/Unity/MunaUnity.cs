@@ -43,11 +43,18 @@ namespace Muna {
             string? url = null
         ) {
             var settings = MunaSettings.Instance!;
-            var client = new PredictionCacheClient(
+            var client = new UnityClient(
                 url ?? Muna.URL,
                 accessKey: accessKey ?? settings?.accessKey
             );
-            return new Muna(client);
+            var muna = new Muna(client);
+            foreach (var prediction in settings?.cache ?? new())
+                muna.Predictions.cache.Pin(
+                    prediction.tag,
+                    prediction.target,
+                    prediction.id
+                );
+            return muna;
         }
 
         /// <summary>

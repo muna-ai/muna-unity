@@ -124,6 +124,19 @@ namespace Muna.API {
             using var response = await client.PutAsync(url, content);
             response.EnsureSuccessStatusCode();
         }
+
+        /// <summary>
+        /// Get a cache entry.
+        /// </summary>
+        /// <param name="key">Cache entry key.</param>
+        public override string? GetCacheEntry(string key) => null;
+
+        /// <summary>
+        /// Set a cache entry.
+        /// </summary>
+        /// <param name="key">Cache entry key.</param>
+        /// <param name="value">Cache entry value. Pass `null` to unset the key.</param>
+        public override void SetCacheEntry(string key, string? value) { }
         #endregion
 
 

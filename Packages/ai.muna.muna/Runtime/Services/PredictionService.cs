@@ -55,9 +55,7 @@ namespace Muna.Services {
                     tag,
                     inputs,
                     acceleration: acceleration,
-                    device: device,
-                    clientId: clientId,
-                    configurationId: configurationId
+                    device: device
                 );
             return CreateRemotePrediction(
                 tag,
@@ -91,22 +89,25 @@ namespace Muna.Services {
         /// </summary>
         /// <param name="tag">Predictor tag.</param>
         /// <returns>Whether the predictor was successfully deleted from memory.</returns>
-        public async Task<bool> Delete(string tag) {
-            await Configuration.InitializationTask;
-            if (!cache.TryGetValue(tag, out var predictor))
-                return false;
+        public Task<bool> Delete(string tag) {
+            if (!predictors.TryGetValue(tag, out var predictor))
+                return Task.FromResult(false);
             predictor.Dispose();
-            cache.Remove(tag);
-            return true;
+            predictors.Remove(tag);
+            return Task.FromResult(true);
         }
         #endregion
 
 
         #region --Operations--
         private readonly MunaClient client;
-        private readonly Dictionary<string, C.Predictor> cache = new();
+        internal readonly PredictionCache cache;
+        private readonly Dictionary<string, C.Predictor> predictors = new();
 
-        internal PredictionService(MunaClient client) => this.client = client;
+        internal PredictionService(MunaClient client) {
+            this.client = client;
+            this.cache = new PredictionCache(client);
+        }
 
         private Task<Prediction> CreateRawPrediction(
             string tag,
@@ -126,26 +127,15 @@ namespace Muna.Services {
             string tag,
             Dictionary<string, object?> inputs,
             string? acceleration = default,
-            IntPtr device = default,
-            string? clientId = default,
-            string? configurationId = default
+            IntPtr device = default
         ) {
             await Configuration.InitializationTask;
-            if (inputs.Count == 0) {
-                var pred = await CreateRawPrediction(
-                    tag,
-                    clientId: clientId,
-                    configurationId: configurationId
-                );
-                await CreateCachedPrediction(pred);
-                return pred;
-            }
+            if (inputs.Count == 0)
+                return await cache.Retrieve(tag);
             var predictor = await GetPredictor(
                 tag,
                 acceleration: acceleration,
-                device: device,
-                clientId: clientId,
-                configurationId: configurationId
+                device: device
             );
             using var inputMap = ToValueMap(inputs);
             using var prediction = predictor.CreatePrediction(inputMap);
@@ -216,18 +206,30 @@ namespace Muna.Services {
         private async Task<C.Predictor> GetPredictor(
             string tag,
             string? acceleration = default,
-            IntPtr device = default,
-            string? clientId = default,
-            string? configurationId = default
+            IntPtr device = default
         ) {
-            if (cache.TryGetValue(tag, out var p))
-                return p;
-            var prediction = await CreateRawPrediction(
-                tag,
-                clientId: clientId,
-                configurationId: configurationId
-            );
-            prediction = await CreateCachedPrediction(prediction);
+            if (predictors.TryGetValue(tag, out var existing))
+                return existing;
+            var prediction = await cache.Retrieve(tag);
+            C.Predictor predictor;
+            try {
+                predictor = await CreatePredictor(prediction, acceleration, device);
+            } catch {
+                // A cached token can outlive native validation rules. Evict it and
+                // retry once with a fetch pinned to the evicted prediction.
+                await cache.Invalidate(tag);
+                prediction = await cache.Retrieve(tag);
+                predictor = await CreatePredictor(prediction, acceleration, device);
+            }
+            predictors[tag] = predictor;
+            return predictor;
+        }
+
+        private async Task<C.Predictor> CreatePredictor(
+            Prediction prediction,
+            string? acceleration,
+            IntPtr device
+        ) {
             using var configuration = new Configuration() {
                 tag = prediction.tag,
                 token = prediction.configuration!,
@@ -252,20 +254,7 @@ namespace Muna.Services {
                     throw new InvalidOperationException($"Failed to preload {entry.tag} because it did not return a string as its first result");
                 configuration.SetMetadata(entry.metadata, metadata);
             }
-            var predictor = new C.Predictor(configuration);
-            cache.Add(tag, predictor);
-            return predictor;
-        }
-
-        private async Task<Prediction> CreateCachedPrediction(Prediction prediction) {
-            var resources = await Task.WhenAll(prediction.resources.Select(Download));
-            return new() {
-                id = prediction.id,
-                tag = prediction.tag,
-                created = prediction.created,
-                resources = resources,
-                configuration = prediction.configuration,
-            };
+            return new C.Predictor(configuration);
         }
 
         private async Task<Prediction> ParseRemotePrediction(RemotePrediction prediction) {
@@ -466,29 +455,6 @@ namespace Muna.Services {
             return (Image)value.ToObject()!;
         }
 
-        private async Task<PredictionResource> Download(PredictionResource resource) {
-            var uri = new Uri(resource.url);
-            if (uri.IsFile)
-                return new() {
-                    type = resource.type,
-                    url = uri.LocalPath,
-                    name = resource.name
-                };
-            var resourceDir = Path.Combine(client.cachePath, @"cache");
-            var path = GetResourcePath(resource, resourceDir);
-            if (!File.Exists(path)) {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
-                using var dataStream = await client.Download(resource.url);
-                using var fileStream = File.Create(path);
-                dataStream.CopyTo(fileStream); // CHECK // Async usage
-            }
-            return new() {
-                type = resource.type,
-                url = path,
-                name = resource.name
-            };
-        }
-
         private async Task<Stream> Download(string url) {
             if (url.StartsWith(@"data:")) {
                 var dataIdx = url.LastIndexOf(",") + 1;
@@ -506,18 +472,6 @@ namespace Muna.Services {
             var data = Convert.ToBase64String(stream.ToArray<byte>());
             var result = $"data:{mime};base64,{data}";
             return Task.FromResult(result);
-        }
-
-        internal static string GetResourcePath(
-            PredictionResource resource,
-            string cacheDir
-        ) {
-            var uri = new Uri(resource.url);
-            var stem = Path.GetFileName(uri.AbsolutePath);
-            var path = string.IsNullOrEmpty(resource.name) ?
-                Path.Combine(cacheDir, stem) :
-                Path.Combine(cacheDir, stem, resource.name);
-            return path;
         }
         #endregion
 
